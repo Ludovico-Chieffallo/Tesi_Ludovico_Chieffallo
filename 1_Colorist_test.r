@@ -1,4 +1,6 @@
- #Il pacchetto colorist 
+#Il pacchetto "colorist" (R) è stato creato per fornire ai ricercatori metodologie e opzioni in più per studiare e comunicare
+#informazioni sulla distribuzione della fauna selvatica nello spazio e nel tempo. 
+#Per fare questo "colorist"
 
 
 
