@@ -3,7 +3,6 @@
 
 
 
-
 #Abbiamo sviluppato il colorista pacchetto per il r ambiente di calcolo statistico (R Core
 #Team, 2020) per fornire ai ricercatori opzioni aggiuntive per esplorare e comunicare
 #informazioni sulla distribuzione della fauna selvatica nello spazio e nel tempo. colorista sottolinea
