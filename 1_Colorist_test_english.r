@@ -6,6 +6,9 @@
 #-Legend: Users generate a legend to accompany their map
 
 
+#The principal difference between these two classes is that a RasterBrick can only be linked to a single (multi-layer) file. In contrast, a RasterStack can be formed from separate files and/or from a few layers (‘bands’) from a single file.
+
+
 install.packages("colorist")
 library(colorist)
 
