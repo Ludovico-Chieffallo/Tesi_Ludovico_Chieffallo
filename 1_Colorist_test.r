@@ -4,15 +4,15 @@
 
 
 
-Abbiamo sviluppato il colorista pacchetto per il r ambiente di calcolo statistico (R Core
-Team, 2020) per fornire ai ricercatori opzioni aggiuntive per esplorare e comunicare
-informazioni sulla distribuzione della fauna selvatica nello spazio e nel tempo. colorista sottolinea
-l'uso del colore per indicare dove, quando e in che modo si possono trovare specie,
-individui o gruppi di animali. Per farlo in modo efficace, colorista prende le informazioni da una
-pila di raster che descrivono le distribuzioni della fauna selvatica, le elabora e le collega
-alle tavolozze HCL (tonalità-croma-luminanza) in modi specifici. Le visualizzazioni risultanti
-consentono agli spettatori di confrontare in modo significativo i valori di occorrenza,
-abbondanza o densità nello spazio e nel tempo.
+#Abbiamo sviluppato il colorista pacchetto per il r ambiente di calcolo statistico (R Core
+#Team, 2020) per fornire ai ricercatori opzioni aggiuntive per esplorare e comunicare
+#informazioni sulla distribuzione della fauna selvatica nello spazio e nel tempo. colorista sottolinea
+#l'uso del colore per indicare dove, quando e in che modo si possono trovare specie,
+#individui o gruppi di animali. Per farlo in modo efficace, colorista prende le informazioni da una
+#pila di raster che descrivono le distribuzioni della fauna selvatica, le elabora e le collega
+#alle tavolozze HCL (tonalità-croma-luminanza) in modi specifici. Le visualizzazioni risultanti
+#consentono agli spettatori di confrontare in modo significativo i valori di occorrenza,
+#abbondanza o densità nello spazio e nel tempo.
 
 
 
