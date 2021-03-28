@@ -1,3 +1,11 @@
+#The basic workflow for colorist is as follows:
+
+#-Metrics: Users calculate metrics to describe their distributions.
+#-Color palette: Users choose a color palette to enable visualization of metrics.
+#-Map: Users combine metrics and a palette to map distributions in a series of small multiples or in a single map.
+#-Legend: Users generate a legend to accompany their map
+
+
 install.packages("colorist")
 library(colorist)
 
@@ -20,4 +28,6 @@ map_single(met,pal,lambda_i = -2)
 
 #legend
 legend_timecycle(pal)
+
+
 
