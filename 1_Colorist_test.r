@@ -47,15 +47,15 @@ fiespa_occ
 met1<-metrics_pull(fiespa_occ)  #Questa funzione trasforma i valori dello stack raster che descrivono le distribuzioni individuali o le distribuzioni delle specie in valori di intensità standardizzati.
 
 print(met1)
-#lass      : RasterBrick 
-#imensions : 193, 225, 43425, 12  (nrow, ncol, ncell, nlayers)
-#esolution : 14814.03, 14814.04  (x, y)
-#xtent     : -1482551, 1850606, -1453281, 1405830  (xmin, xmax, ymin, ymax)
-#rs        : +proj=laea +lat_0=38.7476367322638 +lon_0=-90.2379515912106 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0 
-#ource     : memory
-#mes      :       jan,       feb,       mar,       apr,       may,       jun,       jul,       aug,       sep,       oct,       nov,       dec 
-#in values :         0,         0,         0,         0,         0,         0,         0,         0,         0,         0,         0,         0 
-#ax values : 0.9835264, 0.9529886, 0.9208400, 0.8991927, 0.8984586, 0.8922251, 0.8785749, 0.9063431, 0.8974113, 0.9096173, 0.9397971, 1.0000000 
+#class      : RasterBrick 
+#dimensions : 193, 225, 43425, 12  (nrow, ncol, ncell, nlayers)
+#resolution : 14814.03, 14814.04  (x, y)
+#extent     : -1482551, 1850606, -1453281, 1405830  (xmin, xmax, ymin, ymax)
+#crs        : +proj=laea +lat_0=38.7476367322638 +lon_0=-90.2379515912106 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0 
+#source     : memory
+#names      :       jan,       feb,       mar,       apr,       may,       jun,       jul,       aug,       sep,       oct,       nov,       dec 
+#min values :         0,         0,         0,         0,         0,         0,         0,         0,         0,         0,         0,         0 
+#max values : 0.9835264, 0.9529886, 0.9208400, 0.8991927, 0.8984586, 0.8922251, 0.8785749, 0.9063431, 0.8974113, 0.9096173, 0.9397971, 1.0000000
 
 
 
