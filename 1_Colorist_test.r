@@ -60,19 +60,53 @@ print(met1)
 
 
 
+attr(met1,"maximum")  # da chiedere????
 
 
 
 
 
-attr(met1,"maximum")
-
-#2.)Creiamo una palette (HCL)
+#2.)Creiamo una palette (HCL). Vogliamo scegliere una tavolozza che aiuti a comunicare informazioni temporali sull'occorrenza di Field Sparrow.
+#Utilizzeremo la funzione palette_timecycle() perchè i nostri dati rapprenentano una sequyuenza ordinata e ciclica (tutti i mesi dell'anno)
 
 pal<- palette_timecycle(fiespa_occ)
 
-#3.)Ceiamo una mappa
+head(pal)      #usiamo head() per restyituirci i primi valori. Pal ha 1212 oggetti, con head ad esempio prendiamo i primi 6
+
+#  specificity layer_id   color
+#1           0        1 #6A6A6A
+#2           0        2 #6A6A6A
+#3           0        3 #6A6A6A
+#4           0        4 #6A6A6A
+#5           0        5 #6A6A6A
+#6           0        6 #6A6A6A    
+
+#Abbiamo visto come la funzione palette_timecycle ci restituisca un frame di dati con tre campi: specificy layer_id e color
+#I campi specificity e layer_id verranno utilizzati per assegnare i colori a celle raster specifiche
+
+
+
+#3.)Creiamo una mappa. 
+#Con la funzione map_multiples() avremo modo di vedere la mappa per ogni layer, quindi per ogni mese dell'anno
+#All'interno della parentesi scriveremo 1.)La metrica/ 2.)La palette utilizzata/ 3.) ncol=x per definire il numero di colonne da visualizzare/ 4.)Labels=names(nome file)
+
 map_multiples(met1, pal, ncol = 3, labels = names (fiespa_occ))
+
+#Se vogliamo estrarre un mese di dati per un'analisi più approfondita, possiamo utilizzare map_single()e specificare quale mese di dati vorremmo vedere utilizzando l'argomento layer.
+map_single(met1, ppal, layer = 6)
+
+#Per generare una singola mappa del ciclo annuale che sintetizzi le informazioni spazio-temporali sull'occorrenza di Field Sparrow,
+#abbiamo bisogno di "distillare" le informazioni distributive nel nostro RasterStackutilizzo metrics_distill()
+
+#La metrics_distill()funzione calcola le metriche di distribuzione su tutti i livelli in ogni cella raster e restituisce tre metriche per la visualizzazione successiva:
+
+#-Intensità massima (ovvero, il valore massimo di occorrenza, abbondanza o densità).
+#-Strato di massima intensità (ovvero, l'identità dello strato contenente il valore di intensità massima)
+#-Specificità del valore di intensità massima per lo strato di intensità massima (cioè, il grado in cui i valori di intensità sono distribuiti in modo non uniforme tra gli strati).
+
+
+
+
 
 #4.)Infine creiamo la legenda
 legend_timecycle(pal, origin_label = "jan 1")
