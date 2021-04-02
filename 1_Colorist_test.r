@@ -14,10 +14,10 @@
 
 #Il flusso di lavoro di base per colorist è il seguente:
 
-#1.)Metriche : gli utenti calcolano le metriche per descrivere le loro distribuzioni.
-#2.)Tavolozza dei colori : gli utenti scelgono una tavolozza dei colori per abilitare la visualizzazione delle metriche.
-#3.)Mappa : gli utenti combinano metriche e una tavolozza per mappare le distribuzioni in una serie di piccoli multipli o in una singola mappa.
-#4.)Legenda : gli utenti generano una legenda per accompagnare la loro mappa.
+   #1.)Metriche : gli utenti calcolano le metriche per descrivere le loro distribuzioni.
+   #2.)Tavolozza dei colori : gli utenti scelgono una tavolozza dei colori per abilitare la visualizzazione delle metriche.
+   #3.)Mappa : gli utenti combinano metriche e una tavolozza per mappare le distribuzioni in una serie di piccoli multipli o in una singola mappa.
+   #4.)Legenda : gli utenti generano una legenda per accompagnare la loro mappa.
 
 #Prima di iniziare definiamo la differenza tra RasterBrick (usato in precedenza) e Rasterstack.
 #La differenza principale tra RasterBrick e Rasterstack è che a RasterBrick può essere collegato solo a un singolo file (multistrato, come immagini satellitari).
@@ -26,8 +26,9 @@
 install.packages("colorist")
 library(colorist)
 
+#ESEMPIO 1: MAPPARE UNA DISTRIBUZIONE DI SPECIE NEL CICLO ANNUALE
 
-#Per iniziare con un esempio mappiamo una distribuzione di specie in un ciclo annuale
+
 #Carichiamo l'esempio usando la funzione data
 
 data("fiespa_occ")
@@ -59,19 +60,12 @@ print(met1)
 
 
 
-
-attr(met1,"maximum")  # da chiedere????
-
-
-
-
-
 #2.)Creiamo una palette (HCL). Vogliamo scegliere una tavolozza che aiuti a comunicare informazioni temporali sull'occorrenza di Field Sparrow.
 #Utilizzeremo la funzione palette_timecycle() perchè i nostri dati rapprenentano una sequyuenza ordinata e ciclica (tutti i mesi dell'anno)
 
 pal<- palette_timecycle(fiespa_occ)
 
-head(pal)      #usiamo head() per restyituirci i primi valori. Pal ha 1212 oggetti, con head ad esempio prendiamo i primi 6
+head(pal)      #usiamo head() per restituirci i primi valori. Pal ha 1212 oggetti, con head ad esempio prendiamo i primi 6
 
 #  specificity layer_id   color
 #1           0        1 #6A6A6A
@@ -93,7 +87,7 @@ head(pal)      #usiamo head() per restyituirci i primi valori. Pal ha 1212 ogget
 map_multiples(met1, pal, ncol = 3, labels = names (fiespa_occ))
 
 #Se vogliamo estrarre un mese di dati per un'analisi più approfondita, possiamo utilizzare map_single()e specificare quale mese di dati vorremmo vedere utilizzando l'argomento layer.
-map_single(met1, ppal, layer = 6)
+map_single(met1, pal, layer = 6)
 
 #Per generare una singola mappa del ciclo annuale che sintetizzi le informazioni spazio-temporali sull'occorrenza di Field Sparrow,
 #abbiamo bisogno di "distillare" le informazioni distributive nel nostro RasterStackutilizzo metrics_distill()
@@ -104,21 +98,37 @@ map_single(met1, ppal, layer = 6)
 #-Strato di massima intensità (ovvero, l'identità dello strato contenente il valore di intensità massima)
 #-Specificità del valore di intensità massima per lo strato di intensità massima (cioè, il grado in cui i valori di intensità sono distribuiti in modo non uniforme tra gli strati).
 
+met1_distill<-metrics_distill(fiespa_occ)  #"Distilliamo" quindi le informazioni
+map_single(met1_distill,pal)               #Visualizziamo quindi le informazione nella singola immagine con le immagini "distillate" e  la palette creata in precedenza
 
 
+#4.)Infine creiamo la legenda.
+#Avendo utilizzato palette_timecycle() utilizzeremo la legenda da configurare con la funzione legend_timecycle().
+#Ci verrà restituita una legenda a cerchi dove Le informazioni su quando inizia (e finisce) il ciclo di tempo possono essere fornite anche nell'argomento origin_label.
 
-
-#4.)Infine creiamo la legenda
 legend_timecycle(pal, origin_label = "jan 1")
 
+#CONCLUSIONI
+#Con tutte le informazioni descritte, con la mappa e con la legenda vicino, siamo in grado di capire dove e quando trovare questa specie.
+#Le parti più colorate indicheranno alta specificità ma alta probabilità di occorrenza solo in alcuni periodi dell'anno
+#Le parti grigie invece indicheranno bassa specificità ma alta occorrenza per tutto l'anno
+#In questo caso la specificità bassa indica la stagionalità dove 0 indica presenza tutto l'anno
 
-#
-met1_distill<-metrics_distill(fiespa_occ)
-map_single(met1_distill,pal)
-legend_timecycle(pal, origin_label = "jan 1")
 
 
-#///
+#ESEMPIO 2: MAPPARE IL COMPORTAMENTO INDIVIDUALE NEL TEMPO
+#Qui, coloristesploriamo come un individuo Fisher ( Pekania pennanti ) che vive nello stato di New York si è spostato nel suo ambiente locale per un periodo di nove notti sequenziali nel 2011. 
+
+
+
+
+
+
+
+
+
+#ESEMPIO 3: MAPPARE LE DISTRIBUZIONI DI PIU' INDIVIDUI DURANTE LO STESSO PERIODO DI TEMPO
+
 
 
 data("elephant_ud")
