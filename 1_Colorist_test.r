@@ -28,9 +28,10 @@ library(colorist)
 
 #ESEMPIO 1: MAPPARE UNA DISTRIBUZIONE DI SPECIE NEL CICLO ANNUALE
 
+#Qui, utilizziamo dati aggregati sullo stato e sulle tendenze di eBird per Field Sparrow ( Spizella pusilla ) per illustrare una strategia diversa per la creazione di mappe del ciclo annuale,
+#che sfrutta i dati di occorrenza continua (piuttosto che i dati categoriali di presenza-assenza) per descrivere dove e quando gli spettatori potrebbero essere in grado di trovare una specie.
 
 #Carichiamo l'esempio usando la funzione data
-
 data("fiespa_occ")
 fiespa_occ
 #class      : RasterStack 
@@ -121,6 +122,7 @@ legend_timecycle(pal, origin_label = "jan 1")
 
 #Qui esploriamo come un individuo Fisher ( Pekania pennanti ) che vive nello stato di New York si è spostato nel suo ambiente locale per un periodo di nove notti sequenziali nel 2011. 
 
+#Carichiamo i dati 
 data("fisher_ud")   
 fisher_ud
 #class      : RasterStack 
@@ -208,6 +210,6 @@ met3_distt<-metrics_distill(elephant_ud)
 map_single(met3_distt,pal2,lambda_i = -5)
 
 #Qui utilizzeremo una legenda diversa ancora una volta.
-#utilizzeremo legend_set coerentemente con il codice precedente
+#utilizzeremo legend_set e non legend_timeline o legend_timecycle coerentemente con il codice precedente
 legend_set(pal3, group_labels = names(elephant_ud))
 
