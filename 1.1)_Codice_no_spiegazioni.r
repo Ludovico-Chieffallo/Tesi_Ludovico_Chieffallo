@@ -37,7 +37,6 @@ legend_timeline(pal2,time_labels = c("2 aprile", "11 aprile"))
 
 #ESEMPIO 3: MAPPARE LE DISTRIBUZIONI DI PIU' INDIVIDUI DURANTE LO STESSO PERIODO DI TEMPO
 
-
 data("elephant_ud")
 elephant_ud
 met3<-metrics_pull((elephant_ud))
