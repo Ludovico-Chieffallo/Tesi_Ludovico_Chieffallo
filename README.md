@@ -4,4 +4,4 @@
 //
 1.1)_Codice_no_spiegazioni.r   <-- Codice nudo, senza spiegazioni. (si può copiare e incollare in R per testarlo)
 //
-2.Creazione di un documento in LaTex con knitr (funzione stitch)
+2.)_Creazione di un documento in LaTex con knitr (funzione stitch)
