@@ -22,3 +22,6 @@ getwd()
 stitch("tesi.r", template = system.file("misc", "knitr-template.Rnw", package="knitr"))
 
 #In questo modo ci verrà restituito il fil Pdf completo
+
+#A questo punto possiamo passare in latex e compilare il testo del file con estenzione .tex oppure andare su overleaf (online) e copia/incollare il testo .tex e compilare
+#Se le immagini non dovessero essere presenti, creare su Overleaf una cartella e rinominarla "figure" e importare le immagini direttamente dal computer (le immagini si genereranno automaticamente dopo la funzione stitch)
