@@ -5,26 +5,28 @@
 #in modo significativo i valori di occorrenza, abbondanza, o densità nello spazio e nel tempo
 
 #Cos'è la tavolozza HCL? Lo spazio colore Hue-Chroma-Luminance (HCL) è un'alternativa ad altri spazi colore come RGB, HSV e così via. 
-# Ogni colore all'interno dello spazio colore HCL è definito da una tripletta di valori. Le dimensioni sono:
+#Ogni colore all'interno dello spazio colore HCL è definito da una tripletta di valori. 
+#Le dimensioni sono:
 
-#H ue: definisce il colore (tonalità)
-#C hroma: definisce il colore (saturazione o intensità del colore)
-#L uminance: definisce la luminosità
-#(https://hclwizard.org/images//hclscheme_pic0.png)
+    #H-ue: definisce il colore (tonalità)
+    #C-hroma: definisce il colore (saturazione o intensità del colore)
+    #L-uminance: definisce la luminosità
+    #(https://hclwizard.org/images//hclscheme_pic0.png)
 
 #Il flusso di lavoro di base per colorist è il seguente:
 
-   #1.)Metriche : gli utenti calcolano le metriche per descrivere le loro distribuzioni.
-   #2.)Tavolozza dei colori : gli utenti scelgono una tavolozza dei colori per abilitare la visualizzazione delle metriche.
-   #3.)Mappa : gli utenti combinano metriche e una tavolozza per mappare le distribuzioni in una serie di piccoli multipli o in una singola mappa.
-   #4.)Legenda : gli utenti generano una legenda per accompagnare la loro mappa.
+   #1.)Metriche: gli utenti calcolano le metriche per descrivere le loro distribuzioni.
+   #2.)Tavolozza dei colori: gli utenti scelgono una tavolozza dei colori per abilitare la visualizzazione delle metriche.
+   #3.)Mappa: gli utenti combinano metriche e una tavolozza per mappare le distribuzioni in una o più mappe.
+   #4.)Legenda: gli utenti generano una legenda per accompagnare la loro mappa.
 
-#Prima di iniziare definiamo la differenza tra RasterBrick (usato in precedenza) e Rasterstack.
+#Prima di iniziare definiamo la differenza tra RasterBrick e Rasterstack.
 #La differenza principale tra RasterBrick e Rasterstack è che a RasterBrick può essere collegato solo a un singolo file (multistrato, come immagini satellitari).
-#Al contrario, un RasterStack può essere formato da file separati e / o da pochi livelli ("bande") da un singolo file.
+#Al contrario, un RasterStack può essere formato da file separati e/o da pochi livelli ("bande") da un singolo file.
 
 install.packages("colorist")
 library(colorist)
+
 
 #ESEMPIO 1: MAPPARE UNA DISTRIBUZIONE DI SPECIE NEL CICLO ANNUALE
 
@@ -32,6 +34,7 @@ library(colorist)
 #che sfrutta i dati di occorrenza continua (piuttosto che i dati categoriali di presenza-assenza) per descrivere dove e quando gli spettatori potrebbero essere in grado di trovare una specie.
 
 #Carichiamo l'esempio usando la funzione data
+
 data("fiespa_occ")
 fiespa_occ
 #class      : RasterStack 
@@ -62,6 +65,7 @@ print(met1)
 
 
 #2.)Creiamo una palette (HCL). Vogliamo scegliere una tavolozza che aiuti a comunicare informazioni temporali sull'occorrenza di Field Sparrow.
+
 #Utilizzeremo la funzione palette_timecycle() perchè i nostri dati rapprenentano una sequyuenza ordinata e ciclica (tutti i mesi dell'anno)
 
 pal<- palette_timecycle(fiespa_occ)
@@ -91,9 +95,9 @@ map_multiples(met1, pal, ncol = 3, labels = names (fiespa_occ))
 map_single(met1, pal, layer = 6)
 
 #Per generare una singola mappa del ciclo annuale che sintetizzi le informazioni spazio-temporali sull'occorrenza di Field Sparrow,
-#abbiamo bisogno di "distillare" le informazioni distributive nel nostro RasterStackutilizzo metrics_distill()
+#abbiamo bisogno di "distillare" le informazioni distribuite nel nostro RasterStack e per fare questo utilizziamo la funzione metrics_distill()
 
-#La metrics_distill()funzione calcola le metriche di distribuzione su tutti i livelli in ogni cella raster e restituisce tre metriche per la visualizzazione successiva:
+#La funzione metrics_distill() calcola le metriche di distribuzione su tutti i livelli in ogni cella raster e restituisce tre metriche per la visualizzazione successiva:
 
 #-Intensità massima (ovvero, il valore massimo di occorrenza, abbondanza o densità).
 #-Strato di massima intensità (ovvero, l'identità dello strato contenente il valore di intensità massima)
