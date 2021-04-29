@@ -1,7 +1,7 @@
 install.packages("colorist")
 library(colorist)
 
-#ESEMPIO 1: MAPPARE UNA DISTRIBUZIONE DI SPECIE NEL CICLO ANNUALE
+#EXAMPLE 1: MAPPING A DISTRIBUTION OF SPECIES IN THE ANNUAL CYCLE
 
 data("fiespa_occ")
 fiespa_occ
@@ -17,7 +17,7 @@ legend_timecycle(pal, origin_label = "jan 1")
 
 
 
-#ESEMPIO 2: MAPPARE IL COMPORTAMENTO INDIVIDUALE NEL TEMPO
+#EXAMPLE 2: MAPPING INDIVIDUAL BEHAVIOR OVER TIME
 
 data("fisher_ud")   
 fisher_ud
@@ -33,9 +33,7 @@ legend_timeline(pal2,time_labels = c("2 aprile", "11 aprile"))
 
 
 
-
-
-#ESEMPIO 3: MAPPARE LE DISTRIBUZIONI DI PIU' INDIVIDUI DURANTE LO STESSO PERIODO DI TEMPO
+#EXAMPLE 3: MAPPING THE DISTRIBUTIONS OF MULTIPLE INDIVIDUALS DURING THE SAME TIME PERIOD
 
 data("elephant_ud")
 elephant_ud
