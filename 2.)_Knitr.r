@@ -1,27 +1,27 @@
-#Prima di proseguire andiamo su un gestore di testo, e tramite copia/incolla andiamo a riportare il codice che ci interessa inserire nel pdf
+#Before continuing, let's go to a text manager, and copying / pasting will bring back the code we are interested in inserting in the pdf
 
-#Installiamo il pacchetto knitr
+#install "knitr"
 
 install.packages("knitr")
 
-#Richiamiamo il file
+#use library for work with knitr
 
 library(knitr)
 
-#Definiamo la nostra cartella di lavoro (qui è stata utilizzata la cartella lad)
+#use setwd for select correctly the folder
 setwd("c:/lab/")
 
-#controlliamo che il percorso sia giusto
+#check folder 
 
 getwd()
 
-#Usiamo la funzione stitch.
-#A cosa serve la funzione stitch? prende il file esterno a R, lo porta dentro e ci restituisce un file in pdf completo
-#Il primo attributo da inserire sarà il nome del dile che abbiamo creato (tesi.r)
+#We use the stitch function.
+#What is the stitch function? it takes the external file to R, brings it in and gives us a complete pdf file
+#The first attribute to insert will be the name of the file we created (thesis.r)
 
 stitch("tesi.r", template = system.file("misc", "knitr-template.Rnw", package="knitr"))
 
-#In questo modo ci verrà restituito il fil Pdf completo
+#Now we can see our pdf 
 
-#A questo punto possiamo passare in latex e compilare il testo del file con estenzione .tex oppure andare su overleaf (online) e copia/incollare il testo .tex e compilare
-#Se le immagini non dovessero essere presenti, creare su Overleaf una cartella e rinominarla "figure" e importare le immagini direttamente dal computer (le immagini si genereranno automaticamente dopo la funzione stitch)
+# At this point we can switch to latex and compile the text of the file with .tex extension or go to overleaf (online) and copy / paste the .tex text and compile
+#If the images are not present, create a folder on Overleaf and rename it "figure" and import the images directly from the computer (the images will be generated automatically after the stitch function)
