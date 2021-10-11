@@ -1,9 +1,8 @@
-#######################################
+
 ## DOWNLOAD AND CLEAN DATA FROM GBIF ##
-#######################################
 
 library(rgbif)
-library(scrubr)
+library(scrubr)  #?
 library(maps)
 
 
