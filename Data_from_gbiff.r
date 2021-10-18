@@ -1,5 +1,7 @@
-
 ## DOWNLOAD AND CLEAN DATA FROM GBIF ##
+
+#IMPORTANT: YOU MUST HAVE VERSION 4.0.5 OR NEWER!#
+
 
 library(rgbif)
 library(scrubr)  #?
@@ -16,7 +18,7 @@ gbif_data <- occ_data(scientificName = myspecies, hasCoordinate = TRUE, limit = 
 
 # take a look at the downloaded data:
 gbif_data
-# if "Records found" is larger than "Records returned", you need to increase the 'limit' argument above -- see help(occ_data) for options and limitations
+# if "Records found" is larger than "Records returned", we need to increase the 'limit' argument above -- see help(occ_data) for options and limitations
 
 
 # if your species is widespread but you want to work on a particular region, you can download records within a specified window of coordinates:
@@ -26,7 +28,7 @@ gbif_data
 
 # get the DOIs for citing these data properly:
 gbif_citation(gbif_data)
-# note: if you need or prefer only one DOI for the entire dataset, download the dataset directly from www.gbif.org and then import the .csv to R. It is very important to properly cite the data sources! GBIF is not a source, just a repository for many people who put in very hard work to collect these data and make them available
+# note: if you need or prefer only one DOI for the entire dataset, download the dataset directly from www.gbif.org and then import the .csv to R. ALWAYS MENTION THE SOURCE!
 
 # check how the data are organized:
 names(gbif_data)
