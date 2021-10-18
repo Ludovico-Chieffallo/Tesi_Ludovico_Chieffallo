@@ -32,6 +32,7 @@ names(gbif_data)
 names(gbif_data$meta)
 names(gbif_data$data)
 
+
 # get the columns that matter for mapping and cleaning the occurrence data:
 myspecies_coords <- gbif_data$data[ , c("decimalLongitude", "decimalLatitude", "individualCount", "occurrenceStatus", "coordinateUncertaintyInMeters", "institutionCode", "references")]
 head(myspecies_coords)
