@@ -24,6 +24,7 @@
 #La differenza principale tra RasterBrick e Rasterstack è che a RasterBrick può essere collegato solo a un singolo file (multistrato, come immagini satellitari).
 #Al contrario, un RasterStack può essere formato da file separati e/o da pochi livelli ("bande") da un singolo file.
 
+
 install.packages("colorist")
 library(colorist)
 
