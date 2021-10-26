@@ -1,14 +1,15 @@
 install.packages("tidyverse")
+install.packages("dplyr")
 
 
-library(dplyr)
 library(tidyverse)
-
+library(dplyr)
 
 
 setwd("c:/lab/")
-Per<-read.csv2("pernice.csv")
 
+
+Per<-read.csv2("pernice.csv")
 
 per1<- Per%>%
   rename(gbifID=ï..gbifID) #per rinominare qualcosa all'interno del nostro dataframe
@@ -16,7 +17,7 @@ per1<- Per%>%
 
 Dati_pern<- per1 %>%
   dplyr::select(species,genus, family,order,class,decimalLongitude, decimalLatitude, countryCode, individualCount,gbifID,phylum,taxonRank, coordinateUncertaintyInMeters, year,basisOfRecord, institutionCode)  %>% #controlla che i nomi delle variabili corrispondo con i tuoi
-  filter (phylum == "Chordata") %>% #select only vascular plants, valutare se aggiugere filtro temporale (dipende da come sono i dati, magari una volta che li hai decidiamo cosa togliere)
+  filter (phylum == "Chordata") %>% 
   filter(!is.na(decimalLongitude))%>%
   filter(!is.na(decimalLatitude)) %>%
   filter(!is.na(individualCount))
