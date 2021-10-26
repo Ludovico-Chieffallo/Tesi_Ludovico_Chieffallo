@@ -9,3 +9,5 @@
 3.)_Dati_from_gbiff_rgbif.r <-- Come importare i dati Gbiff senza passare da Excell
 //                                
 4.)_Data_cleaning_gbiff.r <-- Come pulire e filtrare il Dataset per avere dati puliti
+//                                                        
+5.)_Dplyr_function.pdf <-- Tutte le funzioni che possiamo utilizzare con Dplyr
