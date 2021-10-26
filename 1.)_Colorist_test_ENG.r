@@ -235,7 +235,6 @@ map_multiples(met3, pal3, ncol = 2,lambda_i = -5,labels = names(elephant_ud))
 met3_distt<-metrics_distill(elephant_ud)
 map_single(met3_distt,pal2,lambda_i = -5)
 
-
 #Here we will use a different legend once again.
 #We will use legend_set and not legend_timeline or legend_timecycle 
 
