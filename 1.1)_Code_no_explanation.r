@@ -16,7 +16,6 @@ map_single(met1_distill,pal)
 legend_timecycle(pal, origin_label = "jan 1")
 
 
-
 #EXAMPLE 2: MAPPING INDIVIDUAL BEHAVIOR OVER TIME
 
 data("fisher_ud")   
