@@ -94,35 +94,3 @@ map("world", xlim = range(myspecies_coords$decimalLongitude), ylim = range(myspe
 points(myspecies_coords[ , c("decimalLongitude", "decimalLatitude")], col = myspecies_coords$species, pch = ".")
 
 # you may notice (especially if you zoom in, e.g. by specifying a smaller range of coordinates under 'xlim' and 'ylim' above) that many points are too regularly spaced to be exact locations of species sightings; rather, such points are likely to be centroids of (relatively large) grid cells on which particular surveys were based, so remember to adjust the spatial resolution of your analysis accordingly!
-
-
-# CLEAN THE DATASET! ----
-
-# mind that data often contain errors, so careful inspection and cleaning are necessary! 
-# here we'll first remove records of absence or zero-abundance (if any):
-names(myspecies_coords)
-sort(unique(myspecies_coords$individualCount))  # notice if some points correspond to zero abundance
-sort(unique(myspecies_coords$occurrenceStatus))  # check for different indications of "absent", which could be in different languages! and remember that R is case-sensitive
-absence_rows <- which(myspecies_coords$individualCount == 0 | myspecies_coords$occurrenceStatus %in% c("absent", "Absent", "ABSENT", "ausente", "Ausente", "AUSENTE"))
-length(absence_rows)
-if (length(absence_rows) > 0) {
-  myspecies_coords <- myspecies_coords[-absence_rows, ]
-}
-
-# let's do some further data cleaning with functions of the 'scrubr' package (but note this cleaning is not exhaustive!)
-nrow(myspecies_coords)
-myspecies_coords <- coord_incomplete(coord_imprecise(coord_impossible(coord_unlikely(myspecies_coords))))
-nrow(myspecies_coords)
-
-# map the cleaned occurrence data:
-map("world", xlim = range(myspecies_coords$decimalLongitude), ylim = range(myspecies_coords$decimalLatitude))  # if the map doesn't appear right at first, run this command again
-points(myspecies_coords[ , c("decimalLongitude", "decimalLatitude")], col = myspecies_coords$species, pch = ".")
-# possible erroneous points e.g. on the Equator (lat and lon = 0) should have disappeared now
-
-# also eliminate presences with reported coordinate uncertainty (location error, spatial resolution) larger than 5 km (5000 m):
-myspecies_coords <- coord_uncertain(myspecies_coords, coorduncertainityLimit = 5000)
-nrow(myspecies_coords)
-# but note that this will only get rid of records where coordinate uncertainty is adequately reported, which may not always be the case! Careful mapping and visual inspection is necessary
-
-# map the cleaned occurrence records with a different colour on top of the raw ones:
-points(myspecies_coords[ , c("decimalLongitude", "decimalLatitude")], pch = 20, cex = 0.5, col = "turquoise")
