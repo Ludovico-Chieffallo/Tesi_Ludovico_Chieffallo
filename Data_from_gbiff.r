@@ -4,7 +4,6 @@
 
 
 library(rgbif)
-library(scrubr)  #?
 library(maps)
 
 
