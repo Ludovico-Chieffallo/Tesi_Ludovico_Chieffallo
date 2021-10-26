@@ -1,4 +1,4 @@
-#Here we can clean the data. The quality of data is very important in a correct statistical analysis!
+#Here we can clean the data. The quality of data is very important for a correct statistical analysis!
 
 #Step 1: We can install the packages for work. We can install only "Tidyverse", however i had some errors. For solve this problem i just installed also "dplyr".
 install.packages("tidyverse")
