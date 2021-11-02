@@ -8,12 +8,10 @@ Worldclim<-raster::getData('worldclim', var='bio', res=2.5) #Valid resolutions a
 
 # envData<-crop(Worldclim, extent(-12, 25, 36, 60)) approssimativo
 
-Russia <- Europe %>% 
-       filter(
-        str_detect(name_long, 'Russia')
-        ) %>% 
-       select(name_long, geometry) %>% 
-       {. ->> russia})
+Europe <- Europe %>%
+  dplyr::select(geometry,name_long)  %>%  #Be careful, the class names of your dataset may be different!                         
+  filter(name_long!='Russian Federation')
+  
 envData<-crop(Worldclim, Europe)
 plot(envData)
 EuropePred <- mask(envData, Europe)
