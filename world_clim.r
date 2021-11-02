@@ -1,5 +1,5 @@
 library(raster)
-library(rnaturalearth)
+library(rnaturalearth) #se ti dà errore fammi sapere perchè io ho avuto problemi, nel caso saprei come risolverli
 library(tidyverse)
 library(dplyr)
   
@@ -13,6 +13,5 @@ Europe <- Europe %>%
   filter(name_long!='Russian Federation')
   
 envData<-crop(Worldclim, Europe)
-plot(envData)
 EuropePred <- mask(envData, Europe)
 
