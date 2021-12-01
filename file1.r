@@ -69,3 +69,16 @@ points(miniogeo)
 bio1<-crop(Worldclim,e)
 plot(bio1[[1]])
 points(miniogeo,pch=20, cex=0.2)
+
+#----
+install.packages("rworldxtra")
+library(rworldxtra)
+library(rworldmap)
+newmap <- getMap(resolution = "low")
+maphigh<- getMap(resolution = "high")
+plot(newmap, xlim = c(-10, 35), ylim = c(40,55), asp = 1)
+plot(maphigh, xlim = c(-10, 35), ylim = c(40,55), asp=1)
+points(miniogeo,pch=20, cex=0.4, col="red")
+
+str(newmap)
+str(maphigh)
