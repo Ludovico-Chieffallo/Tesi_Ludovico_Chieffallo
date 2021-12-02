@@ -180,5 +180,8 @@ head(xypMinio)
 
 sample_abxydf$presence<-0
 xypMinio$presence<-1
+
+#merge 2 dataframe
+
 minPresAbs<-rbind(sample_abxydf, xypMinio)
 view(minPresAbs)
