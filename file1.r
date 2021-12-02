@@ -157,12 +157,6 @@ head(xypMinio)
 xypMinio$species <- NULL
 head(xypMinio)
 
-
-#IL DATAFRAME LO CREO SOLO CON LE COLONNE LON E LAT?
-#O MI CONVIENE AGGIUNGERE ANCHE UNA COLONNA "presenCE" E DARE GIà VALORE 1?
-#COSì DOPO QUANDO DOVRò UNIRE ANCHE IL DATAFRAME DELLE ASSENZE AVRO' GIA' VALORI 1 E 0
-
-
 sample_abxy<- randomPoints(envData, 12500,xypMinio)
 
 plot(sample_abxy)
