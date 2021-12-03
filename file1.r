@@ -22,7 +22,7 @@ library(rworldmap)
 
 #Load data (miniopterus=minio)---- 
 
-gbif("Miniopterus", "schreibersii" , download=F)
+#gbif("Miniopterus", "schreibersii" , download=F)
 minio<- gbif("Miniopterus", "schreibersii" , download=T)
 
 class(minio)
@@ -35,7 +35,7 @@ minio<- minio%>%
 nrow(minio)
 
 miniogeo<-minio%>%
-  select(lon,lat)
+  dplyr::select(lon,lat)
 head(miniogeo)
 
 miniogeo$species<-1
@@ -74,6 +74,7 @@ plot(envData)
 #extend and crop map----
 e<-drawExtent() # europe, draw the square on the map
 
+
 #or Europe <- Europe %>%
 #dplyr::select(geometry,name_long)  %>%  #Be careful, the class names of dataset may be different!                         
 #  filter(name_long!='Russian Federation')
@@ -86,6 +87,11 @@ bio1<-crop(Worldclim,e)
 plot(bio1[[1]])
 points(miniogeo,pch=20, cex=0.2, col="red")
 
+crs(miniogeo)<- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"
+prova <-miniogeo%>%
+st_as_sf()%>%
+st_transform(4326)
+
 
 #plot points in a map from rworldmap (low and high resolution) -----
 library(rworldxtra)
@@ -97,13 +103,15 @@ lowmap<-plot(newmap, xlim = c(-10, 35), ylim = c(40,55), asp = 1)
 highmap<-plot(maphigh, xlim = c(-10, 35), ylim = c(40,55), asp=1)
 points(miniogeo,pch=20, cex=0.5, col="red")
 
+
+
 str(newmap)
 str(maphigh)
 
 #sample 5000----
 
 minioxy<-minio%>%
-  select(lon,lat)%>%
+  dplyr::select(lon,lat)%>%
   drop_na()
 
 set.seed(999) #?
@@ -118,13 +126,13 @@ head(minio5000)
 
 #plot sample5000----
 
-plot(maphigh, xlim = c(-10, 35), ylim = c(40,55), asp=1)
 
 minio5000$species<-1
 head(minio5000)
 
 coordinates(minio5000) <-c("lon","lat")
 
+plot(maphigh, xlim = c(-10, 35), ylim = c(40,55), asp=1)
 points(minio5000,pch=20, cex=0.5, col="red")
 
 #crop map Spain and Portugal----
