@@ -1,4 +1,4 @@
-#libraries----
+#Libraries----
 library(raster)
 library(dplyr)
 library(knitr)
@@ -19,104 +19,118 @@ library(tidyr)
 library(usdm)
 library(rworldxtra)
 library(rworldmap)
+library(maps)
+library(maptools)
+library(rgbif)
 
 #Load data (miniopterus=minio)---- 
 
-#gbif("Miniopterus", "schreibersii" , download=F)
+gbif("Miniopterus", "schreibersii" , download=F)
 minio<- gbif("Miniopterus", "schreibersii" , download=T)
-
-class(minio)
-dim(minio)
 
 table(minio$basisOfRecord)
 
-minio<- minio%>% 
+#Filter data minio----
+
+minio<- minio%>%
+  filter(!is.na(lat))%>%
+  filter(!is.na(lon))%>%
+  filter(year>1980)%>%
   filter(basisOfRecord %in% c("HUMAN_OBSERVATION", "OBSERVATION"))
+
+class(minio)
+dim(minio)
 nrow(minio)
 
+#Create miniogeo (lon, lat)----
 miniogeo<-minio%>%
-  dplyr::select(lon,lat)
+  select(lon,lat)
 head(miniogeo)
 
 miniogeo$species<-1
-miniogeo
-miniogeo<-miniogeo%>%
-  drop_na()
+head(miniogeo)
+nrow(miniogeo)
 
-#create a spatial obj------
+#Create a spatial obj------
 
 class(miniogeo)
 coordinates(miniogeo) <-c("lon","lat") #create a spatial obj
+                                       #or #coordinates(miniogeo) <-  ~ lon + lat 
+                                           #crs(minio) <- "+proj=longlat"
 
-#worlcclim data and europe map-----
+#Set correct datum and epsg----
+crs(miniogeo) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+proj4string(miniogeo) <- CRS("+init=epsg:4326")
 
-Europe <- ne_countries(scale="medium", type="map_units", returnclass="sf", continent="Europe")  #PUò ESSERE MODIFICATO?
+#Worlclim data and Europe map-----
+Europe <- ne_countries(scale="medium", type="map_units", returnclass="sf", continent="Europe")
 Worldclim<-raster::getData('worldclim', var='bio', res=2.5) #Valid resolutions are 0.5, 2.5, 5, and 10 (minutes of a degree). In the case of res=0.5, you must also provide a lon and lat argument for a tile
 
-plot(Worldclim[[1]]) #plot(worldclim$bio1)
-
-points(miniogeo)
-
-#envdata and crop Europe----
-#PROBLEMA NELLA RAPPRESENTAZIONE GRAFICA, I PUNTI NON COINCIDONO(MENTRE IN MAPHIGH SI)
 Europe <- Europe %>%
-  dplyr::select(geometry,name_long)  %>%  #Be careful, the class names of your dataset may be different!                         
+  dplyr::select(geometry,name_long)  %>%  #Be careful, the class names of dataset may be different!                         
   filter(name_long!='Russian Federation')
 
+
+plot(Worldclim[[1]]) #or plot(worldclim$bio1)
+plot(st_geometry(Europe))
+points(miniogeo, cex=0.1)
+
+
+#Envdata and Europepred----
+
 envData<-crop(Worldclim, Europe)
-EuropePred <- mask(envData, Europe)
+EuropePred <- mask(envData, Europe) #we create a new raster without NA value 
 
 
-plot(Europe)
-plot(envData)
-
-
+par(mfrow=c(1,2))
+plot(envData$bio1)
+plot(EuropePred$bio1)
+dev.off()
 #extend and crop map----
-e<-drawExtent() # europe, draw the square on the map
 
+plot(EuropePred[[1]]) #example
+points(miniogeo, cex=0.2)
 
-#or Europe <- Europe %>%
-#dplyr::select(geometry,name_long)  %>%  #Be careful, the class names of dataset may be different!                         
-#  filter(name_long!='Russian Federation')
+#eSpnPrt<-drawExtent() #we can use for check the coordinates
+#xmin       : -10.23854 
+#xmax       : 9.322413 
+#ymin       : 34.29422 
+#ymax       : 55.99065 
 
+extSpnPrt<-extent(c(-11,10,35,56))
+miniogeo<-crop(miniogeo,extSpnPrt) 
+SpainPort<-crop(EuropePred,extSpnPrt)
 
-miniogeo<-crop(miniogeo,e)
+#points(miniogeo)
+#bio1<-crop(Worldclim,e)
+#plot(bio1[[1]])
+#points(miniogeo,pch=20, cex=0.2, col="red")
 
-points(miniogeo)
-bio1<-crop(Worldclim,e)
-plot(bio1[[1]])
-points(miniogeo,pch=20, cex=0.2, col="red")
+plot(SpainPort$bio1)
+points(miniogeo, cex=0.1)
 
-crs(miniogeo)<- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"
-prova <-miniogeo%>%
-st_as_sf()%>%
-st_transform(4326)
-
-
-#plot points in a map from rworldmap (low and high resolution) -----
+#Alternative map rworldmap (low and high resolution)-----
 library(rworldxtra)
 library(rworldmap)
+
 newmap <- getMap(resolution = "low")
 maphigh<- getMap(resolution = "high")
 
-lowmap<-plot(newmap, xlim = c(-10, 35), ylim = c(40,55), asp = 1)
-highmap<-plot(maphigh, xlim = c(-10, 35), ylim = c(40,55), asp=1)
-points(miniogeo,pch=20, cex=0.5, col="red")
+#maphigh<-maphigh%>%
+#  as.data.frame()
+  
+extSpnPrt1<-extent(c(-11,10,35,56))
+miniogeo<-crop(miniogeo,extSpnPrt) 
+SpainPort1<-crop(maphigh,extSpnPrt)  
 
-
-
-str(newmap)
-str(maphigh)
+plot(SpainPort1)
 
 #sample 5000----
 
-minioxy<-minio%>%
-  dplyr::select(lon,lat)%>%
-  drop_na()
+set.seed(999)
 
-set.seed(999) #?
-
-minio5000<- minioxy%>%
+minio5000<- miniogeo%>%
+  as.data.frame()%>%
   sample_n(5000)
 
 view(minio5000)
@@ -126,29 +140,23 @@ head(minio5000)
 
 #plot sample5000----
 
-
-minio5000$species<-1
-head(minio5000)
-
 coordinates(minio5000) <-c("lon","lat")
 
-plot(maphigh, xlim = c(-10, 35), ylim = c(40,55), asp=1)
-points(minio5000,pch=20, cex=0.5, col="red")
+crs(minio5000) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+proj4string(minio5000) <- CRS("+init=epsg:4326")
 
-#crop map Spain and Portugal----
-
-e<-drawExtent()
-minio5000<-crop(minio5000,e) 
-pltminio5000<-crop(maphigh,e)
-plot(pltminio5000)
-points(minio5000,pch=20, cex=0.2, col="red")
+plot(SpainPort$bio1)
+points(minio5000,pch=1, cex=0.09, col="red")
 
 #(Re)create a dataframe----
 
 view(minio5000)
-xypMinio<-as.data.frame(minio5000) #convert to a spatial points in a dataframe
+xypMinio<-as.data.frame(minio5000,row.names = NULL) #convert a spatial points in a dataframe
 view(xypMinio)
+view(minio5000)
 nrow(xypMinio)
+nrow(minio5000)
+
 
 #absences----
 #we set the prevalence to 0,4
@@ -156,40 +164,59 @@ nrow(xypMinio)
 #we need to use randompoints() to find this 12.500 absences
 #but before we need to convert a dataframe with lat=y and long=x
 
-head(xypMinio)
-colnames(xypMinio)[which(names(xypMinio) == "lon")] <- "x" 
-colnames(xypMinio)[which(names(xypMinio) == "lat")] <- "y"
-head(xypMinio)
 
-#Delete the previous column (species)
-xypMinio$species <- NULL
 head(xypMinio)
+colnames(xypMinio) <- c("x","y","presence")
 
-sample_abxy<- randomPoints(envData, 12500,xypMinio)
+#or
+#colnames(xypminio)[which(names(xypMinio) == "lon")] <- "x" 
+#colnames(xypminio)[which(names(xypMinio) == "lat")] <- "y"
+
+
+sample_abxy<- randomPoints(EuropePred, 12500,ext=SpainPort, p=minio5000)
 
 plot(sample_abxy)
 head(sample_abxy)
 nrow(sample_abxy)
 
-#C'E' IL PROBLEMA DEL DATUM, CON EUROPA NON COINCIDONO I DATI MENTRE CON MAPHIGH SI
-#HO PROVATO CON #crs(minio5000)<- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"
-                #crs(envData) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"
-
 
 #Dataframe di dati uniti Pres/abs----
 
 class(sample_abxy)
+
 sample_abxydf<-as.data.frame(sample_abxy)
+
+nrow(sample_abxydf)
 class(sample_abxydf)
 head(sample_abxydf)
 head(xypMinio)
 
 
-
 sample_abxydf$presence<-0
-xypMinio$presence<-1
+
 
 #merge 2 dataframe
-
 minPresAbs<-rbind(sample_abxydf, xypMinio)
+
+#coordinates(minPresAbs)<-c("x","y")
 view(minPresAbs)
+
+
+#-----
+
+predictors<- raster::extract(EuropePred, minPresAbs[,1:2], df=FALSE)
+
+
+sdmData<-data.frame(cbind(minPresAbs, predictors))
+
+sdmData
+view(sdmData)
+
+#----
+
+FavModel<-multGLM(sdmData, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+
+FavModel
+#----
+
+#validation data ??
