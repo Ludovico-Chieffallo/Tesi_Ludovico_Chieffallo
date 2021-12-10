@@ -1,66 +1,47 @@
-library(raster)
-library(dplyr)
-library(knitr)
-library(tidyverse)
-library(ggplot2)
-library(colorist)
-library(rnaturalearth)
-library(dismo)
-library(rnaturalearthdata)
-library(rgeos)
-library(sp)
-library(rgdal)
-library(sf)
-library(maptools)
-library(fuzzySim)
-library(sdm)
-library(tidyr)
-library(usdm)
-library(rworldxtra)
-library(rworldmap)
-library(maps)
-library(maptools)
-library(rgbif)
+mela<-read.csv("melanitta.csv")
 
-#Load data (miniopterus=minio)---- 
 
-gbif("Miniopterus", "schreibersii" , download=F)
-minio<- gbif("Miniopterus", "schreibersii" , download=T)
 
-table(minio$basisOfRecord)
+
+
+table(mela$basisOfRecord)
 
 #Filter data minio----
 
-minio<- minio%>%
-  filter(!is.na(lat))%>%
-  filter(!is.na(lon))%>%
+mela<- mela%>%
+  filter(!is.na(decimalLatitude))%>%
+  filter(!is.na(decimalLongitude))%>%
   filter(year>1980)%>%
+  filter(coordinateUncertaintyInMeters<100)%>%
+  filter(!is.na(coordinateUncertaintyInMeters))%>%
   filter(basisOfRecord %in% c("HUMAN_OBSERVATION", "OBSERVATION"))
 
-class(minio)
-dim(minio)
-nrow(minio)
+class(mela)
+dim(mela)
+nrow(mela)
 
 #Create miniogeo (lon, lat)----
-miniogeo<-minio%>%
-  select(lon,lat)
-head(miniogeo)
+melageo<-mela%>%
+  select(decimalLongitude,decimalLatitude)
+head(melageo)
 
-miniogeo$species<-1
-head(miniogeo)
-nrow(miniogeo)
+melageo$species<-1
+head(melageo)
+nrow(melageo)
 
 #Create a spatial obj------
 
-class(miniogeo)
-coordinates(miniogeo) <-c("lon","lat") #create a spatial obj
-                                       #or #coordinates(miniogeo) <-  ~ lon + lat 
-                                           #crs(minio) <- "+proj=longlat"
-head(miniogeo)
+colnames(melageo) <- c("lon","lat","species")
+class(melageo)
+
+coordinates(melageo) <-c("lon","lat") #create a spatial obj
+#or #coordinates(miniogeo) <-  ~ lon + lat 
+#crs(minio) <- "+proj=longlat"
+
 
 #Set correct datum and epsg----
-crs(miniogeo) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
-proj4string(miniogeo) <- CRS("+init=epsg:4326")
+crs(melageo) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+proj4string(melageo) <- CRS("+init=epsg:4326")
 
 #Worlclim data and Europe map-----
 Europe <- ne_countries(scale="medium", type="map_units", returnclass="sf", continent="Europe")
@@ -73,8 +54,9 @@ Europe <- Europe %>%
 
 plot(Worldclim[[1]]) #or plot(worldclim$bio1)
 plot(st_geometry(Europe))
-points(miniogeo, cex=0.1)
+points(melageo, cex=0.1)
 
+plot(melageo)
 
 #Envdata and Europepred----
 
@@ -98,7 +80,7 @@ points(miniogeo, cex=0.2)
 #ymax       : 55.99065 
 
 extSpnPrt<-extent(c(-11,10,35,56))
-miniogeo<-crop(miniogeo,extSpnPrt) 
+melageo<-crop(melageo,extSpnPrt) 
 SpainPort<-crop(EuropePred,extSpnPrt)
 
 #points(miniogeo)
@@ -107,7 +89,7 @@ SpainPort<-crop(EuropePred,extSpnPrt)
 #points(miniogeo,pch=20, cex=0.2, col="red")
 
 plot(SpainPort$bio1)
-points(miniogeo, cex=0.1)
+points(melageo, cex=0.01)
 
 #Alternative map rworldmap (low and high resolution)-----
 library(rworldxtra)
@@ -118,44 +100,39 @@ maphigh<- getMap(resolution = "high")
 
 #maphigh<-maphigh%>%
 #  as.data.frame()
-  
-extSpnPrt1<-extent(c(-11,10,35,56))
-miniogeo<-crop(miniogeo,extSpnPrt) 
-SpainPort1<-crop(maphigh,extSpnPrt)  
-
-plot(SpainPort1)
 
 #sample 5000----
 
 set.seed(999)
 
-minio5000<- miniogeo%>%
+mela5000<- melageo%>%
   as.data.frame()%>%
   sample_n(5000)
 
-view(minio5000)
-nrow(minio5000)
-head(minio5000)
+view(mela5000)
+nrow(mela5000)
+head(mela5000)
 
 
 #plot sample5000----
 
-coordinates(minio5000) <-c("lon","lat")
+coordinates(mela5000) <-c("lon","lat")
 
-crs(minio5000) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
-proj4string(minio5000) <- CRS("+init=epsg:4326")
+crs(mela5000) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+proj4string(mela5000) <- CRS("+init=epsg:4326")
 
 plot(SpainPort$bio1)
-points(minio5000,pch=1, cex=0.09, col="red")
+points(mela5000,pch=1, cex=0.09, col="red")
+
 
 #(Re)create a dataframe----
 
-view(minio5000)
-xypMinio<-as.data.frame(minio5000,row.names = NULL) #convert a spatial points in a dataframe
-view(xypMinio)
-view(minio5000)
-nrow(xypMinio)
-nrow(minio5000)
+view(mela5000)
+xypmela<-as.data.frame(mela5000,row.names = NULL) #convert a spatial points in a dataframe
+view(xypmela)
+view(xypmela)
+nrow(xypmela)
+nrow(xypmela)
 
 
 #absences----
@@ -165,49 +142,49 @@ nrow(minio5000)
 #but before we need to convert a dataframe with lat=y and long=x
 
 
-head(xypMinio)
-colnames(xypMinio) <- c("x","y","presence")
+head(xypmela)
+colnames(xypmela) <- c("x","y","presence")
 
 #or
 #colnames(xypminio)[which(names(xypMinio) == "lon")] <- "x" 
 #colnames(xypminio)[which(names(xypMinio) == "lat")] <- "y"
 
 
-sample_abxy<- randomPoints(EuropePred, 12500,ext=SpainPort, p=minio5000)
+sample_abxymela<- randomPoints(EuropePred, 12500,ext=SpainPort, p=mela5000)
 
-plot(sample_abxy)
-head(sample_abxy)
-nrow(sample_abxy)
+plot(sample_abxymela)
+head(sample_abxymela)
+nrow(sample_abxymela)
 
 
 #Dataframe di dati uniti Pres/abs----
 
-class(sample_abxy)
+class(sample_abxymela)
 
-sample_abxydf<-as.data.frame(sample_abxy)
+sample_abxymeladf<-as.data.frame(sample_abxymela)
 
-nrow(sample_abxydf)
-class(sample_abxydf)
-head(sample_abxydf)
-head(xypMinio)
+nrow(sample_abxymeladf)
+class(sample_abxymeladf)
+head(sample_abxymeladf)
 
 
-sample_abxydf$presence<-0
+xypmela$presence<-1
+sample_abxymeladf$presence<-0
 
 
 #merge 2 dataframe
-minPresAbs<-rbind(sample_abxydf, xypMinio)
+melaPresAbs<-rbind(sample_abxymeladf, xypmela)
 
 #coordinates(minPresAbs)<-c("x","y")
-view(minPresAbs)
+view(melaPresAbs)
 
 
 #-----
 
-predictors<- raster::extract(EuropePred, minPresAbs[,1:2], df=FALSE)
+predictors<- raster::extract(EuropePred, melaPresAbs[,1:2], df=FALSE)
 
 
-sdmData<-data.frame(cbind(minPresAbs, predictors))
+sdmData<-data.frame(cbind(melaPresAbs, predictors))
 
 sdmData
 view(sdmData)
@@ -220,3 +197,5 @@ FavModel
 #----
 
 #validation data ??
+
+
