@@ -177,7 +177,7 @@ FavPred_min<- getPreds(EuropePred, models=FavModel$models, id.col = NULL, Y = FA
 #m_distill <- metrics_distill(FAV_3SP)
 
 # visualize distilled information on a single map
-#map_single(m_distill, p, lambda_i = -5)
+#map_single(m_distill, p, lambda_i = -5)   è UNA BIVARIATA NOOOOO!!!! PROBLEMA
 
 
 ################## ORA LAVORIAMO CON LE PROIEZIONI CLIMATE CHANGE  ######################
@@ -199,11 +199,31 @@ ac_45 <- getData('CMIP5', var='bio', res=10, rcp=45, model='AC', year=50)
 
 AC_model <- stack(ac_45, ac_85)
 
+AC_model_Europe <- crop(AC_model, Europe)
 library(RStoolbox)
 set.seed(999)
-rpc <- rasterPCA(AC_model, nComp=3, spca=TRUE)
+rpc <- rasterPCA(AC_model_Europe, nComp=8, spca=TRUE)
 
-summary(rpc$model)
+summary(rpc$model) # i primi 8 componenti rappresentano circa il 100%...guardare "Proportion of Variance" e settare su rasterPC nComp in base a quanti componenti da 1:n rappresentano quasi la titalità della varinza
 rpc$map
 
+# facciamo la prediction rispetto al rasterstack climate change
+predictors_future<- raster::extract(rpc$map, minPresAbs[,1:2], df=FALSE)
+
+
+sdmData_min_future<-data.frame(cbind(minPresAbs, predictors_future))
+
+
+#----
+
+FavModel_min_future<-multGLM(sdmData_min_future, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+fut_pred <-stack(rpc$map)
+FuturePred_min<- getPreds(fut_pred,models=FavModel_min_future$models, id.col=NULL, Y=FALSE, P = FALSE, Favourability = TRUE)
+
+
+
+
+
+
+#######  QUESTI PASSAGGI VANNO RIPETURI PER LE ALTRE SPECIE E PLOTTATI SU COLORIST ALLO STESSO MODO   #######
 
