@@ -144,21 +144,19 @@ minPresAbs<-rbind(sample_abxydf, xypMinio)
 
 #-----
 
-predictors<- raster::extract(EuropePred, minPresAbs[,1:2], df=FALSE)
+predictors_min<- raster::extract(EuropePred, minPresAbs[,1:2], df=FALSE)
 
 
-sdmData_min<-data.frame(cbind(minPresAbs, predictors))
+sdmData_min<-data.frame(cbind(minPresAbs, predictors_min))
 
 
 #----
 
-FavModel_min<-multGLM(sdmData, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
-
-FavModel
+FavModel_min<-multGLM(sdmData_min, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
 
 # prima di fare getPred bisogna estendere la prediction su tutta l'estensione quindi creo data.frame di values in x e y di tutta l'estensione
 EuropePred <- stack(EuropePred) # it needs to be RasterStack, EuropePred is RasterBrick
-FavPred_min<- getPreds(EuropePred, models=FavModel$models, id.col = NULL, Y = FALSE, P = FALSE, Favourability = TRUE)
+FavPred_min<- getPreds(EuropePred, models=FavModel_min$models, id.col = NULL, Y = FALSE, P = FALSE, Favourability = TRUE)
  
 ################# COME USARE COLORIST  ##############
 
@@ -216,7 +214,7 @@ sdmData_min_future<-data.frame(cbind(minPresAbs, predictors_future))
 
 #----
 
-FavModel_min_future<-multGLM(sdmData_min_future, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_min_future<-multGLM(sdmData_min_future, sp.cols = 3, var.cols=4:8, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
 fut_pred <-stack(rpc$map)
 FuturePred_min<- getPreds(fut_pred,models=FavModel_min_future$models, id.col=NULL, Y=FALSE, P = FALSE, Favourability = TRUE)
 
