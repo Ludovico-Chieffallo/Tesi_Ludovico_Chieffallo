@@ -249,8 +249,8 @@ Fav_union <- fuzzyOverlay(DF_Fav, op = "union")
 Fav_intersect <- cbind(Fav_intersect, FavPred_min_DF[delle colonne x e y]) # ottengo raster usando la funzione rasterfromxyz
 Fav_union <- cbind(Fav_intersect, FavPred_min_DF[delle colonne x e y])
 
-# se non ho capito male quello che esce da map_distill layer specificity è come fav_intersect, forse specificity=0 è il valore di fav_intersect max
+# se non ho capito male quello che esce da map_distill layer specificity è simile a fav_intersect, forse specificity=0 è simila al valore di fav_intersect max ( i due metodi di calcolo probabilmente sono diveri)
 
-# proviamo ad sovrapporre i due layer rispetto a specifity = 0 e fav_ intersect = max ... dovrebbero essere la stessa cosa. 
+# proviamo ad sovrapporre i due layer rispetto a specifity = 0 e fav_ intersect = max ... tipo plotto con ggplot2 sopra a map_single un poligono che riprende l'area di fav_intersect max (sulla vignetta colorist in basso c'è il tutorial per ggplot2). 
 # TROVA UN MODO PER FARLO E RAPPRESENTARLO SULLA MAPPA, nel caso ci guardiamo assieme!!!
 
