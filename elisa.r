@@ -181,7 +181,14 @@ FavPred_min<- getPreds(EuropePred, models=FavModel$models, id.col = NULL, Y = FA
 
 
 ################## ORA LAVORIAMO CON LE PROIEZIONI CLIMATE CHANGE  ######################
+# TEORIA:    https://www.wcrp-climate.org/images/modelling/WGCM/CMIP/CMIP6FinalDesign_GMD_180329.pdf
+#            https://www.worldclim.org/data/cmip6/cmip6_clim2.5m.html
+
+# https://www.worldclim.org/data/cmip6/cmip6_clim2.5m.html sceglierei dal 2021-2040, risoluzione 2.5, scaricare tutti e 4 ssp rispetto a bc....scegli il modello che ti sembra più appropriato!
+
 
 
 # ora carico i predictors in projection futura + faccio PCA per raster (????) o prima devo trasformare in data.frame e poi raster???
-#----
+
+
+#ESEMPIO PCA CON MODELLI CMIP5 DA EFFETTUARE PER CMIP6
