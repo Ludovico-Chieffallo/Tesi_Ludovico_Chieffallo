@@ -175,7 +175,7 @@ FavPred_min<- getPreds(EuropePred, models=FavModel_min$models, id.col = NULL, Y 
 #m_distill <- metrics_distill(FAV_3SP)
 
 # visualize distilled information on a single map
-#map_single(m_distill, p, lambda_i = -5)   è UNA BIVARIATA NOOOOO!!!! PROBLEMA
+#map_single(m_distill, p, lambda_i = -5)  colore in comune indica zone equamente condivise dalle specie... vediamo cosa si può ottenere da fuzzyOverlay e se posso confrontare i due dati
 
 
 ################## ORA LAVORIAMO CON LE PROIEZIONI CLIMATE CHANGE  ######################
@@ -221,7 +221,33 @@ FuturePred_min<- getPreds(fut_pred,models=FavModel_min_future$models, id.col=NUL
 
 
 
-
-
 #######  QUESTI PASSAGGI VANNO RIPETURI PER LE ALTRE SPECIE E PLOTTATI SU COLORIST ALLO STESSO MODO   #######
+
+########## CONFRONTO PREDICTION PRESENTE FUTURO #########
+
+dif_minPresFut <- (FavPred_min-FuturePred_min)
+plot(dif_minPresFut)
+min_fuzzyRange <- fuzzyRangeChangee(FavPred_min, FuturePred_min)
+
+
+
+
+########## LAVORO CHE VA FATTO UNA VOLTA CHE HAI LA FAV PER TUTTE LE SPECIE ##########
+########## CONFRONTO PLOT COLORIST E FUZZYSIM...PROVIAMO UN PLOT UNICO???? ##########
+
+
+#in teoria lo dovrei fare su la prediction di tutta europa quindi....
+FavPred_min_DF <- as.data.frame(FavPred_min, xy=TRUE)
+FavPred_mela_DF <- as.data.frame(FavPred_mela)
+FavPred_quercus_DF <- as.data.frame(FavPred_quercus)
+
+DF_Fav <- cbind(FavPred_min_DF[aggiungo solo colonna dei valori], FavPred_mela_DF, FavPred_quercus_DF)
+
+Fav_intersect <- fuzzyOverlay(DF_Fav, op = "intersection")
+Fav_union <- fuzzyOverlay(DF_Fav, op = "union")
+
+Fav_intersect <- cbind(Fav_intersect, FavPred_min_DF[delle colonne x e y]) # ottengo raster usando la funzione rasterfromxyz
+Fav_union <- cbind(Fav_intersect, FavPred_min_DF[delle colonne x e y])
+
+
 
