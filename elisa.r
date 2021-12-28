@@ -113,7 +113,7 @@ nrow(minio5000)
 #but before we need to convert a dataframe with lat=y and long=x
 
 
-colnames(xypMinio) <- c("x","y","presence")
+colnames(xypMinio) <- c("x","y","presence") 
 
 #or
 #colnames(xypminio)[which(names(xypMinio) == "lon")] <- "x" 
@@ -147,20 +147,40 @@ minPresAbs<-rbind(sample_abxydf, xypMinio)
 predictors<- raster::extract(EuropePred, minPresAbs[,1:2], df=FALSE)
 
 
-sdmData<-data.frame(cbind(minPresAbs, predictors))
+sdmData_min<-data.frame(cbind(minPresAbs, predictors))
 
 
 #----
 
-FavModel<-multGLM(sdmData, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_min<-multGLM(sdmData, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
 
 FavModel
 
 # prima di fare getPred bisogna estendere la prediction su tutta l'estensione quindi creo data.frame di values in x e y di tutta l'estensione
+EuropePred <- stack(EuropePred) # it needs to be RasterStack, EuropePred is RasterBrick
+FavPred_min<- getPreds(EuropePred, models=FavModel$models, id.col = NULL, Y = FALSE, P = FALSE, Favourability = TRUE)
+ 
+################# COME USARE COLORIST  ##############
 
-# FavPred<- getPreds(VartotWorld1, models=FavModel$models, id.col = NULL, Y = FALSE, P = TRUE, Favourability = TRUE)
-#  PredDataFav=data.frame("x" = XYworld$x, "y"=XYworld$y, "fav" = FavPred$pres_F)
-#  MPFS<- rasterFromXYZ(PredDataFav) 
+#HAI TUTTE E 3 LE FAVOURABILITY IN RASTERLAYER
+
+#1)FAI UNO STACK DEI 3 LAYER ES: FAV_3SP <- STACK("FAV1", "FAV2" "FAV3") DOVE FAV 1 è FavPred_min
+#2) m<- metrics_pull(FAV_3SP)
+
+# assign a color palette
+#p <- palette_set(FAV_3SP)
+
+# generate maps for each individual
+#map_multiples(m, p, ncol = 2, lambda_i = -5, labels = names(elephant_ud))
+
+#3)distill distribution information across individuals
+#m_distill <- metrics_distill(FAV_3SP)
+
+# visualize distilled information on a single map
+#map_single(m_distill, p, lambda_i = -5)
+
+
+################## ORA LAVORIAMO CON LE PROIEZIONI CLIMATE CHANGE  ######################
 
 
 # ora carico i predictors in projection futura + faccio PCA per raster (????) o prima devo trasformare in data.frame e poi raster???
