@@ -184,7 +184,7 @@ FavPred_min<- getPreds(EuropePred, models=FavModel$models, id.col = NULL, Y = FA
 # TEORIA:    https://www.wcrp-climate.org/images/modelling/WGCM/CMIP/CMIP6FinalDesign_GMD_180329.pdf
 #            https://www.worldclim.org/data/cmip6/cmip6_clim2.5m.html
 
-# https://www.worldclim.org/data/cmip6/cmip6_clim2.5m.html sceglierei dal 2021-2040, risoluzione 2.5, scaricare tutti e 4 ssp rispetto a bc....scegli il modello che ti sembra più appropriato!
+# https://www.worldclim.org/data/cmip6/cmip6_clim2.5m.html sceglierei dal 2021-2040, risoluzione 2.5 (stessa di EuropePred), scaricare tutti e 4 ssp rispetto a bc....scegli il modello che ti sembra più appropriato!
 
 
 
@@ -192,3 +192,18 @@ FavPred_min<- getPreds(EuropePred, models=FavModel$models, id.col = NULL, Y = FA
 
 
 #ESEMPIO PCA CON MODELLI CMIP5 DA EFFETTUARE PER CMIP6
+
+ac_85 <- getData('CMIP5', var='bio', res=10, rcp=85, model='AC', year=50)
+
+ac_45 <- getData('CMIP5', var='bio', res=10, rcp=45, model='AC', year=50)
+
+AC_model <- stack(ac_45, ac_85)
+
+library(RStoolbox)
+set.seed(999)
+rpc <- rasterPCA(AC_model, nComp=3, spca=TRUE)
+
+summary(rpc$model)
+rpc$map
+
+
