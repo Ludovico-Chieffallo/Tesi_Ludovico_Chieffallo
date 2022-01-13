@@ -157,7 +157,12 @@ FavModel_min<-multGLM(sdmData_min, sp.cols = 3, var.cols=4:22, family = "binomia
 # prima di fare getPred bisogna estendere la prediction su tutta l'estensione quindi creo data.frame di values in x e y di tutta l'estensione
 EuropePred <- stack(EuropePred) # it needs to be RasterStack, EuropePred is RasterBrick
 FavPred_min<- getPreds(EuropePred, models=FavModel_min$models, id.col = NULL, Y = FALSE, P = FALSE, Favourability = TRUE)
- 
+
+# facciamo un ROC e AUC
+
+
+
+
 ################# COME USARE COLORIST  ##############
 
 #HAI TUTTE E 3 LE FAVOURABILITY IN RASTERLAYER
@@ -204,9 +209,11 @@ rpc <- rasterPCA(AC_model_Europe, nComp=8, spca=TRUE)
 
 summary(rpc$model) # i primi 8 componenti rappresentano circa il 100%...guardare "Proportion of Variance" e settare su rasterPC nComp in base a quanti componenti da 1:n rappresentano quasi la titalità della varinza
 rpc$map
+###### TUTTO QUESTO LAVORO SAREBBE FIGO MA DEV'ESSERE CORRETTO E COMPLETTATO PER PRODOTTI MATRICIALI ( SOTTO COSIGLIO DI FRANCESCO SABATINI) QUINDI EVITEREI PCA E SCEGLIEREI SOLO 1 MODELLO E 1 SSP
+
 
 # facciamo la prediction rispetto al rasterstack climate change
-predictors_future<- raster::extract(rpc$map, minPresAbs[,1:2], df=FALSE)
+predictors_future<- raster::extract(rpc$map, minPresAbs[,1:2], df=FALSE) # quindi al posto di rcp$map metterai lo stck che avrai dal file scaricato sceglendo 1 modello e uno dei corrispettivi ssp
 
 
 sdmData_min_future<-data.frame(cbind(minPresAbs, predictors_future))
