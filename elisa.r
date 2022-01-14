@@ -185,7 +185,9 @@ FavPred_min<- getPreds(EuropePred, models=FavModel_min$models, id.col = NULL, Y 
 
 ################## ORA LAVORIAMO CON LE PROIEZIONI CLIMATE CHANGE  ######################
 # TEORIA:    https://www.wcrp-climate.org/images/modelling/WGCM/CMIP/CMIP6FinalDesign_GMD_180329.pdf
-#            https://www.worldclim.org/data/cmip6/cmip6_clim2.5m.html
+#            https://www.worldclim.org/data/cmip6/cmip6_clim2.5m.html   #link risoluzione che ci serve
+
+#scegliere uno dei modelli e una delle proiezioni per il modello, scegliere in seguito le variabili bio-climatiche (bc)
 
 # https://www.worldclim.org/data/cmip6/cmip6_clim2.5m.html sceglierei dal 2021-2040, risoluzione 2.5 (stessa di EuropePred), scaricare tutti e 4 ssp rispetto a bc....scegli il modello che ti sembra più appropriato!
 
