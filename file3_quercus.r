@@ -1,30 +1,4 @@
-#Libraries----
-library(raster)
-library(dplyr)
-library(knitr)
-library(tidyverse)
-library(ggplot2)
-library(colorist)
-library(rnaturalearth)
-library(dismo)
-library(rnaturalearthdata)
-library(rgeos)
-library(sp)
-library(rgdal)
-library(sf)
-library(maptools)
-library(fuzzySim)
-library(sdm)
-library(tidyr)
-library(usdm)
-library(rworldxtra)
-library(rworldmap)
-library(maps)
-library(maptools)
-library(rgbif)
-library(openxlsx)
-
-#Load data (quercus)---- 
+#import data quercus ---- 
 
 quercus<-read.csv("quercus.csv")
 View(quercus)
@@ -44,26 +18,17 @@ class(quercus)
 dim(quercus)
 nrow(quercus)
 
-#Create miniogeo (lon, lat)----
+#Create quercgeo (lon, lat)----
 
 quercgeo<-quercus%>%
   select(decimalLongitude,decimalLatitude)
 head(quercgeo)
 
 quercgeo$species<-1
-head(quercgeo)
-nrow(quercgeo)
+
 colnames(quercgeo) <- c("lon","lat","species")
-view(quercgeo)
+class(quercgeo)
 head(quercgeo)
-
-#Convert in numeric class----
-
-#If is not numeric class
-#lon is class "character", we need to convert to numeric
-
-quercgeo$lon<- as.numeric(gsub("\\." ,"", quercgeo$lon))
-
 
 #Create a spatial obj------
 
@@ -122,60 +87,15 @@ proj4string(querc5000) <- CRS("+init=epsg:4326")
 
 plot(EuropePred$bio1)
 points(querc5000,pch=1, cex=0.1, col="red")
-plot(querc5000)
+
 str(querc5000)
 plot(st_geometry(Europe))
-points(querc5000)
+points(querc5000,pch=1, cex=0.1, col="red")
 
-
-
-#extend and crop map----
-
-plot(EuropePred[[1]]) #example
-points(querc5000, cex=0.2)
-
-#eSpnPrt<-drawExtent() #we can use for check the coordinates
-#xmin       : -10.23854 
-#xmax       : 9.322413 
-#ymin       : 34.29422 
-#ymax       : 55.99065 
-
-extSpnPrt<-extent(c(-11,10,35,56))
-quercgeo<-crop(quercgeo,extSpnPrt) 
-SpainPort<-crop(EuropePred,extSpnPrt)
-
-#points(miniogeo)
-#bio1<-crop(Worldclim,e)
-#plot(bio1[[1]])
-#points(miniogeo,pch=20, cex=0.2, col="red")
-
-plot(SpainPort$bio1)
-points(querc5000, cex=0.1)
-
-#Alternative map rworldmap (low and high resolution)-----
-library(rworldxtra)
-library(rworldmap)
-
-newmap <- getMap(resolution = "low")
-maphigh<- getMap(resolution = "high")
-
-#maphigh<-maphigh%>%
-#  as.data.frame()
-
-extSpnPrt1<-extent(c(-11,10,35,56))
-quercgeo<-crop(quercgeo,extSpnPrt) 
-SpainPort1<-crop(maphigh,extSpnPrt)  
-
-plot(SpainPort1)
-crs(SpainPort1) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
-proj4string(SpainPort1) <- CRS("+init=epsg:4326")
-
-points(miniogeo)
 
 #(Re)create a dataframe----
 
 xypQuerc<-as.data.frame(querc5000,row.names = NULL) #convert a spatial points in a dataframe
-view(xypQuerc)
 view(xypQuerc)
 nrow(xypQuerc)
 
@@ -191,11 +111,11 @@ head(xypQuerc)
 colnames(xypQuerc) <- c("x","y","presence")
 
 #or
-#colnames(xypminio)[which(names(xypMinio) == "lon")] <- "x" 
-#colnames(xypminio)[which(names(xypMinio) == "lat")] <- "y"
+#colnames(xypminio)[which(names(xypQuerc) == "lon")] <- "x" 
+#colnames(xypminio)[which(names(xypQuerc) == "lat")] <- "y"
 
 
-sample_abxyQuerc<- randomPoints(EuropePred, 12500,ext=SpainPort, p=querc5000)
+sample_abxyQuerc<- randomPoints(EuropePred, 12500, p=querc5000)
 
 plot(sample_abxyQuerc)
 head(sample_abxyQuerc)
@@ -208,37 +128,27 @@ class(sample_abxyQuerc)
 
 sample_abxyQuercdf<-as.data.frame(sample_abxyQuerc)
 
-nrow(sample_abxyQuercdf)
-class(sample_abxyQuercdf)
-head(sample_abxyQuercdf)
-
-
 sample_abxyQuercdf$presence<-0
 xypQuerc$presence<-1
 
 #merge 2 dataframe
 quercPresAbs<-rbind(sample_abxyQuercdf, xypQuerc)
 
-#coordinates(minPresAbs)<-c("x","y")
 view(quercPresAbs)
 
 
-#-----
+#Predictors and sdm data-----
 
-predictors<- raster::extract(EuropePred, quercPresAbs[,1:2], df=FALSE)
+predictors_quer<- raster::extract(EuropePred, quercPresAbs[,1:2], df=FALSE)
 
 
-sdmData<-data.frame(cbind(quercPresAbs, predictors))
+sdmData_quer<-data.frame(cbind(quercPresAbs, predictors_quer))
 
-sdmData
-view(sdmData)
+sdmData_quer
 
-#----
 
-FavModel<-multGLM(sdmData, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+#favourability model----
+
+FavModel_quer<-multGLM(sdmData, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
 
 FavModel
-#----
-
-#validation data ?
-
