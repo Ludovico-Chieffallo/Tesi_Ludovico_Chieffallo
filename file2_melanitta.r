@@ -160,3 +160,7 @@ view(sdmData)
 FavModel_mela<-multGLM(sdmData_mela, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
 
 FavModel
+
+#Getpred mela----
+EuropePred <- stack(EuropePred) # it needs to be RasterStack, EuropePred is RasterBrick
+FavPred_mela<- getPreds(EuropePred, models=FavModel_mela$models, id.col = NULL, Y = FALSE, P = FALSE, Favourability = TRUE)
