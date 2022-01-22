@@ -150,7 +150,7 @@ view(melaPresAbs)
 predictors_mela<- raster::extract(EuropePred, melaPresAbs[,1:2], df=FALSE)
 
 
-sdmData_mela<-data.frame(cbind(melaPresAbs, predictors))
+sdmData_mela<-data.frame(cbind(melaPresAbs, predictors_mela))
 
 sdmData_mela
 view(sdmData)
