@@ -1,26 +1,27 @@
+#Import data from setwd()----
+setwd("c:/tesi/tesi")
+
 mela<-read.csv("melanitta.csv")
-
-
-
-
 
 table(mela$basisOfRecord)
 
-#Filter data minio----
+#Filter data melanitta----
 
 mela<- mela%>%
   filter(!is.na(decimalLatitude))%>%
   filter(!is.na(decimalLongitude))%>%
+  filter(!is.na(countryCode))%>%
   filter(year>1980)%>%
   filter(coordinateUncertaintyInMeters<100)%>%
   filter(!is.na(coordinateUncertaintyInMeters))%>%
+  filter(countryCode !="US" & countryCode !="PM")%>%
   filter(basisOfRecord %in% c("HUMAN_OBSERVATION", "OBSERVATION"))
 
 class(mela)
 dim(mela)
 nrow(mela)
 
-#Create miniogeo (lon, lat)----
+#Create melageo (lon, lat)----
 melageo<-mela%>%
   select(decimalLongitude,decimalLatitude)
 head(melageo)
@@ -35,8 +36,8 @@ colnames(melageo) <- c("lon","lat","species")
 class(melageo)
 
 coordinates(melageo) <-c("lon","lat") #create a spatial obj
-#or #coordinates(miniogeo) <-  ~ lon + lat 
-#crs(minio) <- "+proj=longlat"
+#or #coordinates(melageo) <-  ~ lon + lat 
+
 
 
 #Set correct datum and epsg----
@@ -68,39 +69,6 @@ par(mfrow=c(1,2))
 plot(envData$bio1)
 plot(EuropePred$bio1)
 dev.off()
-#extend and crop map----
-
-plot(EuropePred[[1]]) #example
-points(miniogeo, cex=0.2)
-
-#eSpnPrt<-drawExtent() #we can use for check the coordinates
-#xmin       : -10.23854 
-#xmax       : 9.322413 
-#ymin       : 34.29422 
-#ymax       : 55.99065 
-
-extSpnPrt<-extent(c(-11,10,35,56))
-melageo<-crop(melageo,extSpnPrt) 
-SpainPort<-crop(EuropePred,extSpnPrt)
-
-#points(miniogeo)
-#bio1<-crop(Worldclim,e)
-#plot(bio1[[1]])
-#points(miniogeo,pch=20, cex=0.2, col="red")
-
-plot(SpainPort$bio1)
-points(melageo, cex=0.01)
-
-#Alternative map rworldmap (low and high resolution)-----
-library(rworldxtra)
-library(rworldmap)
-
-newmap <- getMap(resolution = "low")
-maphigh<- getMap(resolution = "high")
-
-#maphigh<-maphigh%>%
-#  as.data.frame()
-
 #sample 5000----
 
 set.seed(999)
@@ -121,7 +89,7 @@ coordinates(mela5000) <-c("lon","lat")
 crs(mela5000) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 proj4string(mela5000) <- CRS("+init=epsg:4326")
 
-plot(SpainPort$bio1)
+plot(st_geometry(Europe))
 points(mela5000,pch=1, cex=0.09, col="red")
 
 
@@ -129,11 +97,9 @@ points(mela5000,pch=1, cex=0.09, col="red")
 
 view(mela5000)
 xypmela<-as.data.frame(mela5000,row.names = NULL) #convert a spatial points in a dataframe
-view(xypmela)
-view(xypmela)
-nrow(xypmela)
-nrow(xypmela)
 
+view(xypmela)
+nrow(xypmela)
 
 #absences----
 #we set the prevalence to 0,4
@@ -150,7 +116,7 @@ colnames(xypmela) <- c("x","y","presence")
 #colnames(xypminio)[which(names(xypMinio) == "lat")] <- "y"
 
 
-sample_abxymela<- randomPoints(EuropePred, 12500,ext=SpainPort, p=mela5000)
+sample_abxymela<- randomPoints(EuropePred, 12500, p=mela5000)
 
 plot(sample_abxymela)
 head(sample_abxymela)
@@ -179,23 +145,18 @@ melaPresAbs<-rbind(sample_abxymeladf, xypmela)
 view(melaPresAbs)
 
 
-#-----
+#Predictors and sdm data-----
 
-predictors<- raster::extract(EuropePred, melaPresAbs[,1:2], df=FALSE)
+predictors_mela<- raster::extract(EuropePred, melaPresAbs[,1:2], df=FALSE)
 
 
-sdmData<-data.frame(cbind(melaPresAbs, predictors))
+sdmData_mela<-data.frame(cbind(melaPresAbs, predictors))
 
-sdmData
+sdmData_mela
 view(sdmData)
 
-#----
+#favourability model----
 
-FavModel<-multGLM(sdmData, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel<-multGLM(sdmData_mela, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
 
 FavModel
-#----
-
-#validation data ??
-
-
