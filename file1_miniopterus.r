@@ -57,6 +57,7 @@ class(miniogeo)
 coordinates(miniogeo) <-c("lon","lat") #create a spatial obj
                                        #or #coordinates(miniogeo) <-  ~ lon + lat 
                                            #crs(minio) <- "+proj=longlat"
+head(miniogeo)
 
 #Set correct datum and epsg----
 crs(miniogeo) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
@@ -86,6 +87,7 @@ par(mfrow=c(1,2))
 plot(envData$bio1)
 plot(EuropePred$bio1)
 dev.off()
+
 #extend and crop map----
 
 plot(EuropePred[[1]]) #example
@@ -110,20 +112,17 @@ plot(SpainPort$bio1)
 points(miniogeo, cex=0.1)
 
 #Alternative map rworldmap (low and high resolution)-----
-library(rworldxtra)
-library(rworldmap)
+#library(rworldxtra)
+#library(rworldmap)
 
-newmap <- getMap(resolution = "low")
-maphigh<- getMap(resolution = "high")
-
-#maphigh<-maphigh%>%
-#  as.data.frame()
+#newmap <- getMap(resolution = "low")
+#maphigh<- getMap(resolution = "high"
   
-extSpnPrt1<-extent(c(-11,10,35,56))
-miniogeo<-crop(miniogeo,extSpnPrt) 
-SpainPort1<-crop(maphigh,extSpnPrt)  
+#extSpnPrt1<-extent(c(-11,10,35,56))
+#miniogeo<-crop(miniogeo,extSpnPrt) 
+#SpainPort1<-crop(maphigh,extSpnPrt)  
 
-plot(SpainPort1)
+#plot(SpainPort1)
 
 #sample 5000----
 
@@ -202,21 +201,25 @@ minPresAbs<-rbind(sample_abxydf, xypMinio)
 view(minPresAbs)
 
 
-#-----
 
-predictors<- raster::extract(EuropePred, minPresAbs[,1:2], df=FALSE)
+#Predictor and sdm data-----
 
 
-sdmData<-data.frame(cbind(minPresAbs, predictors))
+predictors_min<- raster::extract(EuropePred, minPresAbs[,1:2], df=FALSE)
 
-sdmData
-view(sdmData)
 
-#----
+sdmData_min<-data.frame(cbind(minPresAbs, predictors_min))
 
-FavModel<-multGLM(sdmData, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+sdmData_min
+view(sdmData_min)
+
+#favourability model----
+
+FavModel_min<-multGLM(sdmData, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
 
 FavModel
-#----
+#get pred----
 
-#validation data ??
+#prima di fare getPred bisogna estendere la prediction su tutta l'estensione quindi creo data.frame di values in x e y di tutta l'estensione
+EuropePred <- stack(EuropePred) # it needs to be RasterStack, EuropePred is RasterBrick
+FavPred_min<- getPreds(EuropePred, models=FavModel_min$models, id.col = NULL, Y = FALSE, P = FALSE, Favourability = TRUE)
