@@ -1,28 +1,412 @@
-#Uso di colorist----
+#Libraries----
+library(raster)
+library(dplyr)
+library(knitr)
+library(tidyverse)
+library(ggplot2)
+library(colorist)
+library(rnaturalearth)
+library(dismo)
+library(rnaturalearthdata)
+library(rgeos)
+library(sp)
+library(rgdal)
+library(sf)
+library(maptools)
+library(fuzzySim)
+library(sdm)
+library(tidyr)
+library(usdm)
+library(rworldxtra)
+library(rworldmap)
+library(maps)
+library(maptools)
+library(rgbif)
+library(RStoolbox)
+
+#Import data miniopterus---- 
+
+gbif("Miniopterus", "schreibersii" , download=F)
+minio<- gbif("Miniopterus", "schreibersii" , download=T)
+#Import data melanitta----
+setwd("c:/tesi/tesi")
+
+mela<-read.csv("melanitta.csv")
+
+#Import data quercus ---- 
+
+quercus<-read.csv("quercus.csv")
+
+#Filter data miniopterus----
+
+table(minio$basisOfRecord)
+
+minio<- minio%>%
+  filter(!is.na(lat))%>%
+  filter(!is.na(lon))%>%
+  filter(year>1980)%>%
+  filter(basisOfRecord %in% c("HUMAN_OBSERVATION", "OBSERVATION"))
+
+
+#Filter data melanitta----
+
+table(mela$basisOfRecord)
+
+mela<- mela%>%
+  filter(!is.na(decimalLatitude))%>%
+  filter(!is.na(decimalLongitude))%>%
+  filter(!is.na(countryCode))%>%
+  filter(year>1980)%>%
+  filter(coordinateUncertaintyInMeters<100)%>%
+  filter(!is.na(coordinateUncertaintyInMeters))%>%
+  filter(countryCode !="US" & countryCode !="PM")%>%
+  filter(basisOfRecord %in% c("HUMAN_OBSERVATION", "OBSERVATION"))
+
+#Filter data quercus----
+
+table(quercus$basisOfRecord)
+
+quercus<- quercus%>%
+  filter(!is.na(decimalLatitude))%>%
+  filter(!is.na(decimalLongitude))%>%
+  filter(year>1980)%>%
+  filter(basisOfRecord %in% c("HUMAN_OBSERVATION", "OBSERVATION"))
+
+#Create miniogeo (lon, lat)----
+miniogeo<-minio%>%
+  select(lon,lat)
+head(miniogeo)
+
+miniogeo$species<-1
+head(miniogeo)
+
+
+#Create melageo (lon, lat)----
+melageo<-mela%>%
+  select(decimalLongitude,decimalLatitude)
+head(melageo)
+
+melageo$species<-1
+head(melageo)
+
+
+#Create quercgeo (lon, lat)----
+
+quercgeo<-quercus%>%
+  select(decimalLongitude,decimalLatitude)
+head(quercgeo)
+
+quercgeo$species<-1
+
+#Create a spatial obj miniopterus------
+
+coordinates(miniogeo) <-c("lon","lat") #create a spatial obj
+#or #coordinates(miniogeo) <-  ~ lon + lat 
+#crs(minio) <- "+proj=longlat"
+
+
+#Create a spatial obj melanitta------
+
+colnames(melageo) <- c("lon","lat","species")
+coordinates(melageo) <-c("lon","lat")
+
+
+
+#Create a spatial obj quercus------
+
+colnames(quercgeo) <- c("lon","lat","species")
+coordinates(quercgeo)<-c("lon", "lat")
+
+
+#Set correct datum and epsg miniopterus----
+
+crs(miniogeo) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+proj4string(miniogeo) <- CRS("+init=epsg:4326")
+#Set correct datum and epsg melanitta----
+crs(melageo) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+proj4string(melageo) <- CRS("+init=epsg:4326")
+
+#Set correct datum and epsg quercus----
+crs(quercgeo) <- "+proj=longlat"
+crs(quercgeo) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+
+#Worlclim data and Europe map-----
+Europe <- ne_countries(scale="medium", type="map_units", returnclass="sf", continent="Europe")
+Worldclim<-raster::getData('worldclim', var='bio', res=2.5) #Valid resolutions are 0.5, 2.5, 5, and 10 (minutes of a degree). In the case of res=0.5, you must also provide a lon and lat argument for a tile
+
+Europe <- Europe %>%
+  dplyr::select(geometry,name_long)  %>%  #Be careful, the class names of dataset may be different!                         
+  filter(name_long!='Russian Federation')
+
+
+plot(Worldclim[[1]]) #or plot(worldclim$bio1)
+plot(st_geometry(Europe))
+points(miniogeo, cex=0.1)
+#or
+plot(st_geometry(Europe))
+points(melageo, cex=0.1)
+#or
+plot(st_geometry(Europe))
+points(quercgeo, cex=0.1)
+
+#Envdata and Europepred----
+
+envData<-crop(Worldclim, Europe)
+EuropePred <- mask(envData, Europe) #we create a new raster without NA value 
+
+
+par(mfrow=c(1,2))
+plot(envData$bio1)
+plot(EuropePred$bio1)
+dev.off()
+
+#Sample 5000 miniopterus----
+
+set.seed(999)
+
+minio5000<- miniogeo%>%
+  as.data.frame()%>%
+  sample_n(5000)
+
+
+#Sample 5000 melanitta----
+
+set.seed(999)
+
+mela5000<- melageo%>%
+  as.data.frame()%>%
+  sample_n(5000)
+
+
+
+#Sample 5000 quercus----
+set.seed(999)
+
+querc5000<- quercgeo%>%
+  as.data.frame()%>%
+  sample_n(5000)
+
+#Plot sample5000 miniopterus----
+
+coordinates(minio5000) <-c("lon","lat")
+
+crs(minio5000) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+proj4string(minio5000) <- CRS("+init=epsg:4326")
+
+#Plot sample5000 melanitta----
+
+coordinates(mela5000) <-c("lon","lat")
+
+crs(mela5000) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+proj4string(mela5000) <- CRS("+init=epsg:4326")
+
+plot(st_geometry(Europe))
+points(mela5000,pch=1, cex=0.09, col="red")
+
+#Plot sample5000 quercus----
+coordinates(querc5000) <-  ~ lon + lat 
+
+
+
+crs(querc5000) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+proj4string(querc5000) <- CRS("+init=epsg:4326")
+
+plot(EuropePred$bio1)
+points(querc5000,pch=1, cex=0.1, col="red")
+
+str(querc5000)
+plot(st_geometry(Europe))
+points(querc5000,pch=1, cex=0.1, col="red")
+
+#(Re)create a dataframe miniopterus----
+
+xypMinio<-as.data.frame(minio5000,row.names = NULL) #convert a spatial points in a dataframe
+
+
+#(Re)create a dataframe melanitta----
+
+xypmela<-as.data.frame(mela5000,row.names = NULL) #convert a spatial points in a dataframe
+
+
+#(Re)create a dataframe quercus----
+
+xypQuerc<-as.data.frame(querc5000,row.names = NULL) #convert a spatial points in a dataframe
+
+
+
+#Absences miniopterus----
+#we set the prevalence to 0,4
+#prevalence is 0,4=Presence(5000)/absences(x)= 12.500 
+#we need to use randompoints() to find this 12.500 absences
+#but before we need to convert a dataframe with lat=y and long=x
+
+
+head(xypMinio)
+colnames(xypMinio) <- c("x","y","presence")
+
+#or
+#colnames(xypminio)[which(names(xypMinio) == "lon")] <- "x" 
+#colnames(xypminio)[which(names(xypMinio) == "lat")] <- "y"
+
+
+sample_abxy<- randomPoints(EuropePred, 12500, p=minio5000)
+
+plot(sample_abxy)
+
+
+#Absences melanitta----
+
+head(xypmela)
+colnames(xypmela) <- c("x","y","presence")
+
+
+
+sample_abxymela<- randomPoints(EuropePred, 12500, p=mela5000)
+
+plot(sample_abxymela)
+
+
+#Absences quercus----
+
+colnames(xypQuerc) <- c("x","y","presence")
+
+
+sample_abxyQuerc<- randomPoints(EuropePred, 12500, p=querc5000)
+
+plot(sample_abxyQuerc)
+
+
+
+
+#Dataframe di dati uniti Pres/abs miniopterus----
+
+sample_abxydf<-as.data.frame(sample_abxy)
+
+
+sample_abxydf$presence<-0
+
+#merge 2 dataframe
+minPresAbs<-rbind(sample_abxydf, xypMinio)
+
+
+#Dataframe di dati uniti Pres/abs melanitta----
+
+
+sample_abxymeladf<-as.data.frame(sample_abxymela)
+
+xypmela$presence<-1
+sample_abxymeladf$presence<-0
+
+#merge 2 dataframe
+melaPresAbs<-rbind(sample_abxymeladf, xypmela)
+
+
+#Dataframe di dati uniti Pres/abs quercus----
+
+
+sample_abxyQuercdf<-as.data.frame(sample_abxyQuerc)
+
+sample_abxyQuercdf$presence<-0
+xypQuerc$presence<-1
+
+#merge 2 dataframe
+quercPresAbs<-rbind(sample_abxyQuercdf, xypQuerc)
+
+
+#Predictor and sdm data miniopterus-----
+
+predictors_min<- raster::extract(EuropePred, minPresAbs[,1:2], df=FALSE)
+
+
+sdmData_min<-data.frame(cbind(minPresAbs, predictors_min))
+
+sdmData_min
+view(sdmData_min)
+
+#Favourability model miniopterus----
+
+FavModel_min<-multGLM(sdmData_min, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+
+FavModel_min
+#Get pred miniopterus----
+
+#prima di fare getPred bisogna estendere la prediction su tutta l'estensione quindi creo data.frame di values in x e y di tutta l'estensione
+EuropePred <- stack(EuropePred) # it needs to be RasterStack, EuropePred is RasterBrick
+FavPred_min<- getPreds(EuropePred, models=FavModel_min$models, id.col = NULL, Y = FALSE, P = FALSE, Favourability = TRUE)
+
+
+
+
+
+#Predictors and sdm data melanitta-----
+
+predictors_mela<- raster::extract(EuropePred, melaPresAbs[,1:2], df=FALSE)
+
+
+sdmData_mela<-data.frame(cbind(melaPresAbs, predictors_mela))
+
+sdmData_mela
+
+#Favourability model melanitta----
+
+FavModel_mela<-multGLM(sdmData_mela, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+
+FavModel_mela
+
+#Get pred melanitta----
+EuropePred <- stack(EuropePred) # it needs to be RasterStack, EuropePred is RasterBrick
+FavPred_mela<- getPreds(EuropePred, models=FavModel_mela$models, id.col = NULL, Y = FALSE, P = FALSE, Favourability = TRUE)
+
+
+
+
+
+#Predictors and sdm data quercus-----
+
+predictors_quer<- raster::extract(EuropePred, quercPresAbs[,1:2], df=FALSE)
+
+
+sdmData_quer<-data.frame(cbind(quercPresAbs, predictors_quer))
+
+sdmData_quer
+
+
+#Favourability model quercus----
+
+FavModel_quer<-multGLM(sdmData_quer, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+
+FavModel_quer
+
+#Getpred quercus----
+EuropePred <- stack(EuropePred) # it needs to be RasterStack, EuropePred is RasterBrick
+FavPred_quer<- getPreds(EuropePred, models=FavModel_quer$models, id.col = NULL, Y = FALSE, P = FALSE, Favourability = TRUE)
+
+
+
+
+#We can use colorist----
 fav3sp<-stack(FavPred_min,FavPred_mela,FavPred_quer)
 
-#metrics pull----
+#Metrics pull----
 
 metrics<-metrics_pull(fav3sp)
 
-#palette----
+#Palette----
 
 palette<-palette_set(fav3sp)
 
-#map multiples----
+#Map multiples----
 map_multiples(metrics, palette, ncol = 2, lambda_i = -5, labels = names(fav3sp))
 
 
-#metrics distill----
+#Metrics distill----
 metricsdist<- metrics_distill(fav3sp)
 
 
-#Map single
-x<-map_single(metricsdist,palette, lambda_i = 5) #how can i overlap geometry?
+#Map single----
+map_single(metricsdist,palette, lambda_i = 5) #how can i overlap geometry?
 
-
-
-#download and import worldclim for the future----
+#Download and import worldclim for the future----
 
 #ssp126
 prec21_40_126<-brick("wc2.1_2.5m_prec_CNRM-CM6-1_ssp126_2021-2040.tif")
@@ -42,66 +426,55 @@ bioc21_40_585<-brick("wc2.1_2.5m_bioc_CNRM-CM6-1_ssp585_2021-2040.tif")
 #bio1<-getData('CMIP6', var='bio', res=2.5, rcp=85, model='CN', year=50)#how can i choice the rcp(Representative Concentration Pathway)
 #impossible to run because CMPI6 doesn't exist in this function. it is not recognized
 
-#da non fare----
-modelbio<-stack(bioc21_40_126, bioc21_40_585)
-modelbio_Europe <- crop(modelbio, Europe)
 
-library(RStoolbox)
-set.seed(999)
-modelPCA <- rasterPCA(modelbio_Europe, nComp=8, spca=TRUE)
-
-summary(modelPCA$model)
-
-modelPCA$map
+#Prediction rasterstack climate change----
+predictors_future_min<- raster::extract(bioc21_40_126, minPresAbs[,1:2], df=FALSE) 
+predictors_future_mela<- raster::extract(bioc21_40_126, melaPresAbs[,1:2], df=FALSE) 
+predictors_future_querc<- raster::extract(bioc21_40_126, quercPresAbs[,1:2], df=FALSE) 
 
 
- # i primi 8 componenti rappresentano circa il 100%...guardare "Proportion of Variance" e settare su rasterPC nComp in base a quanti componenti da 1:n rappresentano quasi la titalità della varinza
-
-###### TUTTO QUESTO LAVORO SAREBBE FIGO MA DEV'ESSERE CORRETTO E COMPLETTATO PER PRODOTTI MATRICIALI ( SOTTO COSIGLIO DI FRANCESCO SABATINI) QUINDI EVITEREI PCA E SCEGLIEREI SOLO 1 MODELLO E 1 SSP
-
-#
-
-# facciamo la prediction rispetto al rasterstack climate change----
-predictors_future<- raster::extract(bioc21_40_126, minPresAbs[,1:2], df=FALSE) # quindi al posto di rcp$map metterai lo stck che avrai dal file scaricato sceglendo 1 modello e uno dei corrispettivi ssp
+#Dataframe pres/abs and predictors----
+sdmData_min_future<-data.frame(cbind(minPresAbs, predictors_future_min))
+sdmData_mela_future<-data.frame(cbind(melaPresAbs, predictors_future_mela))
+sdmData_querc_future<-data.frame(cbind(quercPresAbs, predictors_future_querc))
 
 
-sdmData_min_future<-data.frame(cbind(minPresAbs, predictors_future))
-
-
-#----
+#Multglm----
 
 FavModel_min_future<-multGLM(sdmData_min_future, sp.cols = 3, var.cols=4:8, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_mela_future<-multGLM(sdmData_mela_future, sp.cols = 3, var.cols=4:8, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_querc_future<-multGLM(sdmData_querc_future, sp.cols = 3, var.cols=4:8, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+
+#Stack bio variables from worldclim----
 fut_pred <-stack(bioc21_40_126)
+
+#We can use getPreds----
 FuturePred_min<- getPreds(fut_pred,models=FavModel_min_future$models, id.col=NULL, Y=FALSE, P = FALSE, Favourability = TRUE)
+FuturePred_mela<- getPreds(fut_pred,models=FavModel_mela_future$models, id.col=NULL, Y=FALSE, P = FALSE, Favourability = TRUE)
+FuturePred_querc<- getPreds(fut_pred,models=FavModel_querc_future$models, id.col=NULL, Y=FALSE, P = FALSE, Favourability = TRUE)
 
 
-
-
-#######  QUESTI PASSAGGI VANNO RIPETURI PER LE ALTRE SPECIE E PLOTTATI SU COLORIST ALLO STESSO MODO   #######
-
-
-
-
-
-
-
-#da fare quando abbiamo i dati di tutte le specie-----
-
-
-
-########## CONFRONTO PREDICTION PRESENTE FUTURO #########
+#Difference between present and future----
 
 dif_minPresFut <- (FavPred_min-FuturePred_min)
+dif_melaPresFut <- (FavPred_mela-FuturePred_mela)
+dif_quercPresFut <- (FavPred_quer-FuturePred_querc)
+
+#Warning message:
+#  In FavPred_quer - FuturePred_querc :
+#  Raster objects have different extents. Result for their intersection is returned
+
 plot(dif_minPresFut)
-min_fuzzyRange <- fuzzyRangeChangee(FavPred_min, FuturePred_min)
+plot(dif_melaPresFut)
+plot(dif_quercPresFut)
 
-
-
-
-########## LAVORO CHE VA FATTO UNA VOLTA CHE HAI LA FAV PER TUTTE LE SPECIE ##########
-########## CONFRONTO PLOT COLORIST E FUZZYSIM...PROVIAMO UN PLOT UNICO???? ##########
-
-
+#Fuzzy(!!!!ERROR!!!!)----
+min_fuzzyRange <- fuzzyRangeChange(FavPred_min, FuturePred_min)
+mela_fuzzyRange <- fuzzyRangeChange(FavPred_mela, FuturePred_mela)
+querc_fuzzyRange <- fuzzyRangeChange(FavPred_quer, FuturePred_querc)
+#Error in fuzzyRangeChange(FavPred_min, FuturePred_min, ylim = c(-1, 1)) : 
+#length(pred1) == length(pred2) is not TRUE
+#LAVORO SU CUI NON SI PUO' LAVORARE ANCORA----
 #in teoria lo dovrei fare su la prediction di tutta europa quindi....
 FavPred_min_DF <- as.data.frame(FavPred_min, xy=TRUE)
 FavPred_mela_DF <- as.data.frame(FavPred_mela)
@@ -119,4 +492,3 @@ Fav_union <- cbind(Fav_intersect, FavPred_min_DF[delle colonne x e y])
 
 # proviamo ad sovrapporre i due layer rispetto a specifity = 0 e fav_ intersect = max ... tipo plotto con ggplot2 sopra a map_single un poligono che riprende l'area di fav_intersect max (sulla vignetta colorist in basso c'è il tutorial per ggplot2). 
 # TROVA UN MODO PER FARLO E RAPPRESENTARLO SULLA MAPPA, nel caso ci guardiamo assieme!!!
-
