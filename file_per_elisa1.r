@@ -243,6 +243,8 @@ colnames(xypMinio) <- c("x","y","presence")
 #colnames(xypminio)[which(names(xypMinio) == "lat")] <- "y"
 
 
+
+
 sample_abxy<- randomPoints(EuropePred, 12500, p=minio5000)
 
 plot(sample_abxy)
@@ -279,7 +281,7 @@ sample_abxydf<-as.data.frame(sample_abxy)
 
 sample_abxydf$presence<-0
 
-#merge 2 dataframe
+#merge 2 dataframe    #########################################################################
 minPresAbs<-rbind(sample_abxydf, xypMinio)
 
 
@@ -291,9 +293,40 @@ sample_abxymeladf<-as.data.frame(sample_abxymela)
 xypmela$presence<-1
 sample_abxymeladf$presence<-0
 
-#merge 2 dataframe
+#merge 2 dataframe   #################### CONTROLLA DA QUI ############################
 melaPresAbs<-rbind(sample_abxymeladf, xypmela)
+predictors_mela<- raster::extract(EuropePred, melaPresAbs[,1:2], df=T)
+predictors_mela <- predictors_mela[,-1] ###### controlla che ci siano tutte le coordinate giuste
+## collinearity test
+Vars_to_remove <- data.frame(BIO=findCorrelation(cor(predictors_mela), cutoff = .6, names = T))
+intersection1 <- colnames(predictors_mela) %in% Vars_to_remove$BIO
+## remove correlated variables
+predictors_mela <- predictors_mela[!intersection1]
+sdmData_mela<- data.frame(pres =melaPresAbs[,1], predictors_mela[1:ncol(predictors_mela)]) #### se pres = melaPresAbs controlla che ci sia solo una colonna pres abs
 
+
+
+
+
+XY<-as.data.frame(EuropePred[[1]], xy=TRUE, na.rm=TRUE)
+PTXY=data.frame("x" = XY$x, "y"=XY$y)
+predictorsDF<- raster::extract(Predictors,PTXY)
+predictorsDF<-data.frame(predictorsDF)
+## remove correlated variables
+intersection2 <- colnames(predictorsDF) %in% Vars_to_remove$BIO
+preds <- predictorsDF[!intersection2]
+
+
+## Favourability
+
+Model<-multGLM(sdmData_mela, sp.cols = 1, var.cols=2:ncol(sdmData_mela), family = "binomial",
+                  step = FALSE, FDR = FALSE, trim = FALSE, Y.prediction = FALSE, 
+                  P.prediction = TRUE, Favourability = TRUE) 
+
+Pred<- getPreds(preds, models=Model$models, id.col = NULL, Y = FALSE, P = FALSE,
+                   Favourability = TRUE)
+PredDataFav_mela=data.frame("x" = XY$x, "y"=XY$y, "fav" = Pred$pres_F)
+fav_mela<- rasterFromXYZ(PredDataFav_mela) 
 
 #Dataframe di dati uniti Pres/abs quercus----
 
