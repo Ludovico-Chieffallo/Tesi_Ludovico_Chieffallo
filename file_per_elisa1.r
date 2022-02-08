@@ -458,3 +458,54 @@ Fav_union <- cbind(Fav_intersect, FavPred_min_DF[delle colonne x e y])
 
 # proviamo ad sovrapporre i due layer rispetto a specifity = 0 e fav_ intersect = max ... tipo plotto con ggplot2 sopra a map_single un poligono che riprende l'area di fav_intersect max (sulla vignetta colorist in basso c'è il tutorial per ggplot2). 
 # TROVA UN MODO PER FARLO E RAPPRESENTARLO SULLA MAPPA, nel caso ci guardiamo assieme!!!
+
+
+
+
+######### PERFORMANCE SDM ##########################
+
+
+
+RocAucFunz <- function(ModelDatabase=NULL,TrainValue = 0.8, TestValue = 0.2) {
+  library(groupdata2)
+  library(ROCR)
+  set.seed(6949)
+  inds <- partition(ModelDatabase, p = c(train = 0.8, test = 0.2))
+  train <- as.data.frame(inds[1])
+  test <- as.data.frame(inds[2])
+  validation<-test
+  training<-train
+  
+  #Favourability
+  Model<-multGLM(training, sp.cols = 1, var.cols=2:ncol(training), family = "binomial",
+                 step = FALSE, FDR = FALSE, trim = FALSE, Y.prediction = FALSE, 
+                 P.prediction = TRUE, Favourability = TRUE)
+  Pred<- getPreds(validation, models=Model$models, id.col = NULL, Y = FALSE, P = TRUE,
+                  Favourability = TRUE)
+  Fav <-prediction(Pred$pres_F, validation$pres, label.ordering = NULL)
+  #ROC
+  ROCperfFAV<-performance(Fav, measure="tpr", x.measure="fpr")
+  #AUC
+  AUCperfFAV<-performance(Fav, measure="auc")
+  AUCperfFAV<-unlist(slot(AUCperfFAV, "y.values"))
+  AUCperfFAV<-round(AUCperfFAV,4)
+ 
+  
+  ROC=ROCperfFAV
+  AUC=AUCperfFAV
+ 
+  
+  
+  Outputs=list("ROC" =ROC, "AUC"=AUC)
+  
+  return(Outputs)
+}
+
+
+#### ModelDatabase= basta che metti il modello, per capirci: Model$models di
+#Model<-multGLM(sdmData_mela, sp.cols = 1, var.cols=2:ncol(sdmData_mela), family = "binomial",
+                  #step = FALSE, FDR = FALSE, trim = FALSE, Y.prediction = FALSE, 
+                  #P.prediction = TRUE, Favourability = TRUE) 
+
+#Pred<- getPreds(preds, models=Model$models, id.col = NULL, Y = FALSE, P = FALSE,
+                  # Favourability = TRUE)
