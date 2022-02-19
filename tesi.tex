@@ -14,11 +14,11 @@
 \usepackage{amsmath}
 \usepackage{latexsym}
 \usepackage{amsthm}
-
+\usepackage{hyperref}
 
 
 %%%%%%%%
-\linespread{1}    %comando per impostare l'interlinea
+\linespread{1.2}    %comando per impostare l'interlinea
 %%%%%%%%
 
 \oddsidemargin=30pt \evensidemargin=20pt %impostano i margini
@@ -40,36 +40,36 @@ Bologna}}}} \rule[0.1cm]{15.8cm}{0.1mm}
 Dipartimento di Scienze Biologiche, Geologiche e Ambientali - BiGeA }}
 \end{center}
 \vspace{6mm}
-\begin{center}
+\begin{center}  
     {Corso di Laurea Magistrale in\\
     \bf Scienze e Gestione della Natura (LM-60)}
 \end{center}
 \vspace{15mm}
 \begin{center}
-{\LARGE{\bf MIXING DISTRIBUTIONS:}}\\  
+{\LARGE{\bf Mixing distributions:}}\\  
 \vspace{3mm}
-{\LARGE{\bf THE COLORIST R PACKAGE APPLIED }}\\
+{\LARGE{\bf the colorist R package applied }}\\
 \vspace{3mm}
-{\LARGE{\bf TO COMMUNITY DISTRIBUTION }}\\
+{\LARGE{\bf to community distribution}}\\
 \vspace{3mm}
-{\LARGE{\bf ESTIMATE}}\\
+{\LARGE{\bf estimate}}\\
 \end{center}
 \vspace{30mm}
 \par
 \noindent
 \begin{minipage}[t]{0.47\textwidth}
 {\large{\bf Relatore:\\
-
 Prof. Duccio Rocchini}}\\
 
 {\large{\bf Correlatori:\\
-
 Elisa Marchetto\\ Enrico Tordoni}}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.47\textwidth}\raggedleft
-{\large{\bf Presentata da:\\
-Ludovico Chieffallo\\}
+{\large{\bf Presentata da:
+\\
+
+Ludovico Chieffallo}\\
 \vspace{3mm}
 Matricola: 0000949523}
 \end{minipage}
@@ -95,10 +95,10 @@ Da scrivere in seguito\ldots                      %\ldots lascia tre puntini
 \clearpage{\pagestyle{empty}\cleardoublepage}%non numera l'ultima pagina sinistra
 \end{titlepage}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\linespread{1.2} 
 \newpage
 \tableofcontents
-
+\linespread{1.5} 
 \newpage
 \section{Abstract}
  xxxx\\
@@ -108,27 +108,50 @@ Da scrivere in seguito\ldots                      %\ldots lascia tre puntini
 \textbf{Keywords}: x,x,x
 
 \newpage
-\section{introduction}
+\section{Introduction}
 kjdfdj
 
 \newpage
-\section{Scopo}
+\section{Aim}
 dff
 
 \newpage
-\section{Metodi}
-kfjnf
+\section{Methods}
+\subsection{Study area}
+The study area chosen for this project was Europe, covering an area of approximately 6,184,800 km2.
+The surface taken into consideration includes both member states of the European Union and external states, however, despite the fact that for historical and cultural reasons there is a part of Russia considered within the European territory of almost 4,000,000 km2, it was chosen to exclude it from the analysis.
+In this vast area we find very varied types of habitats, with a very high rate of biodiversity that makes this surface a natural laboratory for studying the various species and their distribution.
+
+\subsection{Data and filters}
+The data taken into consideration were extracted from the databases of the Global Biodiversity Information Facility (GBIF) (available free of charge at https://www.gbif.org/) between 18 October 2021 and 10 December 2021.
+This data has been carefully filtered, eliminating many parameters taken into account in the initial database.
+First of all, all the occurrence data with coordinates defined as "not available" were eliminated, then all the data were filtered on the basis of observation, keeping only the parameters defined as "human observation" and "observation" thus excluding all museum occurrences, private collections, zoos or other types present that could have distorted our distribution model.
+The data was then filtered by area of interest (Europe excluding European Russia) including the period from 1981 to 2021, therefore for a period of 40 years.
+The year 1981 was carefully chosen as the starting year for our study, since most of the occurrences of interest fell from 1981 onwards for all the species considered.
+Subsequently, all occurrences with an uncertainty in the coordinates greater than 100 meters were excluded, to avoid a too pronounced bias in our model.
+Speaking of databases with very numerous occurrences (in some cases over a million occurrences) this step has allowed us to eliminate many not very useful occurrences in our database, which has made the analysis work faster and more efficient.
+
+\subsection{Worldclim data}
+Worldclim data
+
+For this project, climate data was downloaded from WorldClim (available for free on the website https://www.worldclim.org/data/index.html).
+Worldclim offers an efficient set of past and present data. It has recently implemented its service by adding the possibility to download data regarding future forecasts.
+This data is often used for ecological modeling.
+The 19 bioclimatic variables were downloaded at a spatial resolution of 2.5 minutes (about 4.5 km at the equator). The same parameter was used for both past and future data.
+The 19 variables include: mean annual temperature, mean diurnal interval, isotherm, temperature seasonality, maximum temperature of the hottest month, minimum temperature of the coldest month, annual temperature range, average temperature of the wettest quarter, average temperature of the wettest quarter. dry, mean temperature of the hottest district, mean temperature of the coldest district, annual rainfall, precipitation of the wettest month, precipitation of the driest month, rainfall seasonality, precipitation of the wettest district, precipitation of the driest district, precipitation of the district warmer, colder neighborhood rainfall.
+%DO I ENTER THE COLLINEARITY DATA HERE?
+\subsection{Species}
 
 \newpage
-\section{Risultati}
+\section{Results}
 oijhf
 
 \newpage
-\section{Discussione}
+\section{Discussion}
 kfhj
 
 \newpage
-\section{Conclusioni}
+\section{Conclusion}
 
 yyegd
 
