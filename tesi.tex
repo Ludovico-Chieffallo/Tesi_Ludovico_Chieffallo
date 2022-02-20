@@ -15,6 +15,7 @@
 \usepackage{latexsym}
 \usepackage{amsthm}
 \usepackage{hyperref}
+\usepackage{natbib}
 
 
 %%%%%%%%
@@ -120,7 +121,7 @@ dff
 \subsection{Study area}
 The study area chosen for this project was Europe, covering an area of approximately 6,184,800 km2.
 The surface taken into consideration includes both member states of the European Union and external states, however, despite the fact that for historical and cultural reasons there is a part of Russia considered within the European territory of almost 4,000,000 km2, it was chosen to exclude it from the analysis.
-In this vast area we find very varied types of habitats, with a very high rate of biodiversity that makes this surface a natural laboratory for studying the various species and their distribution.
+In this vast area we found various types of habitats, with a very high rate of biodiversity that makes this surface a natural laboratory for studying the various species and their distribution.
 
 \subsection{Data and filters}
 The data taken into consideration were extracted from the databases of the Global Biodiversity Information Facility (GBIF) (available free of charge at https://www.gbif.org/) between 18 October 2021 and 10 December 2021.
@@ -129,18 +130,70 @@ First of all, all the occurrence data with coordinates defined as "not available
 The data was then filtered by area of interest (Europe excluding European Russia) including the period from 1981 to 2021, therefore for a period of 40 years.
 The year 1981 was carefully chosen as the starting year for our study, since most of the occurrences of interest fell from 1981 onwards for all the species considered.
 Subsequently, all occurrences with an uncertainty in the coordinates greater than 100 meters were excluded, to avoid a too pronounced bias in our model.
-Speaking of databases with very numerous occurrences (in some cases over a million occurrences) this step has allowed us to eliminate many not very useful occurrences in our database, which has made the analysis work faster and more efficient.
+Concerning databases with very numerous occurrences (in some cases over a million occurrences) this step has allowed us to remove many not very useful occurrences in our database, which has made the analysis work faster and more efficient.
 
 \subsection{Worldclim data}
-Worldclim data
 
 For this project, climate data was downloaded from WorldClim (available for free on the website https://www.worldclim.org/data/index.html).
-Worldclim offers an efficient set of past and present data. It has recently implemented its service by adding the possibility to download data regarding future forecasts.
-This data is often used for ecological modeling.
+Worldclim offers an efficient set of past and present data. It has recently implemented its service by adding the possibility to download data regarding future forecasts \citep{wc}, \citep{ey}. This data is often used for ecological modeling \citep{bcw}. 
 The 19 bioclimatic variables were downloaded at a spatial resolution of 2.5 minutes (about 4.5 km at the equator). The same parameter was used for both past and future data.
-The 19 variables include: mean annual temperature, mean diurnal interval, isotherm, temperature seasonality, maximum temperature of the hottest month, minimum temperature of the coldest month, annual temperature range, average temperature of the wettest quarter, average temperature of the wettest quarter. dry, mean temperature of the hottest district, mean temperature of the coldest district, annual rainfall, precipitation of the wettest month, precipitation of the driest month, rainfall seasonality, precipitation of the wettest district, precipitation of the driest district, precipitation of the district warmer, colder neighborhood rainfall.
+The 19 variables include: mean annual temperature, mean diurnal interval, isotherm, temperature seasonality, maximum temperature of the hottest month, minimum temperature of the coldest month, annual temperature range, average temperature of the wettest quarter, average temperature of the wettest quarter. dry, mean temperature of the hottest district, mean temperature of the coldest district, annual rainfall, precipitation of the wettest month, precipitation of the driest month, rainfall seasonality, precipitation of the wettest district, precipitation of the driest district, precipitation of the district warmer, colder neighborhood rainfall 
 %DO I ENTER THE COLLINEARITY DATA HERE?
+
 \subsection{Species}
+To identify the species for this project we used the database of the International Union for Conservation of Nature's Red List of Threatened Species (IUCN red list).
+The IUCN since 1964 has compiled these lists of all species more or less endangered and assesses their survival prospects. Today the IUCN red list represents the most complete inventory of the extinction risk of species globally \citep {IUCN}.
+
+All the species investigated in this project have been carefully selected following some fundamental parameters.
+The first parameter used to select the species was the population trend. We have only chosen species with a decreasing population trend. It must be pointed out that the term "decreasing" is not always synonymous with danger (for example Querus Robur has a very high number of occurrences but the population is decreasing), but it must put us in a position to investigate the causes of this trend and the possible responses in order to preserve the species.
+The distribution and number of occurrences are then taken into consideration. The distribution had to be consistent with the choice of the area designated in the project; therefore, all the selected species were present on the European territory. Subsequently, only species with a number of occurrences greater than 35,000 were chosen. A high number of occurrences allowed us to create a better model with better random sampling capacity and thus to minimize the bias \citep {kaplan} .
+
+\subsubsection{\textit{Melanitta Fusca}} % ricordarsi melanitta in corsivo
+The first species treated was melanitta fusca (Linnaeus, 1758), it is a sea duck with a wide distribution both in central Europe, where it is present in several states, and in northern Europe where most of its occurrences are recorded.
+A part of the occurrences is found in the territory of Asian Russia which, however, we have not considered in our project.
+From surveys in 1992-1993, when the estimate of the wintering population of north-western Europe was estimated at around 933,000 individuals, in the period 2007-2009 there was a decline close to 60\% in the Baltic Sea bringing the count to around 373,000 individuals \citep{skov}.
+Currently the number of natural individuals is estimated at around 141,000-268,000 specimens \citep{IUCN}.
+Melanitta fusca is currently classified as vulnerable in the IUCN red list \citep{IUCN}
+Climate change poses potentially the greatest threat to the species today and in the future \citep{IUCN}. The decrease in the duration of the spring snow cover has been linked to the decline in populations in North America, probably due to trophic maladjustment \citep{drever}.
+
+Directly correlated with climate change, ocean acidification could lead to a decrease in shellfish that make up a large part of the Melanitta diet \citep{stein}, \citep{carb}.
+Another major threat is by-catches in fishing gear, which occur in particular in wintering areas \citep*{dagys}.
+In general, therefore, this species is threatened by various factors: climate change, non-native species and diseases, pollution, hunting.
+It is therefore a kind of interest and Obtaining trend estimates is a top priority \citep{IUCN}.
+
+\subsubsection{\textit{Miniopterus schreibersii}} %ricordarsi in corsivo
+Miniopterus schereibersii (Kuhl, 1817) is a bat of the Miniotteridae family.
+It has a very large range that affects various states of central and eastern Europe.
+The global population of Miniopterus schreibersii is estimated to have decreased by at least 30\% across much of its range \citep{IUCN}. It is currently already extinct in Germany, Ukraine and Austria. In general, the habitat of this species is extremely fragmented. At present this species is classified as vulnerable \citep{IUCN}.
+The threats to this species are manifold: pollution from agricultural waste, human intrusion for recreational or work purposes, hunting and trapping, and invasive prion-induced disease.
+It is included in Annex II and IV of the EU Habitats and Species Directive and therefore requires special conservation measures, including the designation of special areas of conservation \citep{dir}.
+Currently there are numerous projects financed by LIFE for this species, in Spain, Italy and Romania \citep{IUCN}.
+
+\subsubsection{\textit{Lagopus muta}} %ricorda nome specie in corsivo
+Lagopus muta (Montin, 1781), also known as ptarmigan, is a bird of the Phasianidae family; it is a stationary species that populates the arctic and subarctic areas of Eurasia and especially North America. For our analysis we took into account only the occurrences located in the European section (excluding European Russia).
+Due to the size of its range it cannot be considered a vulnerable species, despite the population trend in constant decrease \citep{IUCN}.
+For this reason we find this species cataloged as least concern in the IUCN red list \citep{IUCN}.
+In Europe, population size is estimated to be decreasing at a rate approaching 30\% in 12.6 years (three generations) \citep{bird}.
+The threats affecting this species are on a global scale; habitat degradation and overhunting have had negative effects on population trends \citep{mad}. Much habitat loss occurs due to the development of tourist facilities and collision with cables around ski resorts can cause mortality \citep{IUCN}.
+Human presence results in a displacement of the species from their wintering habitat. Overgrazing by reindeer is thought to be causing a decline in Sweden \citep{sto}.
+Another fundamental problem is climate change.
+A decrease recorded in the Swiss Alps of around 30\% of the population over 10 years has been attributed to climate change \citep{de}.
+
+\subsubsection{\textit{Quercus robur}} %ricorda il corsivo
+Quercus robur (Linnaeus, 1753), commonly known as oak, is a tree belonging to the Fagaceae family.
+It has a very large range that covers a large part of central Europe.
+Due to its vast range it is not possible to consider it as an endangered species even if the population is constantly decreasing. \citep{khe}. It is therefore considered "least to concern" in the IUCN red list. \citep{IUCN}
+The population is potentially at risk of decline due to climate change, which could lead to increased disease risk, loss of suitable habitat and increased exposure to unsuitable weather conditions \citep{jon}, \citep{IUCN}.
+In general, throughout Europe, the population is declining and this is due to urban and agricultural expansion for timber \citep{du}.
+Furthermore, oak has historically been subjected to mortality events from external pathogens (such as Agrilus biguttatus \citep{eat}).
+In the future it is expected that the range of this species will likely change causing a shift towards north and east \citep{ef}.
+Global warming also increases susceptibility to pathogen infections; this could lead to increased environmental stress from drought or floods, extreme temperatures and increased mortality \citep{jon}.
+
+
+\subsection{SDM: species distribution model}
+\subsection{Colorist R package}
+\subsection{Climate change}
+\subsection{Model performance}
 
 \newpage
 \section{Results}
@@ -163,12 +216,90 @@ hhfb
 
 
 \newpage
-\section{Bibliografia}
-hebfew
+\section{Bibliography}
+\begin{thebibliography}{999}
+
+\bibitem[ IUCN  2021 ]{IUCN} 
+IUCN. 2021. The IUCN Red List of Threatened Species. Version 2021-3. https://www.iucnredlist.org. Accessed on [18/10/2021].
+
+\bibitem[Kaplan et al. 2014]{kaplan} 
+Kaplan, R.M., Chambers, D.A. and Glasgow, R.E. (2014), Big Data and Large Sample Size: A Cautionary Note on the Potential for Bias. Clinical And Translational Science, 7: 342-346. https://doi.org/10.1111/cts.12178
+ 
+\bibitem[Skov et al. 2011]{skov}
+(Skov, H; Heinänen, S.; Žydelis, R.; Bellebaum, J.; Bzoma, S.; Dagys, M.; Durinck, J.; Garthe, S.; Grishanov, G.; Hario, M.; Kieckbusch, J.J.; Kube, J.; Kuresoo, A.; Larsson, K.; Luigujoe, L.; Meissner, W.; Nehls, H.W.; Nilsson, L.; Petersen, I.K.; Roos, M.M.; Pihl, S.; Sonntag, N.; Stock, A.; Stipniece, A.; Wahl, J. 2011. Waterbird Populations and Pressures in the Baltic Sea. Nordic Council of Ministers, Copenhagen.)
+
+\bibitem[Drever et al. 2011]{drever}
+Drever, M.C., Clarck, R.G., Derksen, C., Slattery, S.M., Toose, P., Nudds, T.D. 2011. Population vulnerability to climate change linked to timing of breeding in boreal ducks. Global Change biology 18(2): 480-492.
+
+\bibitem[Steinacher et al. 2009]{stein}
+Steinacher M. , Joos, F., Frolicher, T.L., Plattner, G.K., Doney, S.C. 2009. Imminent ocean acidification in the Arctic projected with the NCAR global coupled carbon cycle-climate model. Biogeosciences 6(515-533).
+
+\bibitem[Carboneras et al. 2020]{carb}
+Carboneras, C., Kirwan, G.M.\& Sharpe, C.J. 2020. Velvet Scoter (Melanitta fusca), version 1.0. In: J. del Hoyo, A. Elliott, J. Sargatal, D. A. Christie, and E. de Juana (eds), Birds of the World, Cornell Lab of Ornithology, Ithaca, NY, USA.
+
+\bibitem[Dagys \& Hearn. 2018]{dagys} 
+Dagys, M. \& Hearn, R. (compilers). 2018. International Single Species Action Plan for the Conservation of the Velvet Scoter (Melanitta fusca) Western Siberia \& Northern Europe/NW Europe population.
+
+\bibitem[European Environment Agency. 2013]{dir}
+European Environment Agency. 2013. Species: Miniopterus schreibersii. Report under the Article 17 of the Habitats Directive. Available at: https://bd.eionet.europa.eu/article17/reports2012/species/summary/. (Accessed: 20.10.2021).
+
+\bibitem[BirdLife International. 2015]{bird}
+BirdLife International. 2015. European Red List of Birds. Office for Official Publications of the European Communities, Luxembourg.
+
+\bibitem[Madge \& McGowan. 2002]{mad}
+Madge, S.; McGowan, P. 2002. Pheasants, partridges and grouse: including buttonquails, sandgrouse and allies. Christopher Helm, London.
+
+\bibitem[Storch et al. 2007]{sto}
+Storch, I. 2007. Grouse: status survey and conservation action plan 2006-2010. IUCN and World Pheasant Association, Gland, Switzerland \& Cambridge, UK/Fordingbridge, UK.
+
+\bibitem[De Juana et al. 2016]{de}
+de Juana, E., Kirwan, G.M. and Garcia, E.F.J. 2016. Rock Ptarmigan (Lagopus muta). In: del Hoyo, J., Elliott, A., Sargatal, J., Christie, D.A. and de Juana, E. (eds), Handbook of the Birds of the World Alive, Lynx Edicions, Barcelona.
+
+\bibitem[Khela et al. 2012]{khe}
+Khela, S. 2012. Quercus robur. Available at: http://www.iucnredlist.org/details/63532/1. (Accessed: november 2021).
+
+\bibitem[Jonsson. 2012]{jon}
+Jonsson, L. 2012. Impacts of climate change on pedunculate oak (Quercus robur L.) and Phytophthora activity in north and central Europe. Department of Physical Geography and Ecosystem Science, Lund Univeristy.
+
+\bibitem[Ducousso et al. 2003]{du}
+Ducousso, A. and Bordacs, S. 2003. Pedunculate and sessile oaks.
+
+\bibitem[Eaton et al. 2016]{eat}
+Eaton, E., Caudallo, G., Oliveira, S and de Rigo, D. 2016. Quercus robur and Quercus petraea in Europe: distribution, habitat, usage and threats. European Atlas of Forest Tree Species, Publ. Off. EU.
+
+\bibitem[EFDAC. 2015]{ef}
+EFDAC- European Forest Data Centre. 2015. Species Distribution. Available at: http://forest.jrc.ec.europa.eu/download/data/species-distribution/. (Accessed: october 2021).
+
+\bibitem[WorldClim CMIP6. 2016]{wc}
+WorldClim future data available at: https://www.worldclim.org/data/cmip6/cmip6climate.html. (Accessed: october 2021)
+
+\bibitem[ Eyring et al. 2016 ]{ey}
+Eyring, V., Bony, S., Meehl, G. A., Senior, C. A., Stevens, B., Stouffer, R. J., and Taylor, K. E.: Overview of the Coupled Model Intercomparison Project Phase 6 (CMIP6) experimental design and organization, Geosci. Model Dev., 9, 1937–1958, https://doi.org/10.5194/gmd-9-1937-2016, 2016.
+
+\bibitem[WorldClim. 2021]{bcw}
+WorldClim bioclimatic Variables. Available at: https://www.worldclim.org/data/bioclim.html. (Accessed: october 2021)
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{thebibliography}
 
 
 
