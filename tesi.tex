@@ -128,8 +128,8 @@ In this vast area we found various types of habitats, with a very high rate of b
 \subsection{Data and filters}
 The data taken into consideration were extracted from the databases of the Global Biodiversity Information Facility (GBIF) \citep{gbif} between 18 October 2021 and 10 December 2021.
 This data has been carefully filtered, eliminating many parameters taken into account in the initial database.
-First of all, all the occurrence data with coordinates defined as "not available" were eliminated, then all the data were filtered on the basis of observation, keeping only the parameters defined as "human observation" and "observation" thus excluding all museum occurrences, private collections, zoos or other types present that could have distorted our distribution model.
-The data was then filtered by area of interest (Europe excluding European Russia) including the period from 1981 to 2021, therefore for a period of 40 years.
+First of all, all the occurrence data with coordinates defined as "not available" were eliminated, then all the data were filtered on the basis of observation, keeping only the parameters defined as "human observation" and "observation" thus excluding all museum occurrences, private collections, zoos etc. that could have distorted our distribution model.
+The data was then filtered by area of interest (Europe excluding European Russia) including a period of 40 years (from 1981 to 2021).
 The year 1981 was carefully chosen as the starting year for our study, since most of the occurrences of interest fell from 1981 onwards for all the species considered.
 Subsequently, all occurrences with an uncertainty in the coordinates greater than 100 meters were excluded, to avoid a too pronounced bias in our model.
 Concerning databases with very numerous occurrences (in some cases over a million occurrences) this step has allowed us to remove many not very useful occurrences in our database, which has made the analysis work faster and more efficient.
@@ -147,8 +147,8 @@ To identify the species for this project we used the database of the Internation
 The IUCN since 1964 has compiled these lists of all species more or less endangered and assesses their survival prospects. Today the IUCN red list represents the most complete inventory of the extinction risk of species globally \citep {IUCN}.
 
 All the species investigated in this project have been carefully selected following some fundamental parameters.
-The first parameter used to select the species was the population trend. We have only chosen species with a decreasing population trend. It must be pointed out that the term "decreasing" is not always synonymous with danger (for example Querus Robur has a very high number of occurrences but the population is decreasing), but it must put us in a position to investigate the causes of this trend and the possible responses in order to preserve the species.
-The distribution and number of occurrences are then taken into consideration. The distribution had to be consistent with the choice of the area designated in the project; therefore, all the selected species were present on the European territory. Subsequently, only species with a number of occurrences greater than 35,000 were chosen. A high number of occurrences allowed us to create a better model with better random sampling capacity and thus to minimize the bias \citep {kaplan} .
+The first parameter used to select the species was the population trend. We have only chosen species with a decreasing population trend. It must be pointed out that the term "decreasing" is not always synonymous with danger (for example Querus Robur has a very high number of occurrences but the population is decreasing), but it must drive to investigate the causes of this trend and the possible responses in order to preserve the species.
+The distribution and number of occurrences are then taken into consideration. The distribution had to be consistent with the choice of the area designated in the project; therefore, all the selected species were present on the European territory. Subsequently, only species with a number of occurrences greater than 35,000 were chosen. A high number of occurrences allowed us to create a better model with better random sampling capacity and thus to decrease the bias \citep {kaplan} .
 
 \bigskip
 {\noindent \textbf{\textit{Melanitta Fusca}}} 
@@ -158,10 +158,10 @@ A part of the occurrences is found in the territory of Asian Russia which, howev
 From surveys in 1992-1993, when the estimate of the wintering population of north-western Europe was estimated at around 933,000 individuals, in the period 2007-2009 there was a decline close to 60\% in the Baltic Sea bringing the count to around 373,000 individuals \citep{skov}.
 Currently the number of natural individuals is estimated at around 141,000-268,000 specimens \citep{IUCN}.
 \textit{Melanitta fusca} is currently classified as vulnerable in the IUCN red list \citep{IUCN}
-Climate change poses potentially the greatest threat to the species today and in the future \citep{IUCN}. The decrease in the duration of the spring snow cover has been linked to the decline in populations in North America, probably due to trophic maladjustment \citep{drever}.
+Climate change poses potentially the greatest threat to the species today and in the future . The decrease in the duration of the spring snow cover has been linked to the decline in populations in North America, probably due to trophic maladjustment \citep{drever}.
 Directly correlated with climate change, ocean acidification could lead to a decrease in shellfish that make up a large part of the \textit{Melanitta} diet \citep{stein}, \citep{carb}.
 Another major threat is by-catches in fishing gear, which occur in particular in wintering areas \citep*{dagys}.
-In general, therefore, this species is threatened by various factors: climate change, non-native species and diseases, pollution, hunting.
+In general, therefore, this species is threatened by various factors: climate change, non-native species and diseases, pollution, hunting.\citep{IUCN}
 It is therefore a kind of interest and Obtaining trend estimates is a top priority \citep{IUCN}.\\
 Data extraction: \citep{mela}
 
@@ -204,7 +204,47 @@ Data extraction:\citep{querc}
 
 
 \subsection{SDM: species distribution model} 
-\subsection{Colorist R package}
+The use of species distribution models (SDMs) to map and monitor the distribution of plants and animals has become increasingly important in communication aimed at understanding environmental change, population dynamics and ecological consequences (Miller, J. (2010), Species distribution models. Compass Geography, 4: 490-509. Https://doi.org/10.1111/j.1749-8198.2010.00351.x).
+In addition to predicting the distribution of species, the SDMs have become important for many studies that include the study of climate change, the identification of potential protected areas, the determination of places more or less susceptible to invasions, etc. (Miller, J. (2010), Species distribution models. Compass Geography, 4: 490-509. Https://doi.org/10.1111/j.1749-8198.2010.00351.x).
+
+There are mechanistic models where the phenotypic traits of a given organism are translated into performance or fitness components using sets of equations and correlative models, which we have dealt with.
+Correlative models can be of three types: presence-absence, presence-background, and presence-only methods.
+The presence-absence model was used for this project.
+The presence-absence methods intuitively use the observations of the occurrences and absences of species. The absences correspond to places where the species was not found during field sampling. When geo-referenced absences are not available, it is possible to create pseudo-absences (artificially created).
+Presence-absence modeling methods include: logistic regression (Brito et al., 1999), generalized linear models and generalized additive models (Guisan et al., 2002), random forest (Breiman, 1999), boosted regression trees (Elith et al. al., 2008), multivariate adaptive regression splines (Moisen and Frescino, 2002), and artificial neural networks (Tarroso et al., 2012).
+The generalized linear model (GLM) was chosen for this project.
+\subsubsection{SDM structure}
+
+The development process of an SDM is mainly composed of 4 phases: preparation of the data necessary for the project, calculation of the models, evaluation of the models and finally application of the models. Doing the data preparation is the part that will take the longest (QUOTE)
+Once the objective of the project has been determined, it is necessary to define the area of the study.
+The continent of Europe was taken into consideration for this project.
+Species occurrence records are indispensable for calculating a correlative niche model. There are several sources of species presence records; for this project it was decided to use the GBIF-Global Biodiversity Information Facility online database (Yesson et al., 2007)
+Once the presences were obtained, the pseudo-absences were created.
+Pseudo-absences must be created with caution as their positioning can strongly influence the results of the models (Chefaoui and Lobo, 2008; VanDerWal et al., 2009; Barbet-Massin et al., 2012).
+The pseudo absences can be created in various ways, we have chosen the function (random points), this has allowed the creation of random points on the map excluding the points of presence.
+A prevalence rate of 0.4 was set for the creation of the pseudo-absence points.
+A sample of 5000 occurrences for each species was chosen, consequently the pseudo absences created were 12,500 according to this formula: \[(P)0.4=\frac{5000(Pres)}{12.500 (Abs)}\]
+The best number of pseudo absences depends on the modeling technique (Barbet-Massin et al., 2012; Kanagaraj et al., 2013).
+In the case of this project based on generalized linear models, a good number of pseudo-absences is represented by a value greater than 10,000.
+
+At this point, having obtained these data, the key aspect was to check them to check for any errors.
+The most common errors are represented by occurrences with wrong or non-existent coordinates.
+For this reason, the data were filtered to obtain sampling uncertainty levels <100 meters and all records with unavailable coordinates were excluded.
+Another common mistake can be the inversion of longitude and latitude;
+very often to check the level of this error it is possible to simply map the points to see if they fall within the study area or not.
+Consequently, the next step was to check for any points outside our map of interest.
+Once the points were identified, they had to be removed from our analysis.
+As for the environmental values, for our project the bioclimatic variables taken from WorldClim were chosen (site).Most modeling algorithms are sensitive to high levels of correlation between predictive variables (Dormann et al., 2013.Therefore the correlation of one or more predictor variables can drastically change the quality of the model.High correlations can have two main consequences (Dormann et al., 2013; De Marco and Nobrega, 2018):
+1) the results will be over-adapted and 2) the response curves will not be independent, thus the curve response of a variable will not exclusively represent that variable, but will include interactions with other related variables.
+Variables with very high correlation values (such as -0.7 / -0.8) should be excluded (Dormann et al., 2013).
+Another alternative used was that of PCA (principal component analysis) (Vale et al., 2016; Pérez i de Lanuza et al., 2018).
+The PCA summarizes the environmental variables in orthogonal factors, therefore completely unrelated, and these factors can be used to model the niche of the species. However, the interpretation of the model will be more difficult. (quote)
+Other methodologies have also been tried to understand correlation; Parametric (eg Pearson) or non-parametric (eg Spearman) coefficients were tested (Field et al., 2012).
+The variance inflation factor (VIF) measured the correlation of each variable with a combination of all other variables in the model together (Zuur et al., 2010; Dormann et al., 2013). Therefore, VIF measures the multicollinearity or non-independence of the predictive variables. However, the parameters will continue to be fair, consistent and efficient.
+The generalized linear model (GLM) was then calculated with the function (MULTIGLM).
+The model obtained was then ported to colorist (FUNCTION) and following the workflow, the maps representing the distribution of these species and the level of specificity of each area within the European territory were obtained. 
+
+\subsection{\texttt{colorist} R package}
 The \texttt{colorist} package represents the beating heart of this project.
 Graphical map representation plays a key role in research to determine where, how and why wildlife distribution changes over space and time.\citep{colo}
 Understanding these mechanisms is one of the main objectives of ecology.\\\citep{and1}
@@ -216,7 +256,7 @@ This package can be used to represent obtained data, as in our case, but it can 
 It is important to remember that the \texttt{colorist} functions have been developed to manage and visualize the data, but the interpretations are the responsibility of the researcher.\citep{colo}
 The workflow is as follows: creation of the metrics that describe the distribution of the species concerned, creation of the colorimetric palette for representation, creation of the map based on metrics and palettes and finally a legend to be associated with the map.
 In this project we used \texttt{colorist} to visualize the distribution of our species.
-After extracting, filtering and analyzing the data, the generalized linear model (GLM) was chosen for the study on the distribution of the species, which was subsequently imported into \texttt{colorist}.
+After extracting, filtering and analyzing the data, the generalized linear model (GLM) was chosen for the study on the species distribution, predictions were made from the obtained statistical model in order to obtain favourability, these data were imported into \texttt{colorist}.
 The metrics\_pull function was used to transform the model values into intensity values ranging from 0 (0 probability of occurrence) to 1 (maximum stack occurrence value).
   In\texttt{colorist} we use the term "intensity" as a generic descriptor of normalized data values that can reflect the probability of relative occurrence, abundance, density or probability density.\citep{colo}
 We can describe this first phase as preparative, in fact this extraction process preserves all the information in the original stack while preparing the layers for the next visualization.
@@ -239,7 +279,8 @@ palette<-palette_set(fav3sp)
 
 \bigskip
 At this point, having obtained the metrics, having a palette that can be used, we moved on to creating the map.
-For the map we used the function \textit{map\_multiples}. 
+For the map we used the function \textit{map\_multiples}.
+This function returns a multiframe maps.
 
 \begin{lstlisting}
 
@@ -263,9 +304,8 @@ legend <- legend_set(palette, group_labels = names(fav4sp))
 
 \end{lstlisting}
 \bigskip
-At this point we can interpret the data through the intensity and specificity parameters.
-
-
+At this point we can interpret the data through the intensity and specificity parameters, a higher specificity value corresponds to a more intense color in the representation, consequently a lower specificity rate corresponds to a lower intensity of the color.
+When the specificity value is lower it means that the species share common space while when it is high it means that portion of space is not shared.
 
 \subsection{Climate change}
 \subsection{Model performance}
@@ -283,6 +323,8 @@ kfhj
 
 yyegd
 
+\newpage
+\section{Future studies}
 \newpage
 \section{Acknowledgments}
 hhfb
@@ -353,7 +395,7 @@ Eyring, V., Bony, S., Meehl, G. A., Senior, C. A., Stevens, B., Stouffer, R. J.,
 
 \bibitem[WorldClim. 2021]{bcw}
 WorldClim bioclimatic Variables. Available at: https://www.worldclim.org/data/bioclim.html. (Accessed: october 2021)
-%%%%%%%%%%%%%%%%%%%%%%%
+
 \bibitem[Andrewartha \& Birch. 1954]{and1}
 Andrewartha, H. G., \& Birch, L. C. (1954). The distribution and abundance of animals. Chicago, IL: University of Chicago Press.
 
