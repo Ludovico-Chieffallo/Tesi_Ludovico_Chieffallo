@@ -112,7 +112,7 @@ Da scrivere in seguito\ldots                      %\ldots lascia tre puntini
 
 \newpage
 \section{Introduction}
-kjdfdj
+%CARICARE L'INTRODUZIONE
 
 \newpage
 \section{Aim}
@@ -204,29 +204,28 @@ Data extraction:\citep{querc}
 
 
 \subsection{SDM: species distribution model} 
-The use of species distribution models (SDMs) to map and monitor the distribution of plants and animals has become increasingly important in communication aimed at understanding environmental change, population dynamics and ecological consequences (Miller, J. (2010), Species distribution models. Compass Geography, 4: 490-509. Https://doi.org/10.1111/j.1749-8198.2010.00351.x).
-In addition to predicting the distribution of species, the SDMs have become important for many studies that include the study of climate change, the identification of potential protected areas, the determination of places more or less susceptible to invasions, etc. (Miller, J. (2010), Species distribution models. Compass Geography, 4: 490-509. Https://doi.org/10.1111/j.1749-8198.2010.00351.x).
+The use of species distribution models (SDMs) to map and monitor the distribution of plants and animals has become increasingly important wehn aiming at understanding environmental change, population dynamics and ecological consequences \citep{mil}.
+In addition to predicting the distribution of species, SDMs have become important for many studies that include the study of climate change, the identification of potential protected areas, the determination of places more or less susceptible to invasions, etc. \citep{mil}.
 
 There are mechanistic models where the phenotypic traits of a given organism are translated into performance or fitness components using sets of equations and correlative models, which we have dealt with.
 Correlative models can be of three types: presence-absence, presence-background, and presence-only methods.
 The presence-absence model was used for this project.
 The presence-absence methods intuitively use the observations of the occurrences and absences of species. The absences correspond to places where the species was not found during field sampling. When geo-referenced absences are not available, it is possible to create pseudo-absences (artificially created).
-Presence-absence modeling methods include: logistic regression (Brito et al., 1999), generalized linear models and generalized additive models (Guisan et al., 2002), random forest (Breiman, 1999), boosted regression trees (Elith et al. al., 2008), multivariate adaptive regression splines (Moisen and Frescino, 2002), and artificial neural networks (Tarroso et al., 2012).
+Presence-absence modeling methods include: logistic regression \citep{bri}, generalized linear models and generalized additive models \citep{guis}, random forest \citep{brei}, boosted regression trees \citep{Eli}, multivariate adaptive regression splines \\ \citep{mois}, and artificial neural networks \citep{tarr}.
 The generalized linear model (GLM) was chosen for this project.
 \subsubsection{SDM structure}
 
-The development process of an SDM is mainly composed of 4 phases: preparation of the data necessary for the project, calculation of the models, evaluation of the models and finally application of the models. Doing the data preparation is the part that will take the longest (QUOTE)
+The development process of an SDM is mainly composed of 4 phases: preparation of the data necessary for the project, calculation of the models, evaluation of the models and finally application of the models. Doing the data preparation is the part that will take the longest \citep{sil}.
 Once the objective of the project has been determined, it is necessary to define the area of the study.
 The continent of Europe was taken into consideration for this project.
-Species occurrence records are indispensable for calculating a correlative niche model. There are several sources of species presence records; for this project it was decided to use the GBIF-Global Biodiversity Information Facility online database (Yesson et al., 2007)
+Species occurrence records are indispensable for calculating a correlative niche model. There are several sources of species presence records; for this project it was decided to use the GBIF-Global Biodiversity Information Facility online database \citep{yes}.
 Once the presences were obtained, the pseudo-absences were created.
-Pseudo-absences must be created with caution as their positioning can strongly influence the results of the models (Chefaoui and Lobo, 2008; VanDerWal et al., 2009; Barbet-Massin et al., 2012).
+Pseudo-absences must be created with caution as their positioning can strongly influence the results of the models \citep{mass}.
 The pseudo absences can be created in various ways, we have chosen the function (random points), this has allowed the creation of random points on the map excluding the points of presence.
 A prevalence rate of 0.4 was set for the creation of the pseudo-absence points.
-A sample of 5000 occurrences for each species was chosen, consequently the pseudo absences created were 12,500 according to this formula: \[(P)0.4=\frac{5000(Pres)}{12.500 (Abs)}\]
-The best number of pseudo absences depends on the modeling technique (Barbet-Massin et al., 2012; Kanagaraj et al., 2013).
+A sample of 5000 occurrences for each species was chosen, consequently the pseudo absences created were 12,500 according to this formula:\\ \[(P)0.4=\frac{5000(Pres)}{12.500 (Abs)}\] \\
+The best number of pseudo absences depends on the modeling technique used\\ \citep{kan} \citep{mass} .
 In the case of this project based on generalized linear models, a good number of pseudo-absences is represented by a value greater than 10,000.
-
 At this point, having obtained these data, the key aspect was to check them to check for any errors.
 The most common errors are represented by occurrences with wrong or non-existent coordinates.
 For this reason, the data were filtered to obtain sampling uncertainty levels <100 meters and all records with unavailable coordinates were excluded.
@@ -234,15 +233,15 @@ Another common mistake can be the inversion of longitude and latitude;
 very often to check the level of this error it is possible to simply map the points to see if they fall within the study area or not.
 Consequently, the next step was to check for any points outside our map of interest.
 Once the points were identified, they had to be removed from our analysis.
-As for the environmental values, for our project the bioclimatic variables taken from WorldClim were chosen (site).Most modeling algorithms are sensitive to high levels of correlation between predictive variables (Dormann et al., 2013.Therefore the correlation of one or more predictor variables can drastically change the quality of the model.High correlations can have two main consequences (Dormann et al., 2013; De Marco and Nobrega, 2018):
+As for the environmental values, for our project the bioclimatic variables taken from WorldClim were chosen \citep{bcw}.Most modeling algorithms are sensitive to high levels of correlation between predictive variables \citep{dor13}.Therefore the correlation of one or more predictor variables can drastically change the quality of the model.High correlations can have two main consequences \citep{dor13}\citep{demn}:
 1) the results will be over-adapted and 2) the response curves will not be independent, thus the curve response of a variable will not exclusively represent that variable, but will include interactions with other related variables.
-Variables with very high correlation values (such as -0.7 / -0.8) should be excluded (Dormann et al., 2013).
-Another alternative used was that of PCA (principal component analysis) (Vale et al., 2016; Pérez i de Lanuza et al., 2018).
-The PCA summarizes the environmental variables in orthogonal factors, therefore completely unrelated, and these factors can be used to model the niche of the species. However, the interpretation of the model will be more difficult. (quote)
-Other methodologies have also been tried to understand correlation; Parametric (eg Pearson) or non-parametric (eg Spearman) coefficients were tested (Field et al., 2012).
-The variance inflation factor (VIF) measured the correlation of each variable with a combination of all other variables in the model together (Zuur et al., 2010; Dormann et al., 2013). Therefore, VIF measures the multicollinearity or non-independence of the predictive variables. However, the parameters will continue to be fair, consistent and efficient.
+Variables with very high correlation values (such as -0.7 / -0.8) should be excluded \citep{dor13}.
+Another alternative used was that of PCA (principal component analysis) \citep{pere}.
+The PCA summarizes the environmental variables in orthogonal factors, therefore completely unrelated, and these factors can be used to model the niche of the species. However, the interpretation of the model will be more difficult \citep{sil}. 
+Other methodologies have also been tried to understand correlation; Parametric ( Pearson) or non-parametric ( Spearman) coefficients were tested \citep{fiel}.
+The variance inflation factor (VIF) measured the correlation of each variable with a combination of all other variables in the model together \citep{dor13}. Therefore, VIF measures the multicollinearity or non-independence of the predictive variables. However, the parameters will continue to be fair, consistent and efficient.
 The generalized linear model (GLM) was then calculated with the function (MULTIGLM).
-The model obtained was then ported to colorist (FUNCTION) and following the workflow, the maps representing the distribution of these species and the level of specificity of each area within the European territory were obtained. 
+The model obtained was then ported to \texttt{colorist } and following the workflow, the maps representing the distribution of these species and the level of specificity of each area within the European territory were obtained. 
 
 \subsection{\texttt{colorist} R package}
 The \texttt{colorist} package represents the beating heart of this project.
@@ -308,6 +307,16 @@ At this point we can interpret the data through the intensity and specificity pa
 When the specificity value is lower it means that the species share common space while when it is high it means that portion of space is not shared.
 
 \subsection{Climate change}
+The SDMs can be transferred in different spatial and temporal scenarios, the algorithms can apply the formula that determines the distribution of the species to a set of environmental variables that correspond to future projections.
+Today we find ourselves in a world that changes faster than any other period in history; global changes are clear and undeniable.
+The specific data regarding climate change are analyzed in detail by the IPCC \citep{ipcc}.
+The Intergovernmental Panel on Climate Change (IPCC) is the United Nations body for the evaluation of science related to climate change, the IPCC was created to provide policymakers with regular scientific assessments on climate change, its implications and potential future risks, as well as to propose adaptation and mitigation options\citep{ipcc}.
+Climate change is a direct consequence of the impact that human beings have on the planet and this has serious consequences on all living beings that populate the Earth.
+In this project a future scenario was analyzed using the bioclimatic variables coming from WorldClim \citep{cmi} from 2021 to 2040; they were combined with our data and the same previous models were run so that we could compare them.
+Studying how the distribution of species varies with changing climatic conditions is fundamental to understand the dynamics between species that previously occupied different territories and that now and in the future may find themselves in common spaces they are not used to, this leads to loss of biodiversity, new population dynamics and new strategies for the conservation of these species.
+WorldClim's future data has been structured thanks to the Coupled Model Intercomparison Project (CMIP6) which is a collaborative framework designed to improve knowledge of climate change \citep{CMIP6}.
+
+
 \subsection{Model performance}
 
 \newpage
@@ -435,23 +444,83 @@ GBIF.org (10 December 2021) GBIF Occurrence Download  https://doi.org/10.15468/d
 \bibitem[Melanitta fusca. GBIF. 2021]{mela}
 GBIF.org (08 December 2021) GBIF Occurrence Download  https://doi.org/10.15468/dl.xzb96a
 
+\bibitem[Miller. 2010]{mil}
+(Miller, J. (2010), Species distribution models. Compass Geography, 4: 490-509. Https://doi.org/10.1111/j.1749-8198.2010.00351.x)
 
+\bibitem[Brito et al. 1999]{bri}
+J.C. Brito, O.S. Crespo, e.g. Paulo
+Modelling wildlife distributions: logistic multiple regression vs overlap analysis
+Ecograph. (Cop.), 3 (1999), pp. 251-260
 
+\bibitem[Guisan et al. 2002]{guis}
+A. Guisan, T.C.J. Edwards, T. Hastie
+Generalized linear and generalized additive models in studies of species distributions: setting the scene
+Ecol. Modell. (2002), pp. 89-100
 
+\bibitem[Breiman. 1999]{brei}
+L. Breiman
+Random forest, Mach. Learn., 45 (1999), pp. 1-35, 10.1023/A:1010933404324
 
+\bibitem[Elith et al. 2008]{Eli}
+J. Elith, J.R. Leathwick, T. Hastie
+A working guide to boosted regression trees
+J. Anim. Ecol., 77 (2008), pp. 802-813, 10.1111/j.1365-2656.2008.01390.x
 
+\bibitem[Moisen \& Frescino. 2002]{mois}
+G.G. Moisen, T.S. Frescino
+Comparing five modelling techniques for predicting forest characteristics
+Ecol. Modell., 2–3 (2002), pp. 209-225
 
+\bibitem[Tarroso et al. 2012]{tarr}
+P. Tarroso, S.B. Carvalho, J.C. Brito
+Simapse - simulation maps for ecological niche modelling
+Meth. Ecol. Evol., 3 (2012), pp. 787-791, 10.1111/j.2041-210X.2012.00210.x
 
+\bibitem[Sillero et al. 2021]{sil}
+Neftalí Sillero, Salvador Arenas-Castro, Urtzi Enriquez‐Urzelai, Cândida Gomes Vale, Diana Sousa-Guedes, Fernando Martínez-Freiría, Raimundo Real, A.Márcia Barbosa,
+Want to model a species niche? A step-by-step guideline on correlative ecological niche modelling,
+Ecological Modelling,Volume 456,2021,ISSN 0304-3800, https://doi.org/10.1016/j.ecolmodel.2021.109671.
 
+\bibitem[Yesson et al. 2007]{yes}
+C. Yesson, P.W. Brewer, T. Sutton, N. Caithness, J.S. Pahwa, M. Burgess, W.A. Gray, R.J. White, A.C. Jones, F.A. Bisby, A. Culham
+How global is the global biodiversity information facility?
+PLoS ONE, 11 (2007), p. e1124
 
+\bibitem[Barbet-Massin et al. 2012]{mass}
+M. Barbet-Massin, F. Jiguet, C.H. Albert, W. Thuiller
+Selecting pseudo-absences for species distribution models: how, where and how many?
+Meth. Ecol. Evol., 3 (2012), pp. 327-338, 10.1111/j.2041-210X.2011.00172.x
 
+\bibitem[Kanagaraj et al. 2013]{kan}
+R. Kanagaraj, T. Wiegand, A. Mohamed, S. Kramer-Schadt
+Modelling species distributions to map the road towards carnivore conservation in the tropics
 
+\bibitem[Dormann et al. 2013]{dor13}
+C.F. Dormann, J. Elith, S. Bacher, C. Buchmann, G. Carl, G. Carré, J.R.G. Marquéz, B. Gruber, B. Lafourcade, P.J. Leitão, T. Münkemüller, C. McClean, P.E. Osborne, B. Reineking, B. Schröder, A.K. Skidmore, D. Zurell, S. Lautenbach
+Collinearity: a review of methods to deal with it and a simulation study evaluating their performance
+Ecograph. (Cop.), 36 (2013), pp. 27-46, 10.1111/j.1600-0587.2012.07348.x
 
+\bibitem[De Marco \& Nobrega. 2018 ]{demn}
+P. De Marco, C.C. Nobrega
+Evaluating collinearity effects on species distribution models: an approach based on virtual species simulation
+PLoS ONE, 13 (2018), 10.1371/journal.pone.0202403
 
+\bibitem[Perez et al. 2018]{pere}
+G. Pérez i de Lanuza, N. Sillero, M.Á. Carretero
+Climate suggests environment-dependent selection on lizard colour morphs
+J. Biogeogr., 45 (2018), pp. 2791-2802, 10.1111/jbi.13455
 
+\bibitem[Field et al. 2012]{fiel}
+A. Field, J. Miles, Z. Field, Discovering Statistics using R, Sage Publications (2012)
 
+\bibitem[IPCC 2022]{ipcc}
+https://www.ipcc.ch/ (Accessed: January 2022)
 
+\bibitem[WorldClim CMIP6]{cmi}
+https://www.worldclim.org/data/cmip6/cmip6climate.html
 
+\bibitem[Coupled Model Intercomparison Project 2022]{CMIP6}
+https://www.cmcc.it/it/data-services-and-products/data-list/cmip6-scenario-simulations
 
 
 
