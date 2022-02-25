@@ -112,6 +112,7 @@ Da scrivere in seguito\ldots                      %\ldots lascia tre puntini
 
 \newpage
 \section{Introduction}
+\subsection{Biodiversity}
 \textit{"The most unique feature of Earth is the existence of life, and the most extraordinary feature of life is its diversity."} \citep{cardinale}.\\
 Biodiversity is the variety of all forms of life on earth but the most important point is that it is fundamental for the balance of this planet.
 Biodiversity is fundamental in many respects: conversion of solar energy, decomposition of organic matter, pollination, sustenance, raw materials useful for our economy, etc.
@@ -119,6 +120,7 @@ Biodiversity is regulated by a very delicate balance.
 Many species, despite their resilience, are unable to adapt to changes in such a fast time frame.
 The consequence of this is that biodiversity is on the decline; currently there are about 142,500 species within the IUCN red list with over 40,000 species threatened with extinction \citep{IUCN}. This number is obviously indicative and underestimated compared to the real numbers, in fact, the next goal of the International Union for Conservation of Nature is to reach 160,000 species to be included in the list.
 To address this problem, one of the practical aspects adopted is monitoring, with the consequent objective of proposing a conservation system for the investigated species.
+\subsection{SDM and favourability}
 In the ecological field, researchers use species distribution models (SDMs) to study the relationships between known occurrences of species and the characteristics of the ecological and environmental landscape.
 These models are useful not only for understanding where species are in this historical moment, but they are important for understanding where they were present in the past and for predicting where they might be in the future, allowing for an in-depth study of community dynamics.
 Invasive species are highly regarded as they can have devastating effects on native species and the habitat itself.
@@ -130,15 +132,25 @@ In general, the SDMs provide output in 2 different formats: probability (logisti
 The consequence is that the probabilistic results defined for the species can neither be compared nor combined and on the other hand, the suitability lacks a standard unit of measurement and this makes them in turn unmatchable.
 Here we introduce the concept of favourability; in fact, the models based on favourability produce comparable values regardless of the presence and absence value of the species distributions and therefore it is possible to compare and combine models for different species and for different environmental factors.
 The favourability values (F, ranging from 0 to 1) can be obtained directly from the probability values using this formula:
-
 \\ \[ F=\dfrac{\frac{P}{(1-P)}}{\frac{n_1}{n_0}+\frac{P}{(1-P)}}\] \\
 
 Where \textit{P} is the probability of the presence of a species, \textit{n\textsubscript{1}} is the number of registered presences, and \textit{n\textsubscript{0}} is the number of absences.\\
 If the method used to calculate P is logistic regression, the probability is defined according to the following equation:
 \\ \[    F=\dfrac{e^y}{\dfrac{n_1}{n_0}+{e^y}}          \] \\
-Where \textit{e} is the base of the Neperian logarithms and \textit{y} is the “logit function”, that is a linear combination of environmental variables.
 
-%DA AGGIUNGERE LA PARTE DI COLORIST E CVD QUASI FINITA (DA RIFINIRE)
+Where \textit{e} is the base of the Neperian logarithms and \textit{y} is the 'logit function', that is a linear combination of environmental variables.
+\subsection{Data representation}
+A key part of research is data representation. In this case the maps represent an indispensable step to describe the distribution of the species.
+To create reliable maps we used the R package called colorist which was the engine of this project.
+The \texttt{colorist} package was created in 2020 \citep{Schuetz} to provide researchers with additional methodologies and options for studying, understanding and communicating information on the distribution of species in space and time.
+As the name colorist suggests, the protagonist of this R package is precisely the color, connecting the distributions of the species with the HCL corimetric palettes.
+The HCL palettes are an alternative to other color spaces such as RGB and HSV; each color within the color space is composed of 3 factors: 'Hue' which defines the color (hue), chroma which defines the saturation or intensity of the color and luminance which defines the brightness.
+Color can be a problem in some cases. People affected by Color vision deficiency (CVD) currently represent a number close to 360 million people with an important number of 8\% of affected men. The main visual defects are: deuteranopia (green blindness), protanopia (red blindness) and tritanopia (blue and yellow blindness).
+Such a condition places us in the situation of having to investigate more effective methods to represent our research as sometimes they may be misunderstood and even create confusion or false information.
+HCL vanes fit well into this problem; in fact, within the group of HCL pallets there are pallets such as viridis and cividis, perfectly visible to all people even with visual defects, so as to be able to communicate information in the most effective way.
+The colorist workflow is mainly composed of 4 steps: the creation of the metrics, the creation of palettes, the map and the legend.
+It is precisely in the step of creating the palette that with the function \texttt{custom\_hues} we can decide the color to be adopted within our maps, the value can vary from -360 to +360 and represents the hue in the color wheel.
+Finally, this project questioned how climate change can affect the distribution of species in the future in order to better understand future community dynamics. This gives us the opportunity to mobilize for the conservation of endangered species but also to prevent others from becoming endangered species.
 
 \newpage
 \section{Aim}
@@ -296,10 +308,11 @@ metrics<-metrics_pull(fav4sp)
 \bigskip
 The \textit{'fav4sp'} file is a stack containing the information of all the species considered.
 Subsequently, having obtained the metrics, the function \textit{palette\_set} was used.
-
+In the \texttt{palette\_set} function it is possible to change the hue with \texttt{custom\_hues()} function; this is particularly effective in our analysis as we want to be sure that our map is visible to the widest possible audience, even those affected by CVD (colour vision deficiency).
+To extract the correct and perfectly visible values, the \texttt{show\_col(viridis\_pal()(30))} function was used; this function gives us the hexadecimal values of the colors belonging to the \texttt{viridis} palette that have been converted at first into the RGB color space and then into hue values using a simple color converter. This gave us four colors of the \texttt{viridis} palette perfectly visible even to all subjects with visual defects.
 \begin{lstlisting}
 
-palette<-palette_set(fav3sp)
+palette<-palette_set(fav3sp, custom_hues= c(54, 130,219,313))
 \end{lstlisting}
 
 \bigskip
@@ -310,7 +323,9 @@ This function returns a multiframe maps.
 \begin{lstlisting}
 
 maps <- map_multiples (metrics, palette, ncol = 2,
-lambda_i = -5, labels = names (fav4sp))
+labels= c("Mioniopterus s.", "Melanita f.",
+"Quercus r.","Lagopus"),lambda_i = -5)
+
 
 \end{lstlisting}
 \bigskip
@@ -319,13 +334,16 @@ The map gave us an idea of the distribution of each species, however the \textit
 \begin{lstlisting}
 
 metricsdist<- metrics_distill(fav4sp)
+mapdist<-map_single(metricsdist,palette, lambda_i = 5)
 
 \end{lstlisting}
 \bigskip
 In the end, the legend was created with the \textit{legend\_set} function; for this it is necessary to use only the palette.
 \\
 \begin{lstlisting}
-legend <- legend_set(palette, group_labels = names(fav4sp))
+legend <- legend_set(palette, specificity = TRUE
+group_labels= c("Mioniopterus s.", "Melanita f.",
+"Quercus r.","Lagopus"))
 
 \end{lstlisting}
 \bigskip
@@ -560,11 +578,12 @@ Correlation and process in species distribution models: bridging a dichotomy
 J. Biogeogr., 39 (2012), pp. 2119-2131, 10.1111/j.1365-2699.2011.02659.x
 
 \bibitem[Kearney \& Porter. 2009]{kea}
-
 M. Kearney, W.P. Porter
 Mechanistic niche modelling: combining physiological and spatial data to predict species’ ranges
 Ecol. Lett., 4 (2009), pp. 334-350
 
+\bibitem[Schuetz et al. 2020]{Schuetz}
+Schuetz, Justin G, Matthew Strimas‐Mackey, Tom Auer, and Laura Graham. "Colorist: An R Package for Colouring Wildlife Distributions in Space–time." Methods in Ecology and Evolution 11.11 (2020): 1476-482. Web
 
 
 \end{thebibliography}
