@@ -18,7 +18,7 @@
 \usepackage{natbib}
 \usepackage{listings}
 \usepackage{tcolorbox}
-
+\usepackage{fixltx2e}
 
 %%%%%%%%
 \linespread{1.2}    %comando per impostare l'interlinea
@@ -112,7 +112,33 @@ Da scrivere in seguito\ldots                      %\ldots lascia tre puntini
 
 \newpage
 \section{Introduction}
-%CARICARE L'INTRODUZIONE
+\textit{"The most unique feature of Earth is the existence of life, and the most extraordinary feature of life is its diversity."} \citep{cardinale}.\\
+Biodiversity is the variety of all forms of life on earth but the most important point is that it is fundamental for the balance of this planet.
+Biodiversity is fundamental in many respects: conversion of solar energy, decomposition of organic matter, pollination, sustenance, raw materials useful for our economy, etc.
+Biodiversity is regulated by a very delicate balance.
+Many species, despite their resilience, are unable to adapt to changes in such a fast time frame.
+The consequence of this is that biodiversity is on the decline; currently there are about 142,500 species within the IUCN red list with over 40,000 species threatened with extinction \citep{IUCN}. This number is obviously indicative and underestimated compared to the real numbers, in fact, the next goal of the International Union for Conservation of Nature is to reach 160,000 species to be included in the list.
+To address this problem, one of the practical aspects adopted is monitoring, with the consequent objective of proposing a conservation system for the investigated species.
+In the ecological field, researchers use species distribution models (SDMs) to study the relationships between known occurrences of species and the characteristics of the ecological and environmental landscape.
+These models are useful not only for understanding where species are in this historical moment, but they are important for understanding where they were present in the past and for predicting where they might be in the future, allowing for an in-depth study of community dynamics.
+Invasive species are highly regarded as they can have devastating effects on native species and the habitat itself.
+With the SDMs it is possible to predict the movements of these species and consequently also predict the possible arrival of invasive species.
+There are mainly 3 categories of SDM: mechanistic, correlative and hybrid \citep{dor12}. While mechanistic models generally incorporate physiological, morphological and behavioral data \citep{kea}, correlative and hybrid models use geographic occurrence data.
+The correlative SDM category is in turn divided into 3 types: presence-absence, presence-background and presence-only methods.
+For our project, the correlative category of presence-absence was used based on occurrences taken from the Global Biodiversity Information Facility (GBIF) and creating artificial absences (pseudo-absences).
+In general, the SDMs provide output in 2 different formats: probability (logistic regression, GAM, enhanced regression trees, random forests) and suitability (eg GARP, ENFA, MaxEnt). \\ \textit{'Probabilistic results are influenced by an uneven proportion of species presences and absences. Regardless of the environmental conditions, most of the probability values of presence in the study area will be high if referred to widespread species; instead, they will be low if the target species is a microendemism.'} \citep{fav}
+The consequence is that the probabilistic results defined for the species can neither be compared nor combined and on the other hand, the suitability lacks a standard unit of measurement and this makes them in turn unmatchable.
+Here we introduce the concept of favourability; in fact, the models based on favourability produce comparable values regardless of the presence and absence value of the species distributions and therefore it is possible to compare and combine models for different species and for different environmental factors.
+The favourability values (F, ranging from 0 to 1) can be obtained directly from the probability values using this formula:
+
+\\ \[ F=\dfrac{\frac{P}{(1-P)}}{\frac{n_1}{n_0}+\frac{P}{(1-P)}}\] \\
+
+Where \textit{P} is the probability of the presence of a species, \textit{n\textsubscript{1}} is the number of registered presences, and \textit{n\textsubscript{0}} is the number of absences.\\
+If the method used to calculate P is logistic regression, the probability is defined according to the following equation:
+\\ \[    F=\dfrac{e^y}{\dfrac{n_1}{n_0}+{e^y}}          \] \\
+Where \textit{e} is the base of the Neperian logarithms and \textit{y} is the “logit function”, that is a linear combination of environmental variables.
+
+%DA AGGIUNGERE LA PARTE DI COLORIST E CVD QUASI FINITA (DA RIFINIRE)
 
 \newpage
 \section{Aim}
@@ -306,9 +332,9 @@ legend <- legend_set(palette, group_labels = names(fav4sp))
 At this point we can interpret the data through the intensity and specificity parameters, a higher specificity value corresponds to a more intense color in the representation, consequently a lower specificity rate corresponds to a lower intensity of the color.
 When the specificity value is lower it means that the species share common space while when it is high it means that portion of space is not shared.
 
-\subsection{Climate change}
+\subsection{Climate change scenarios}
 The SDMs can be transferred in different spatial and temporal scenarios, the algorithms can apply the formula that determines the distribution of the species to a set of environmental variables that correspond to future projections.
-Today we find ourselves in a world that changes faster than any other period in history; global changes are clear and undeniable.
+Today we find ourselves in a world that changes faster than any other period in history.    
 The specific data regarding climate change are analyzed in detail by the IPCC \citep{ipcc}.
 The Intergovernmental Panel on Climate Change (IPCC) is the United Nations body for the evaluation of science related to climate change, the IPCC was created to provide policymakers with regular scientific assessments on climate change, its implications and potential future risks, as well as to propose adaptation and mitigation options\citep{ipcc}.
 Climate change is a direct consequence of the impact that human beings have on the planet and this has serious consequences on all living beings that populate the Earth.
@@ -522,9 +548,22 @@ https://www.worldclim.org/data/cmip6/cmip6climate.html
 \bibitem[Coupled Model Intercomparison Project 2022]{CMIP6}
 https://www.cmcc.it/it/data-services-and-products/data-list/cmip6-scenario-simulations
 
+\bibitem[Cardinale et al. 2012]{cardinale}
+Cardinale, B., Duffy, J., Gonzalez, A. et al. Biodiversity loss and its impact on humanity. Nature 486, 59–67 (2012). https://doi-org.ezproxy.unibo.it/10.1038/nature11148
 
+\bibitem[Favourability function. 2018]{fav}
+(https://biogeografia-uma.com/wp-content/uploads/2018/09/The\_favourability\_function.pdf)
 
+\bibitem[Dormann et al. 2012]{dor12}
+C.F. Dormann, S.J. Schymanski, J. Cabral, I. Chuine, C. Graham, F. Hartig, M. Kearney, X. Morin, C. Römermann, B. Schröder, A. Singer
+Correlation and process in species distribution models: bridging a dichotomy
+J. Biogeogr., 39 (2012), pp. 2119-2131, 10.1111/j.1365-2699.2011.02659.x
 
+\bibitem[Kearney \& Porter. 2009]{kea}
+
+M. Kearney, W.P. Porter
+Mechanistic niche modelling: combining physiological and spatial data to predict species’ ranges
+Ecol. Lett., 4 (2009), pp. 334-350
 
 
 
