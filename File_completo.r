@@ -321,7 +321,6 @@ sample_abxymela<- randomPoints(EuropePred, 12500, p=mela5000)
 
 plot(sample_abxymela)
 
-
 #Absences quercus----
 
 colnames(xypQuerc) <- c("x","y","presence")
@@ -365,62 +364,54 @@ sample_abxyLagdf$presence<-0
 minPresAbs<-rbind(sample_abxydf, xypMinio)
 melaPresAbs<-rbind(sample_abxymeladf, xypmela)
 quercPresAbs<-rbind(sample_abxyQuercdf, xypQuerc)
-LagPresAbs<-rbind(sample_abxyLagdf, xypLagopus )
-
-
-#!!!!!!!DA CONTROLLARE BENE CON ELISA!!!!!!!!
-#Collineary test---- 
-Vars_to_removemin <- data.frame(BIO=findCorrelation(cor(predictors_min), cutoff = .6, names = T))
-intersection1 <- colnames(predictors_min) %in% Vars_to_removemin$BIO
-
-Vars_to_removemela <- data.frame(BIO=findCorrelation(cor(predictors_mela), cutoff = .6, names = T))
-intersection2 <- colnames(predictors_mela) %in% Vars_to_removemela$BIO
-
-Vars_to_removequer <- data.frame(BIO=findCorrelation(cor(predictors_quer), cutoff = .6, names = T))
-intersection3 <- colnames(predictors_quer) %in% Vars_to_removequer$BIO
-
-Vars_to_removelag <- data.frame(BIO=findCorrelation(cor(predictors_lagopus), cutoff = .6, names = T))
-intersection4 <- colnames(predictors_lagopus) %in% Vars_to_removelag$BIO
+lagPresAbs<-rbind(sample_abxyLagdf, xypLagopus )
 
 
 
-#Remove correlated variables
+predictors_min<- raster::extract(EuropePred, minPresAbs[,1:2], df=T)
+predictors_min<- predictors_min[,-1]
 
-predictors_min <- predictors_min[!intersection1]
-sdmData_min<- data.frame(pres =minPresAbs[,1], predictors_min[1:ncol(predictors_min)]) #### se pres = melaPresAbs controlla che ci sia solo una colonna pres abs
+predictors_mela<- raster::extract(EuropePred, melaPresAbs[,1:2], df=T)
+predictors_mela<- predictors_mela[,-1]
 
-predictors_mela <- predictors_mela[!intersection2]
-sdmData_mela<- data.frame(pres =melaPresAbs[,1], predictors_mela[1:ncol(predictors_mela)]) #### se pres = melaPresAbs controlla che ci sia solo una colonna pres abs
+predictors_quer<- raster::extract(EuropePred, quercPresAbs[,1:2], df=T)
+predictors_quer<- predictors_quer[,-1]
 
-predictors_quer <- predictors_quer[!intersection3]
-sdmData_quer<- data.frame(pres =quercPresAbs[,1], predictors_quer[1:ncol(predictors_quer)]) #### se pres = melaPresAbs controlla che ci sia solo una colonna pres abs
-
-predictors_lagopus <- predictors_lagopus[!intersection4]
-sdmData_lag<- data.frame(pres =LagPresAbs[,1], predictors_lagopus[1:ncol(predictors_lagopus)]) #### se pres = melaPresAbs controlla che ci sia solo una colonna pres abs
+predictors_lag<- raster::extract(EuropePred, lagPresAbs[,1:2], df=T)
+predictors_lag<- predictors_lag[,-1]
 
 
-view(minPresAbs)
+#collinearity----
 
-XY<-as.data.frame(EuropePred[[1]], xy=TRUE, na.rm=TRUE)
-PTXY=data.frame("x" = XY$x, "y"=XY$y)
-predictorsDF<- raster::extract(Predictors,PTXY)
-predictorsDF<-data.frame(predictorsDF)
-## remove correlated variables
-intersection2 <- colnames(predictorsDF) %in% Vars_to_remove$BIO
-preds <- predictorsDF[!intersection2]
+vif(predictors_min)
+vifmin<-vifcor(predictors_min, th=0.9)
+vifminstep<-vifstep(predictors_min,th=10)
+predictors_min<-exclude(predictors_min,vifminstep)
 
 
-#Predictor and sdm data miniopterus-----
+vif(predictors_mela)
+vifmelastep<-vifstep(predictors_mela,th=10)
+predictors_mela<-exclude(predictors_mela,vifmelastep)
 
-predictors_min<- raster::extract(EuropePred, minPresAbs[,1:2], df=FALSE)
-predictors_mela<- raster::extract(EuropePred, melaPresAbs[,1:2], df=FALSE)
-predictors_quer<- raster::extract(EuropePred, quercPresAbs[,1:2], df=FALSE)
-predictors_lagopus<- raster::extract(EuropePred, LagPresAbs[,1:2], df=FALSE)
+
+vif(predictors_min)
+vifquerstep<-vifstep(predictors_quer,th=10)
+predictors_quer<-exclude(predictors_quer,vifquerstep)
+
+
+vif(predictors_min)
+viflagstep<-vifstep(predictors_lag,th=10)
+predictors_lag<-exclude(predictors_lag,viflagstep)
+
+
+#Sdm data-----
+
+
 
 sdmData_min<-data.frame(cbind(minPresAbs, predictors_min))
 sdmData_mela<-data.frame(cbind(melaPresAbs, predictors_mela))
 sdmData_quer<-data.frame(cbind(quercPresAbs, predictors_quer))
-sdmData_lag<-data.frame(cbind(LagPresAbs, predictors_lagopus))
+sdmData_lag<-data.frame(cbind(lagPresAbs, predictors_lag))
 
 sdmData_min
 sdmData_mela
@@ -429,14 +420,14 @@ sdmData_lag
 
 #Favourability model miniopterus----
 
-FavModel_min<-multGLM(sdmData_min, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
-FavModel_mela<-multGLM(sdmData_mela, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
-FavModel_quer<-multGLM(sdmData_quer, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
-FavModel_lag<-multGLM(sdmData_lag, sp.cols = 3, var.cols=4:22, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_min<-multGLM(sdmData_min, sp.cols = 3, var.cols=4:10, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_mela<-multGLM(sdmData_mela, sp.cols = 3, var.cols=4:10, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_quer<-multGLM(sdmData_quer, sp.cols = 3, var.cols=4:10, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_lag<-multGLM(sdmData_lag, sp.cols = 3, var.cols=4:10, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
 
 
 
-#Get pred miniopterus----
+#Get pred ----
 
 #prima di fare getPred bisogna estendere la prediction su tutta l'estensione quindi creo data.frame di values in x e y di tutta l'estensione
 EuropePred <- stack(EuropePred) # it needs to be RasterStack, EuropePred is RasterBrick
@@ -455,7 +446,9 @@ metrics<-metrics_pull(fav4sp)
 
 #Palette----
 
-palette<-palette_set(fav4sp)
+#palette<-palette_set(fav4sp)
+palette<-palette_set(4, custom_hues = c(54, 130,219, 313))
+
 
 #Map multiples----
 mapmult<-map_multiples(metrics, palette, ncol = 2, lambda_i = -5, labels = names(fav4sp))
