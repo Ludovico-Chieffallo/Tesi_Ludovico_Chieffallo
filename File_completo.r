@@ -570,8 +570,30 @@ dif_lagPresFut <- (FuturePred_lag-FavPred_lag)
 
 
 viridis <- viridisLite::viridis(100)
+drawExtent()
+par(mfrow=c(1,2))
+plot(FavPred_min,col=viridis, main="Miniopterus s. (current distribution)")
+plot(FuturePred_min,col=viridis, main="Miniopterus s. (future forecasts)")
+plot(dif_minPresFut,col=viridis, main="Miniopterus s. (difference between present and future) ")
+dev.off()
 
-plot(dif_minPresFut,col=viridis)
-plot(dif_melaPresFut,col=viridis)
-plot(dif_quercPresFut,col=viridis)
-plot(dif_lagPresFut,col=viridis)
+
+par(mfrow=c(1,2))
+plot(FavPred_mela,col=viridis, main="Melanitta f. (current distribution)")
+plot(FuturePred_mela,col=viridis, main="Melanitta f. (future forecasts)")
+plot(dif_melaPresFut,col=viridis, main="Melanitta f. (difference between present and future) ")
+dev.off()
+
+
+par(mfrow=c(1,2))
+plot(FavPred_quer,col=viridis, main="Quercus r. (current distribution)")
+plot(FuturePred_querc,col=viridis, main="Quercus r. (future forecasts)")
+plot(dif_quercPresFut,col=viridis, main="Quercus r. (difference between present and future) ")
+dev.off()
+
+par(mfrow=c(1,2))
+plot(FavPred_lag,col=viridis, main="Lagopus m. (current distribution)")
+plot(FuturePred_lag,col=viridis, main="Lagopus m. (future forecasts)")
+plot(dif_lagPresFut,col=viridis, main="Lagopus m. (difference between present and future) ")
+dev.off()
+
