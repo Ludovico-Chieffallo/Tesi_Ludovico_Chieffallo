@@ -479,12 +479,15 @@ bioc21_40_585<-brick("wc2.1_2.5m_bioc_CNRM-CM6-1_ssp585_2021-2040.tif")
 #bio1<-getData('CMIP6', var='bio', res=2.5, rcp=85, model='CN', year=50)#how can i choice the rcp(Representative Concentration Pathway)
 #impossible to run because CMPI6 doesn't exist in this function. it is not recognized
 
+#crop Europe----
+envDatafut<-crop(bioc21_40_585, Europe)
+EuropePredfut <- mask(envDatafut, Europe) #we create a new raster without NA value 
 
 #Prediction rasterstack climate change----
-predictors_future_min<- raster::extract(bioc21_40_585, minPresAbs[,1:2], df=FALSE) 
-predictors_future_mela<- raster::extract(bioc21_40_585, melaPresAbs[,1:2], df=FALSE) 
-predictors_future_querc<- raster::extract(bioc21_40_585, quercPresAbs[,1:2], df=FALSE) 
-predictors_future_lag<- raster::extract(bioc21_40_585, lagPresAbs[,1:2], df=FALSE) 
+predictors_future_min<- raster::extract(EuropePredfut, minPresAbs[,1:2], df=FALSE) 
+predictors_future_mela<- raster::extract(EuropePredfut, melaPresAbs[,1:2], df=FALSE) 
+predictors_future_querc<- raster::extract(EuropePredfut, quercPresAbs[,1:2], df=FALSE) 
+predictors_future_lag<- raster::extract(EuropePredfut, lagPresAbs[,1:2], df=FALSE) 
 
 #Collinearity----
 vif(predictors_future_min)
@@ -523,7 +526,7 @@ FavModel_lag_future<-multGLM(sdmData_lag_future, sp.cols = 3, var.cols=4:11, fam
 
 
 #Stack bio variables from worldclim----
-fut_pred <-stack(bioc21_40_585)
+fut_pred <-stack(EuropePredfut)
 
 #We can use getPreds----
 FuturePred_min<- getPreds(fut_pred,models=FavModel_min_future$models, id.col=NULL, Y=FALSE, P = FALSE, Favourability = TRUE)
@@ -541,21 +544,8 @@ fav4spfut<-stack(FuturePred_min,FuturePred_mela,FuturePred_querc,FuturePred_lag)
 
 metricsfut<-metrics_pull(fav4spfut)
 
-#Palette----
-
-#palette<-palette_set(fav4sp)
-palette<-palette_set(4, custom_hues = c(54, 130,219, 313))
-
-
 #Map multiples----
-
-#to allocate more memory
-gc()
-memory.size()
-memory.limit()
-memory.limit(size=56000)
-
-mapmultfut<-map_multiples(metricsfut, palettefut, ncol = 2,labels = c("Mioniopterus s.", "Melanita f.", "Quercus r.", "Lagopus m."), lambda_i = -5)
+mapmultfut<-map_multiples(metricsfut, palette, ncol = 2,labels = c("Mioniopterus s.", "Melanita f.", "Quercus r.", "Lagopus m."), lambda_i = -5)
 mapmultfut
 
 #Metrics distill----
@@ -571,29 +561,17 @@ legend<-legend_set(palette, group_labels = c("Mioniopterus s.", "Melanita f.", "
 legend
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #Difference between present and future----
 
-dif_minPresFut <- (FavPred_min-FuturePred_min)
-dif_melaPresFut <- (FavPred_mela-FuturePred_mela)
-dif_quercPresFut <- (FavPred_quer-FuturePred_querc)
-dif_lagPresFut <- (FavPred_lag-FuturePred_lag)
+dif_minPresFut <- (FuturePred_min-FavPred_min)
+dif_melaPresFut <- (FuturePred_mela-FavPred_mela)
+dif_quercPresFut <- (FuturePred_querc-FavPred_quer)
+dif_lagPresFut <- (FuturePred_lag-FavPred_lag)
 
 
-plot(dif_minPresFut)
-plot(dif_melaPresFut)
-plot(dif_quercPresFut)
-plot(dif_lagPresFut)
+viridis <- viridisLite::viridis(100)
+
+plot(dif_minPresFut,col=viridis)
+plot(dif_melaPresFut,col=viridis)
+plot(dif_quercPresFut,col=viridis)
+plot(dif_lagPresFut,col=viridis)
