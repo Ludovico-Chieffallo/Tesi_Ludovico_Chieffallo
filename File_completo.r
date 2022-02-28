@@ -446,6 +446,10 @@ metrics<-metrics_pull(fav4sp)
 
 #Palette----
 
+install.packages("scales")
+library(scales)
+show_col(viridis_pal()(30))
+
 #palette<-palette_set(fav4sp)
 palette<-palette_set(4, custom_hues = c(54, 130,219, 313))
 
@@ -540,29 +544,31 @@ metricsfut<-metrics_pull(fav4spfut)
 #Palette----
 
 #palette<-palette_set(fav4sp)
-palettefut<-palette_set(4, custom_hues = c(54, 130,219, 313))
+palette<-palette_set(4, custom_hues = c(54, 130,219, 313))
 
 
 #Map multiples----
+
+#to allocate more memory
+gc()
+memory.size()
+memory.limit()
+memory.limit(size=56000)
+
 mapmultfut<-map_multiples(metricsfut, palettefut, ncol = 2,labels = c("Mioniopterus s.", "Melanita f.", "Quercus r.", "Lagopus m."), lambda_i = -5)
 mapmultfut
 
 #Metrics distill----
-metricsdist<- metrics_distill(fav4sp)
+metricsdistfut<- metrics_distill(fav4spfut)
 
 
 #Map single----
-mapdist<-map_single(metricsdist,palette, lambda_i = 5) #how can i overlap geometry?
+mapdistfut<-map_single(metricsdistfut,palette, lambda_i = 5) #how can i overlap geometry?
 mapdist
 
 #legend----
 legend<-legend_set(palette, group_labels = c("Mioniopterus s.", "Melanita f.", "Quercus r.", "Lagopus m."))
 legend
-
-
-
-
-
 
 
 
@@ -586,9 +592,6 @@ dif_melaPresFut <- (FavPred_mela-FuturePred_mela)
 dif_quercPresFut <- (FavPred_quer-FuturePred_querc)
 dif_lagPresFut <- (FavPred_lag-FuturePred_lag)
 
-#Warning message:
-#  In FavPred_quer - FuturePred_querc :
-#  Raster objects have different extents. Result for their intersection is returned
 
 plot(dif_minPresFut)
 plot(dif_melaPresFut)
