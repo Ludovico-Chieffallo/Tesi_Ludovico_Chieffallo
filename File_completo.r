@@ -366,7 +366,7 @@ melaPresAbs<-rbind(sample_abxymeladf, xypmela)
 quercPresAbs<-rbind(sample_abxyQuercdf, xypQuerc)
 lagPresAbs<-rbind(sample_abxyLagdf, xypLagopus )
 
-
+#Predictors----
 
 predictors_min<- raster::extract(EuropePred, minPresAbs[,1:2], df=T)
 predictors_min<- predictors_min[,-1]
@@ -381,7 +381,7 @@ predictors_lag<- raster::extract(EuropePred, lagPresAbs[,1:2], df=T)
 predictors_lag<- predictors_lag[,-1]
 
 
-#collinearity----
+#Collinearity----
 
 vif(predictors_min)
 vifmin<-vifcor(predictors_min, th=0.9)
@@ -394,12 +394,12 @@ vifmelastep<-vifstep(predictors_mela,th=10)
 predictors_mela<-exclude(predictors_mela,vifmelastep)
 
 
-vif(predictors_min)
+vif(predictors_quer)
 vifquerstep<-vifstep(predictors_quer,th=10)
 predictors_quer<-exclude(predictors_quer,vifquerstep)
 
 
-vif(predictors_min)
+vif(predictors_lag)
 viflagstep<-vifstep(predictors_lag,th=10)
 predictors_lag<-exclude(predictors_lag,viflagstep)
 
@@ -421,9 +421,9 @@ sdmData_lag
 #Favourability model miniopterus----
 
 FavModel_min<-multGLM(sdmData_min, sp.cols = 3, var.cols=4:10, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
-FavModel_mela<-multGLM(sdmData_mela, sp.cols = 3, var.cols=4:10, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
-FavModel_quer<-multGLM(sdmData_quer, sp.cols = 3, var.cols=4:10, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
-FavModel_lag<-multGLM(sdmData_lag, sp.cols = 3, var.cols=4:10, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_mela<-multGLM(sdmData_mela, sp.cols = 3, var.cols=4:11, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_quer<-multGLM(sdmData_quer, sp.cols = 3, var.cols=4:11, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_lag<-multGLM(sdmData_lag, sp.cols = 3, var.cols=4:11, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
 
 
 
@@ -451,8 +451,8 @@ palette<-palette_set(4, custom_hues = c(54, 130,219, 313))
 
 
 #Map multiples----
-mapmult<-map_multiples(metrics, palette, ncol = 2, lambda_i = -5, labels = names(fav4sp))
-
+mapmult<-map_multiples(metrics, palette, ncol = 2,labels = c("Mioniopterus s.", "Melanita f.", "Quercus r.", "Lagopus m."), lambda_i = -5)
+mapmult
 
 #Metrics distill----
 metricsdist<- metrics_distill(fav4sp)
@@ -460,8 +460,11 @@ metricsdist<- metrics_distill(fav4sp)
 
 #Map single----
 mapdist<-map_single(metricsdist,palette, lambda_i = 5) #how can i overlap geometry?
+mapdist
+
 #legend----
-legend<-legend_set(palette, group_labels = names(fav4sp))
+legend<-legend_set(palette, group_labels = c("Mioniopterus s.", "Melanita f.", "Quercus r.", "Lagopus m."))
+legend
 
 #Download and import worldclim for the future----
 
@@ -474,35 +477,106 @@ bioc21_40_585<-brick("wc2.1_2.5m_bioc_CNRM-CM6-1_ssp585_2021-2040.tif")
 
 
 #Prediction rasterstack climate change----
-predictors_future_min<- raster::extract(bioc21_40_126, minPresAbs[,1:2], df=FALSE) 
-predictors_future_mela<- raster::extract(bioc21_40_126, melaPresAbs[,1:2], df=FALSE) 
-predictors_future_querc<- raster::extract(bioc21_40_126, quercPresAbs[,1:2], df=FALSE) 
-predictors_future_lag<- raster::extract(bioc21_40_585, LagPresAbs[,1:2], df=FALSE) 
+predictors_future_min<- raster::extract(bioc21_40_585, minPresAbs[,1:2], df=FALSE) 
+predictors_future_mela<- raster::extract(bioc21_40_585, melaPresAbs[,1:2], df=FALSE) 
+predictors_future_querc<- raster::extract(bioc21_40_585, quercPresAbs[,1:2], df=FALSE) 
+predictors_future_lag<- raster::extract(bioc21_40_585, lagPresAbs[,1:2], df=FALSE) 
+
+#Collinearity----
+vif(predictors_future_min)
+vifminstepfut<-vifstep(predictors_future_min,th=10)
+predictors_future_min<-exclude(predictors_future_min,vifminstepfut)
+
+
+vif(predictors_future_mela)
+vifmelastepfut<-vifstep(predictors_future_mela,th=10)
+predictors_future_mela<-exclude(predictors_future_mela,vifmelastepfut)
+
+
+vif(predictors_future_querc)
+vifquerstepfut<-vifstep(predictors_future_querc,th=10)
+predictors_future_querc<-exclude(predictors_future_querc,vifquerstepfut)
+
+
+vif(predictors_future_lag)
+viflagstepfut<-vifstep(predictors_future_lag,th=10)
+predictors_future_lag<-exclude(predictors_future_lag,viflagstepfut)
 
 
 #Dataframe pres/abs and predictors----
 sdmData_min_future<-data.frame(cbind(minPresAbs, predictors_future_min))
 sdmData_mela_future<-data.frame(cbind(melaPresAbs, predictors_future_mela))
 sdmData_querc_future<-data.frame(cbind(quercPresAbs, predictors_future_querc))
-sdmData_lag_future<-data.frame(cbind(LagPresAbs, predictors_future_lag))
+sdmData_lag_future<-data.frame(cbind(lagPresAbs, predictors_future_lag))
 
 
 #Multglm----
 
-FavModel_min_future<-multGLM(sdmData_min_future, sp.cols = 3, var.cols=4:8, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
-FavModel_mela_future<-multGLM(sdmData_mela_future, sp.cols = 3, var.cols=4:8, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
-FavModel_querc_future<-multGLM(sdmData_querc_future, sp.cols = 3, var.cols=4:8, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
-FavModel_lag_future<-multGLM(sdmData_lag_future, sp.cols = 3, var.cols=4:8, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_min_future<-multGLM(sdmData_min_future, sp.cols = 3, var.cols=4:11, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_mela_future<-multGLM(sdmData_mela_future, sp.cols = 3, var.cols=4:11, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_querc_future<-multGLM(sdmData_querc_future, sp.cols = 3, var.cols=4:11, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
+FavModel_lag_future<-multGLM(sdmData_lag_future, sp.cols = 3, var.cols=4:11, family = "binomial",step = FALSE, Y.prediction = TRUE, P.prediction = TRUE, Favourability = TRUE)
 
 
 #Stack bio variables from worldclim----
-fut_pred <-stack(bioc21_40_126)
+fut_pred <-stack(bioc21_40_585)
 
 #We can use getPreds----
 FuturePred_min<- getPreds(fut_pred,models=FavModel_min_future$models, id.col=NULL, Y=FALSE, P = FALSE, Favourability = TRUE)
 FuturePred_mela<- getPreds(fut_pred,models=FavModel_mela_future$models, id.col=NULL, Y=FALSE, P = FALSE, Favourability = TRUE)
 FuturePred_querc<- getPreds(fut_pred,models=FavModel_querc_future$models, id.col=NULL, Y=FALSE, P = FALSE, Favourability = TRUE)
 FuturePred_lag<- getPreds(fut_pred,models=FavModel_lag_future$models, id.col=NULL, Y=FALSE, P = FALSE, Favourability = TRUE)
+
+
+
+
+#We can use colorist----
+fav4spfut<-stack(FuturePred_min,FuturePred_mela,FuturePred_querc,FuturePred_lag)
+
+#Metrics pull----
+
+metricsfut<-metrics_pull(fav4spfut)
+
+#Palette----
+
+#palette<-palette_set(fav4sp)
+palettefut<-palette_set(4, custom_hues = c(54, 130,219, 313))
+
+
+#Map multiples----
+mapmultfut<-map_multiples(metricsfut, palettefut, ncol = 2,labels = c("Mioniopterus s.", "Melanita f.", "Quercus r.", "Lagopus m."), lambda_i = -5)
+mapmultfut
+
+#Metrics distill----
+metricsdist<- metrics_distill(fav4sp)
+
+
+#Map single----
+mapdist<-map_single(metricsdist,palette, lambda_i = 5) #how can i overlap geometry?
+mapdist
+
+#legend----
+legend<-legend_set(palette, group_labels = c("Mioniopterus s.", "Melanita f.", "Quercus r.", "Lagopus m."))
+legend
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #Difference between present and future----
