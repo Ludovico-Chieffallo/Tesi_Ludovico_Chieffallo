@@ -19,7 +19,7 @@
 \usepackage{listings}
 \usepackage{tcolorbox}
 \usepackage{fixltx2e}
-
+\usepackage{float}
 %%%%%%%%
 \linespread{1.2}    %comando per impostare l'interlinea
 %%%%%%%%
@@ -369,7 +369,6 @@ In this project a future scenario was analyzed using the bioclimatic variables c
 Studying how the distribution of species varies with changing climatic conditions is fundamental to understand the dynamics between species that previously occupied different territories and that now and in the future may find themselves in common spaces they are not used to, this leads to loss of biodiversity, new population dynamics and new strategies for the conservation of these species.
 WorldClim's future data has been structured thanks to the Coupled Model Intercomparison Project (CMIP6) which is a collaborative framework designed to improve knowledge of climate change \citep{CMIP6}.
 
-
 \section{Results}
 The first step in conducting the analysis was to properly download the occurrences from the Global Biodiversity Information Facility (GBIF), once downloaded, they were carefully filtered thanks to the \texttt{dplyr} package. 
 The downloaded and filtered data were then reduced to a sample of 5000 occurrences, a large enough number to allow us to study the vast area under analysis.
@@ -380,49 +379,119 @@ At this point the collinearity from our data occurred; 2 function basically were
 Subsequently with the \texttt{exclude ()} function all those variables related to each other have been removed, allowing us to have a more reliable model. 
 Once the data of interest were obtained, a generalized linear model (GLM) was created with the \texttt{multGLM ()} function and the \texttt{getPreds ()} function. 
 At this point it was possible to pass to the representation process using the colorist package; after calculating the metrics and creating the colorimetric palette based on colors taken from the \texttt{viridis} palette, it was possible to generate the multiple map with the distribution model of the corresponding species.
-\\
-\\
-\\
-\\
-\\
-\\
-{\begin{figure}[htbp]
-\centerline{\includegraphics[scale=.9]{map mult pres.png}}
-\caption{The map shows how the four species analyzed are distributed.
-The color allows us to understand how the areas with a greater intensity are the areas with the highest distribution rate up to the white areas with a very low or completely absent distribution rate.}
-\label{fig}
-\end{figure}}\\
-\texttt{colorist} allows us to use a very useful function for representation, so after distilling the information with the \texttt{metrics\_distill()} function, it was possible to create a single map with all the information in the same map in the form of intensity and specificity, this will allow us to understand which areas of the territory are more specific for a species and which ones are shared by several species.
-\\
 
-\begin{figure}[htbp]
-\centerline{\includegraphics]{}}
-\caption{The map shows how the four species analyzed are distributed.
-The color allows us to understand how the areas with a greater intensity are the areas with the highest distribution rate up to the white areas with a very low or completely absent distribution rate.}
+{\begin{figure}[H]
+\centerline{\includegraphics[scale=.9]{map mult pres.png}}
+\caption{\textit{The map shows how the four species analyzed are distributed.
+The color allows us to understand how the areas with a greater intensity are the areas with the highest distribution rate up to the white areas with a very low or completely absent distribution rate.}}
+\label{fig}
+\end{figure}} 
+\vspace{1cm}
+\texttt{colorist} allows us to use a very useful function for representation, so after distilling the information with the \texttt{metrics\_distill()} function, it was possible to create a single map with all the information in the same map in the form of intensity and specificity, this will allow us to understand which areas of the territory are more specific for a species and which ones are shared by several species.
+\vspace{1cm}
+
+\begin{figure}[H]
+\centerline{\includegraphics{mapdist.png}}
+\caption{\textit{This map includes all species and gives us values of intensity and specificity.
+If a color is predominant, it means that that territory is specific to the species corresponding to the color, while the white areas or areas with a low intensity indicate a shared space or not specific to any species.}}
+\label{fig}
+\end{figure}
+
+\vspace{1cm}
+For an accurate understanding of this map we use the \texttt{legend\_set()} function which will generate a legend able to make us understand how the colors are distributed on the map.
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=.7]{legend.png}}
+\caption{\textit{The legend explains how the colors are handled in the single \texttt{colorist} map.}}
+\label{fig}
+\end{figure}
+\vspace{1cm}
+Another aim of this project was to study and compare a species distribution model at the present time and one with future predictions.
+Similarly to the previous model, the same analyzes were made but this time with the bioclimatic variables for the time span from 2021 to 2040.
+After developing the model, it was possible to use colorist for the representation.
+\vspace{1cm}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=.9]{map mult fut.png}}
+\caption{\textit{This map defines the forecasts of the distributions of the species investigated in this project, in the period from 2021 to 2040.}}
 \label{fig}
 \end{figure}
 
 
+In viewing the map, in our opinion, there was no clear understanding of the change between present and future.
+To solve this visualization problem, a difference was made between the plot containing the data projected to the future and the plot with the data at the present time.
+Therefore, in the first analysis, a comparison was made between the present and future distributions for each species and subsequently a difference was made that allowed us to see more clearly what was the change in the distribution of species in the two time frames.
+\vspace{1cm}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=.4]{minio nowfutu.png}}
+\caption{\textit{Representation of the two distributions at present time (left map) and with future forecasts (right map).
+The yellow colored areas represent the points where the species Miniopterus s. is most distributed. while the darker areas represent the areas where absent.}}
+\label{fig}
+\end{figure}
+
+\begin{figure}[H]
+\centerline{\includegraphics[scale=.4]{melapresfut.png}}
+\caption{\textit{Representation of the two distributions at present time (left map) and with future forecasts (right map).
+The yellow colored areas represent the points where the species Melanitta f. is most distributed. while the darker areas represent the areas where absent.}}
+\label{fig}
+\end{figure}
+\vspace{1cm}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=.4]{quercpresfut.png}}
+\caption{\textit{Representation of the two distributions at present time (left map) and with future forecasts (right map).
+The yellow colored areas represent the points where the species quercus r. is most distributed. while the darker areas represent the areas where absent.}}
+\label{fig}
+\end{figure}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=.4]{lagoppresfut.png}}
+\caption{\textit{Representation of the two distributions at present time (left map) and with future forecasts (right map).
+The yellow colored areas represent the points where the species Lagopus m. is most distributed. while the darker areas represent the areas where absent.}}
+\label{fig}
+\end{figure}
+\vspace{1cm}
 
 
 
-
+\begin{figure}[H]
+\centerline{\includegraphics[scale=.9]{miniodiff.png}}
+\caption{\textit{This map represents the difference between the values obtained from the models at the future time and the models at the present time. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
+\label{fig}
+\end{figure}
+\vspace{1cm}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=.9]{meladiff.png}}
+\caption{\textit{This map represents the difference between the values obtained from the models at the future time and the models at the present time. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
+\label{fig}
+\end{figure}
+\vspace{1cm}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=.9]{quercdiff.png}}
+\caption{\textit{This map represents the difference between the values obtained from the models at the future time and the models at the present time. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
+\label{fig}
+\end{figure}
+\vspace{1cm}
+\begin{figure}[H]
+\centerline{\includegraphics[scale=.9]{lagdiff.png}}
+\caption{\textit{This map represents the difference between the values obtained from the models at the future time and the models at the present time. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
+\label{fig}
+\end{figure}
+\vspace{1cm}
+It is important to remember that all the maps of this project are developed with the viridis colorimetric palette, which allows people with color vision deficiency (CVD) to perceive colors efficiently and thus avoid a misinterpretation of the research.
 
 
 \newpage
 \section{Discussion}
-kfhj
+%da caricare nel primo pomeriggio massimo
 
 \newpage
 \section{Conclusion}
-
-yyegd
+%da caricare nel primo pomeriggio massimo
 
 \newpage
 \section{Future studies}
-\newpage
+%da caricare nel primo pomeriggio massimo
+
 \section{Acknowledgments}
-hhfb
+%da caricare nel primo pomeriggio massimo
 
 
 
