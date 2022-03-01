@@ -25,6 +25,7 @@ library(rgbif)
 library(RStoolbox)
 library(spMaps)
 library(caret)
+library(scales)
 
 #Import data miniopterus---- 
 
@@ -456,7 +457,7 @@ palette<-palette_set(4, custom_hues = c(54, 130,219, 313))
 
 
 #Map multiples----
-mapmult<-map_multiples(metrics, palette, ncol = 2,labels = c("Mioniopterus s.", "Melanita f.", "Quercus r.", "Lagopus m."), lambda_i = -5)
+mapmult<-map_multiples(metrics, palette, ncol = 2,labels = c( "Mioniopterus s.", "Melanita f.", "Quercus r.", "Lagopus m."), lambda_i = -5)
 mapmult
 
 #Metrics distill----
@@ -573,40 +574,32 @@ dif_lagPresFut <- (FuturePred_lag-FavPred_lag)
 viridis <- viridisLite::viridis(100)
 x<-zoom(EuropePred,ext=c(-40,50,30,80))
 
-
-
-
-par(mfrow=c(1,2))
-plot(FavPred_min,col=viridis, main="Miniopterus s. (current distribution)", ext=x)
-plot(FuturePred_min,col=viridis, main="Miniopterus s. (future forecasts)", ext=x)
+par(mar=c(2, 4, 2, 2), mfrow=c(1,2),oma = c(1, 3, 1,1))
+plot(FavPred_min,col=viridis, main=substitute(paste(italic("Miniopterus s. (current distribution)"))),cex.main=1.5, ext=x)
+plot(FuturePred_min,col=viridis, main=substitute(paste(italic("Miniopterus s.(future forecasts)"))),cex.main=1.5, ext=x)
 dev.off()
-plot(dif_minPresFut,col=viridis, main="Miniopterus s. (difference between present and future) ", ext=x)
+plot(dif_minPresFut,col=viridis, main=substitute(paste(italic("Miniopterus s. (difference between present and future)"))), cex.main=1,ext=x)
 
 
 
-par(mfrow=c(1,2))
-plot(FavPred_mela,col=viridis, main="Melanitta f. (current distribution)", ext=x)
-plot(FuturePred_mela,col=viridis, main="Melanitta f. (future forecasts)", ext=x)
+par(mar=c(2, 4, 2, 2), mfrow=c(1,2),oma = c(1, 3, 1,1))
+plot(FavPred_mela,col=viridis, main=substitute(paste(italic("Melanitta f. (current distribution)"))),sub="Current distribution",cex.main=1.5, ext=x)
+plot(FuturePred_mela,col=viridis, main=substitute(paste(italic("Melanitta f. (future forecasts) "))), cex.main=1.5,ext=x)
 dev.off()
-plot(dif_melaPresFut,col=viridis, main="Melanitta f. (difference between present and future) ", ext=x)
+plot(dif_melaPresFut,col=viridis, main=substitute(paste(italic("Melanitta f.(difference between present and future) "))),cex.main=1, ext=x)
 
 
 
-par(mfrow=c(1,2))
-plot(FavPred_quer,col=viridis, main="Quercus r. (current distribution)", ext=x)
-plot(FuturePred_querc,col=viridis, main="Quercus r. (future forecasts)", ext=x)
+par(mar=c(2, 4, 2, 2), mfrow=c(1,2),oma = c(1, 3, 1,1))
+plot(FavPred_quer,col=viridis, main=substitute(paste(italic("Quercus r. (current distribution)"))),cex.main=1.5, ext=x)
+plot(FuturePred_querc,col=viridis, main=substitute(paste(italic("Quercus r. (Future forecasts)"))),cex.main=1.5, ext=x)
 dev.off()
-plot(dif_quercPresFut,col=viridis, main="Quercus r. (difference between present and future) ", ext=x)
+plot(dif_quercPresFut,col=viridis, main=substitute(paste(italic("Quercus r. (difference between present and future)"))),cex.main=1, ext=x)
 
 
-par(mfrow=c(1,2))
-plot(FavPred_lag,col=viridis, main="Lagopus m. (current distribution)", ext=x)
-plot(FuturePred_lag,col=viridis, main="Lagopus m. (future forecasts)", ext=x)
+par(mar=c(2, 4, 2, 2), mfrow=c(1,2),oma = c(1, 3, 1,1))
+plot(FavPred_lag,col=viridis, main=substitute(paste(italic("Lagopus m. "))),sub="Current distribution",cex.main=1.5, ext=x)
+plot(FuturePred_lag,col=viridis, main=substitute(paste(italic("Lagopus m.(future forecasts) "))),cex.main=1.5, ext=x)
 dev.off()
-plot(dif_lagPresFut,col=viridis, main="Lagopus m. (difference between present and future) ", ext=x)
-
-
-
-#try----
-
+plot(dif_lagPresFut,col=viridis, main=substitute(paste(italic("Lagopus m. (difference between present and future)"))),cex.main=1, ext=x)
 
