@@ -110,7 +110,7 @@ The hypothesis was to be able to use the R package called colorist to represent 
 Species distribution models were created to test the hypotheses. Based on the presence-absence method, a generalized linear model (GLM) was created and the colorist package was used for graphical representation.
 Thanks to the use of colors, it was possible to see which portions of space were shared by different species and which ones were more specific to a species.
 The use of colors based on the HCL palette, and precisely on the colors taken from the viridis palette, is important because it allows an effective reading of the representations even for people with color vision deficiency.
-The use of this package was therefore crucial for the representation of the data and places it as a useful tool for future studies not only of one, but for multiple species that make up an ecological community; this will allow us to better understand the population dynamics and enhance the conservation aspect of endangered species.
+The use of this package was therefore crucial for data representation and demonstrates how it can become a useful tool for studying ecological communities; this will allow us to better understand the population dynamics and enhance the conservation aspect of endangered species.
  
  
 \vspace{1cm}
@@ -158,11 +158,14 @@ The colorist workflow is mainly composed of 4 steps: the creation of the metrics
 It is precisely in the step of creating the palette that with the function \texttt{custom\_hues} we can decide the color to be adopted within our maps, the value can vary from -360 to +360 and represents the hue in the color wheel.
 Finally, this project questioned how climate change can affect the distribution of species in the future in order to better understand future community dynamics. This gives us the opportunity to mobilize for the conservation of endangered species but also to prevent others from becoming endangered species.
 
-\newpage
 \section{Aim}
-dff
+For this project, several aspects relating to the ecological community have been analyzed and for this reason we cannot define a single purpose, but multiple ones.
+In the first analysis, a goal of this project was to verify if the colorist package could give us a reliable, effective and concrete representation of the data developed for the study of an ecological community and not on single species.
+Having chosen species with a decreasing population, we wanted to understand how these were distributed within the European territory, trying to understand even if their habitat was fragmented.
+Consequently, a key goal was to create a performing model that was reliable for studying species distribution.
+Ultimately we wanted to create a species distribution model with predictions for the future, to understand how these species, with a population already decreasing due to various factors, could be distributed in a less favorable condition due to climate change and where these species could move.
+The general objective was therefore to study an all-round ecology community, in the present and in the future, with a representation as effective as possible and to lay good future foundations for the use of the colorist package that can open various perspectives by placing itself as a point reference in the study of ecology.
 
-\newpage
 \section{Methods}
 \subsection{Study area}
 The study area chosen for this project was Europe, covering an area of approximately 6,184,800 km2.
@@ -256,7 +259,7 @@ Correlative models can be of three types: presence-absence, presence-background,
 The presence-absence model was used for this project.
 The presence-absence methods intuitively use the observations of the occurrences and absences of species. The absences correspond to places where the species was not found during field sampling. When geo-referenced absences are not available, it is possible to create pseudo-absences (artificially created).
 Presence-absence modeling methods include: logistic regression \citep{bri}, generalized linear models and generalized additive models \citep{guis}, random forest \citep{brei}, boosted regression trees \citep{Eli}, multivariate adaptive regression splines \\ \citep{mois}, and artificial neural networks \citep{tarr}.
-The generalized linear model (GLM) was chosen for this project.
+ For this project the generalized linear model (GLM) was chosen following the examples of previous studies\citep{eng} \citep{you} .
 \subsubsection{SDM structure}
 
 The development process of an SDM is mainly composed of 4 phases: preparation of the data necessary for the project, calculation of the models, evaluation of the models and finally application of the models. Doing the data preparation is the part that will take the longest \citep{sil}.
@@ -266,7 +269,7 @@ Species occurrence records are indispensable for calculating a correlative niche
 Once the presences were obtained, the pseudo-absences were created.
 Pseudo-absences must be created with caution as their positioning can strongly influence the results of the models \citep{mass}.
 The pseudo absences can be created in various ways, we have chosen the function (random points), this has allowed the creation of random points on the map excluding the points of presence.
-A prevalence rate of 0.4 was set for the creation of the pseudo-absence points.
+A prevalence rate of 0.4 was set for the creation of the pseudo-absence points; this value proved to be effective given the very vast territorial extension of the study.
 A sample of 5000 occurrences for each species was chosen, consequently the pseudo absences created were 12,500 according to this formula:\\ \[(P)0.4=\frac{5000(Pres)}{12.500 (Abs)}\] \\
 The best number of pseudo absences depends on the modeling technique used\\ \citep{kan} \citep{mass} .
 In the case of this project based on generalized linear models, a good number of pseudo-absences is represented by a value greater than 10,000.
@@ -367,11 +370,44 @@ Studying how the distribution of species varies with changing climatic condition
 WorldClim's future data has been structured thanks to the Coupled Model Intercomparison Project (CMIP6) which is a collaborative framework designed to improve knowledge of climate change \citep{CMIP6}.
 
 
-\subsection{Model performance}
-
-\newpage
 \section{Results}
-oijhf
+The first step in conducting the analysis was to properly download the occurrences from the Global Biodiversity Information Facility (GBIF), once downloaded, they were carefully filtered thanks to the \texttt{dplyr} package. 
+The downloaded and filtered data were then reduced to a sample of 5000 occurrences, a large enough number to allow us to study the vast area under analysis.
+
+At a later time, the pseudo-absences were created to continue the analysis; given the high extension, a prevalence of 0.4 was set, so the pseudo-absence points generated were 12,500 which, joining with the presences, reached a number of 17,500 points to create the model.
+These points, in fact, have been combined using the \texttt{rbind()} function, in order to have a single file to create your predictors.
+At this point the collinearity from our data occurred; 2 function basically were considered: \texttt{vifcor ()} and \texttt{vifstep ()}.
+Subsequently with the \texttt{exclude ()} function all those variables related to each other have been removed, allowing us to have a more reliable model. 
+Once the data of interest were obtained, a generalized linear model (GLM) was created with the \texttt{multGLM ()} function and the \texttt{getPreds ()} function. 
+At this point it was possible to pass to the representation process using the colorist package; after calculating the metrics and creating the colorimetric palette based on colors taken from the \texttt{viridis} palette, it was possible to generate the multiple map with the distribution model of the corresponding species.
+\\
+\\
+\\
+\\
+\\
+\\
+{\begin{figure}[htbp]
+\centerline{\includegraphics[scale=.9]{map mult pres.png}}
+\caption{The map shows how the four species analyzed are distributed.
+The color allows us to understand how the areas with a greater intensity are the areas with the highest distribution rate up to the white areas with a very low or completely absent distribution rate.}
+\label{fig}
+\end{figure}}\\
+\texttt{colorist} allows us to use a very useful function for representation, so after distilling the information with the \texttt{metrics\_distill()} function, it was possible to create a single map with all the information in the same map in the form of intensity and specificity, this will allow us to understand which areas of the territory are more specific for a species and which ones are shared by several species.
+\\
+
+\begin{figure}[htbp]
+\centerline{\includegraphics]{}}
+\caption{The map shows how the four species analyzed are distributed.
+The color allows us to understand how the areas with a greater intensity are the areas with the highest distribution rate up to the white areas with a very low or completely absent distribution rate.}
+\label{fig}
+\end{figure}
+
+
+
+
+
+
+
 
 \newpage
 \section{Discussion}
@@ -546,7 +582,7 @@ R. Kanagaraj, T. Wiegand, A. Mohamed, S. Kramer-Schadt
 Modelling species distributions to map the road towards carnivore conservation in the tropics
 
 \bibitem[Dormann et al. 2013]{dor13}
-C.F. Dormann, J. Elith, S. Bacher, C. Buchmann, G. Carl, G. Carré, J.R.G. Marquéz, B. Gruber, B. Lafourcade, P.J. Leitão, T. Münkemüller, C. McClean, P.E. Osborne, B. Reineking, B. Schröder, A.K. Skidmore, D. Zurell, S. Lautenbach
+C.F. Dormann, J. Elith, S. Bacher, C. Buchmann, G. Carl, G. Carré, J.R.G. Marquéz, B. Gruber, B. Lafourcade, P.J. Leitão, T. Münkemüller, C. McClean, P.E. Osborne, B. Reineking, B. Schroder, A.K. Skidmore, D. Zurell, S. Lautenbach
 Collinearity: a review of methods to deal with it and a simulation study evaluating their performance
 Ecograph. (Cop.), 36 (2013), pp. 27-46, 10.1111/j.1600-0587.2012.07348.x
 
@@ -579,7 +615,7 @@ Cardinale, B., Duffy, J., Gonzalez, A. et al. Biodiversity loss and its impact o
 (https://biogeografia-uma.com/wp-content/uploads/2018/09/The\_favourability\_function.pdf)
 
 \bibitem[Dormann et al. 2012]{dor12}
-C.F. Dormann, S.J. Schymanski, J. Cabral, I. Chuine, C. Graham, F. Hartig, M. Kearney, X. Morin, C. Römermann, B. Schröder, A. Singer
+C.F. Dormann, S.J. Schymanski, J. Cabral, I. Chuine, C. Graham, F. Hartig, M. Kearney, X. Morin, C. Romermann, B. Schroder, A. Singer
 Correlation and process in species distribution models: bridging a dichotomy
 J. Biogeogr., 39 (2012), pp. 2119-2131, 10.1111/j.1365-2699.2011.02659.x
 
@@ -590,6 +626,14 @@ Ecol. Lett., 4 (2009), pp. 334-350
 
 \bibitem[Schuetz et al. 2020]{Schuetz}
 Schuetz, Justin G, Matthew Strimas‐Mackey, Tom Auer, and Laura Graham. "Colorist: An R Package for Colouring Wildlife Distributions in Space–time." Methods in Ecology and Evolution 11.11 (2020): 1476-482. Web
+
+
+\bibitem[Engler et al. 2004]{eng} 
+Engler, R., Guisan, A. and Rechsteiner, L. (2004), An improved approach for predicting the distribution of rare and endangered species from occurrence and pseudo-absence data. Journal of Applied Ecology, 41: 263-274. https://doi.org/10.1111/j.0021-8901.2004.00881.x
+
+\bibitem[You et al. 2018]{you}
+You, M.P., Rensing, K., Renton, M. and Barbetti, M.J. (2018), Critical factors driving aphanomyces damping-off and root disease in clover revealed and explained using linear and generalized linear models and boosted regression trees. Plant Pathol, 67: 1374-1387. https://doi.org/10.1111/ppa.12837
+
 
 
 \end{thebibliography}
