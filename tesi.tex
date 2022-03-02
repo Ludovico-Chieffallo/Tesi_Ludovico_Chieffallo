@@ -20,6 +20,7 @@
 \usepackage{tcolorbox}
 \usepackage{fixltx2e}
 \usepackage{float}
+\usepackage{geometry}
 %%%%%%%%
 \linespread{1.2}    %comando per impostare l'interlinea
 %%%%%%%%
@@ -69,10 +70,8 @@ Elisa Marchetto\\ Enrico Tordoni}}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.47\textwidth}\raggedleft
-{\large{\bf Presentata da:
-\\
-
-Ludovico Chieffallo}\\
+{\large{\bf Presentata da:\\
+Ludovico Leopoldo Chieffallo}\\
 \vspace{3mm}
 Matricola: 0000949523}
 \end{minipage}
@@ -103,37 +102,41 @@ Da scrivere in seguito\ldots                      %\ldots lascia tre puntini
 \tableofcontents
 \linespread{1.5} 
 \newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Abstract}
  Describing how, when and why species are present in a given territory is becoming more and more necessary in a world that changes very quickly.
 This is particularly important for studying how species interact as an ecological community and how these balances can change with the introduction of other species due, among other factors, to the climate change that forces many species to move towards more hospitable territories.
-The hypothesis was to be able to use the R package called colorist to represent the dynamics of the ecology community.
-Species distribution models were created to test the hypotheses. Based on the presence-absence method, a generalized linear model (GLM) was created and the colorist package was used for graphical representation.
+The hypothesis was to be able to use the R package called \texttt{colorist} to represent the dynamics of the ecology community.
+Species distribution models were created to test the hypotheses. Based on the presence-absence method, a generalized linear model (GLM) was created and the \texttt{colorist} package was used for graphical representation.
 Thanks to the use of colors, it was possible to see which portions of space were shared by different species and which ones were more specific to a species.
 The use of colors based on the HCL palette, and precisely on the colors taken from the viridis palette, is important because it allows an effective reading of the representations even for people with color vision deficiency.
 The use of this package was therefore crucial for data representation and demonstrates how it can become a useful tool for studying ecological communities; this will allow us to better understand the population dynamics and enhance the conservation aspect of endangered species.
  
  
 \vspace{1cm}
-\textbf{Keywords}: colorist, biodiversity, species distribution models, climate change, colour vision deficiency, ecological community, presence-absence models
+\textbf{Keywords}: colorist, biodiversity, species distribution models, climate change, colour vision deficiency, ecological community, favourability.
 \\
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 \subsection{Biodiversity}
 \textit{"The most unique feature of Earth is the existence of life, and the most extraordinary feature of life is its diversity."} \citep{cardinale}.\\
 Biodiversity is the variety of all forms of life on earth but the most important point is that it is fundamental for the balance of this planet.
 Biodiversity is fundamental in many respects: conversion of solar energy, decomposition of organic matter, pollination, sustenance, raw materials useful for our economy, etc.
 Biodiversity is regulated by a very delicate balance.
-Many species, despite their resilience, are unable to adapt to changes in such a fast time frame.
+Many species, despite their resilience, are unable to adapt to changes in a fast time frame.
 The consequence of this is that biodiversity is on the decline; currently there are about 142,500 species within the IUCN red list with over 40,000 species threatened with extinction \citep{IUCN}. This number is obviously indicative and underestimated compared to the real numbers, in fact, the next goal of the International Union for Conservation of Nature is to reach 160,000 species to be included in the list.
 To address this problem, one of the practical aspects adopted is monitoring, with the consequent objective of proposing a conservation system for the investigated species.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{SDM and favourability}
-In the ecological field, researchers use species distribution models (SDMs) to study the relationships between known occurrences of species and the characteristics of the ecological and environmental landscape.
+The use of species distribution models (SDMs) to map and monitor the distribution of plants and animals has become increasingly important when aiming at understanding environmental change, population dynamics and ecological consequences \citep{mil}.
 These models are useful not only for understanding where species are in this historical moment, but they are important for understanding where they were present in the past and for predicting where they might be in the future, allowing for an in-depth study of community dynamics.
+In addition to predicting the distribution of species, SDMs have become important for many studies that include the study of climate change, the identification of potential protected areas, the determination of places more or less susceptible to invasions, etc. \citep{mil}.
 Invasive species are highly regarded as they can have devastating effects on native species and the habitat itself.
-With the SDMs it is possible to predict the movements of these species and consequently also predict the possible arrival of invasive species.
 There are mainly 3 categories of SDM: mechanistic, correlative and hybrid \citep{dor12}. While mechanistic models generally incorporate physiological, morphological and behavioral data \citep{kea}, correlative and hybrid models use geographic occurrence data.
 The correlative SDM category is in turn divided into 3 types: presence-absence, presence-background and presence-only methods.
-For our project, the correlative category of presence-absence was used based on occurrences taken from the Global Biodiversity Information Facility (GBIF) and creating artificial absences (pseudo-absences).
+The presence-absence methods intuitively use the observations of the occurrences and absences of species. The absences correspond to places where the species was not found during field sampling. When geo-referenced absences are not available, it is possible to create pseudo-absences (artificially created).
+Presence-absence modeling methods include: logistic regression \citep{bri}, generalized linear models and generalized additive models \citep{guis}, random forest \citep{brei}, boosted regression trees \citep{Eli}, multivariate adaptive regression splines \\ \citep{mois}, and artificial neural networks \citep{tarr}.
+For our project, the correlative category of presence-absence was used based on occurrences taken from the Global Biodiversity Information Facility (GBIF) and creating artificial absences (pseudo-absences) and the generalized linear model (GLM) was chosen following the examples of previous studies \citep {eng} \citep {you}.
 In general, the SDMs provide output in 2 different formats: probability (logistic regression, GAM, enhanced regression trees, random forests) and suitability (eg GARP, ENFA, MaxEnt). \\ \textit{'Probabilistic results are influenced by an uneven proportion of species presences and absences. Regardless of the environmental conditions, most of the probability values of presence in the study area will be high if referred to widespread species; instead, they will be low if the target species is a microendemism.'} \citep{fav}
 The consequence is that the probabilistic results defined for the species can neither be compared nor combined and on the other hand, the suitability lacks a standard unit of measurement and this makes them in turn unmatchable.
 Here we introduce the concept of favourability; in fact, the models based on favourability produce comparable values regardless of the presence and absence value of the species distributions and therefore it is possible to compare and combine models for different species and for different environmental factors.
@@ -141,54 +144,61 @@ The favourability values (F, ranging from 0 to 1) can be obtained directly from 
 \\ \[ F=\dfrac{\frac{P}{(1-P)}}{\frac{n_1}{n_0}+\frac{P}{(1-P)}}\] \\
 
 Where \textit{P} is the probability of the presence of a species, \textit{n\textsubscript{1}} is the number of registered presences, and \textit{n\textsubscript{0}} is the number of absences.\\
-If the method used to calculate P is logistic regression, the probability is defined according to the following equation:
+If the method used to calculate P is a logistic regression, the probability is defined according to the following equation:
 \\ \[    F=\dfrac{e^y}{\dfrac{n_1}{n_0}+{e^y}}          \] \\
 
 Where \textit{e} is the base of the Neperian logarithms and \textit{y} is the 'logit function', that is a linear combination of environmental variables.
-\subsection{Data representation}
-A key part of research is data representation. In this case the maps represent an indispensable step to describe the distribution of the species.
-To create reliable maps we used the R package called colorist which was the engine of this project.
-The \texttt{colorist} package was created in 2020 \citep{Schuetz} to provide researchers with additional methodologies and options for studying, understanding and communicating information on the distribution of species in space and time.
-As the name colorist suggests, the protagonist of this R package is precisely the color, connecting the distributions of the species with the HCL corimetric palettes.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{colorist and data representation}
+The graphical representation of the map plays a very important role in the research to determine where, how and why the distribution of wildlife changes in space and time \citep{colo}.
+The \texttt{colorist} package represents the beating heart of this project.
+Understanding these mechanisms is one of the main objectives of ecology.\citep{and1}
+Traditionally, biologists used simple range maps to describe the distribution of species and individuals in space and time \citep{brt} \citep{gri}, however nowadays specific distribution data has become incredibly more abundant and readily available.
+Surely researchers can take advantage of a greater amount of high quality data, however this entails a series of challenges in visualizing this data that can often be confusing and unclear.\citep{colo}
+Community science projects have collected hundreds of millions of observations of wildlife populations \citep{nat} \citep{sal} and technologies for monitoring individual animals have improved and diversified \citep{ks}. Data for populations and individuals is now shared through a dedicated data infrastructure \citep{gbif} \citep{kra} and we have increasingly detailed descriptions of where and when wildlife can be found.\\
+The \texttt{colorist} package was created in 2020 \citep{colo} to provide researchers with additional methodologies and options for studying, understanding and communicating information on the distribution of species in space and time.
+As the name \texttt{colorist} suggests, the protagonist of this R package is precisely the color, connecting the distributions of the species with the HCL corimetric palettes.
 The HCL palettes are an alternative to other color spaces such as RGB and HSV; each color within the color space is composed of 3 factors: 'Hue' which defines the color (hue), chroma which defines the saturation or intensity of the color and luminance which defines the brightness.
-Color can be a problem in some cases. People affected by Color vision deficiency (CVD) currently represent a number close to 360 million people with an important number of 8\% of affected men. The main visual defects are: deuteranopia (green blindness), protanopia (red blindness) and tritanopia (blue and yellow blindness).
+Colors can be a problem in some cases. People affected by Color vision deficiency (CVD) currently represent a number close to 360 million people with an important number of 8\% of affected men. The main visual defects are: deuteranopia (green blindness), protanopia (red blindness) and tritanopia (blue and yellow blindness).
 Such a condition places us in the situation of having to investigate more effective methods to represent our research as sometimes they may be misunderstood and even create confusion or false information.
 HCL vanes fit well into this problem; in fact, within the group of HCL pallets there are pallets such as viridis and cividis, perfectly visible to all people even with visual defects, so as to be able to communicate information in the most effective way.
-The colorist workflow is mainly composed of 4 steps: the creation of the metrics, the creation of palettes, the map and the legend.
+The \texttt{colorist} workflow is mainly composed of 4 steps: the creation of the metrics, the creation of palettes, the map and the legend.
 It is precisely in the step of creating the palette that with the function \texttt{custom\_hues} we can decide the color to be adopted within our maps, the value can vary from -360 to +360 and represents the hue in the color wheel.
 Finally, this project questioned how climate change can affect the distribution of species in the future in order to better understand future community dynamics. This gives us the opportunity to mobilize for the conservation of endangered species but also to prevent others from becoming endangered species.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Aim}
 For this project, several aspects relating to the ecological community have been analyzed and for this reason we cannot define a single purpose, but multiple ones.
-In the first analysis, a goal of this project was to verify if the colorist package could give us a reliable, effective and concrete representation of the data developed for the study of an ecological community and not on single species.
+In the first analysis, a goal of this project was to verify if the \texttt{colorist} package could give us a reliable, effective and concrete representation of the data developed for the study of an ecological community and not on single species.
 Having chosen species with a decreasing population, we wanted to understand how these were distributed within the European territory, trying to understand even if their habitat was fragmented.
 Consequently, a key goal was to create a performing model that was reliable for studying species distribution.
 Ultimately we wanted to create a species distribution model with predictions for the future, to understand how these species, with a population already decreasing due to various factors, could be distributed in a less favorable condition due to climate change and where these species could move.
-The general objective was therefore to study an all-round ecology community, in the present and in the future, with a representation as effective as possible and to lay good future foundations for the use of the colorist package that can open various perspectives by placing itself as a point reference in the study of ecology.
-
+The general objective was therefore to study an ecological community in its entirety, in the present and in the future, with a representation as effective as possible and to lay good future foundations for the use of the \ texttt {colorist} package which can open different perspectives by placing as a point of reference in the study of ecology.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Methods}
 \subsection{Study area}
 The study area chosen for this project was Europe, covering an area of approximately 6,184,800 km2.
 The surface taken into consideration includes both member states of the European Union and external states, however, despite the fact that for historical and cultural reasons there is a part of Russia considered within the European territory of almost 4,000,000 km2, it was chosen to exclude it from the analysis.
 In this vast area we found various types of habitats, with a very high rate of biodiversity that makes this surface a natural laboratory for studying the various species and their distribution.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Data and filters}
 The data taken into consideration were extracted from the databases of the Global Biodiversity Information Facility (GBIF) \citep{gbif} between 18 October 2021 and 10 December 2021.
-This data has been carefully filtered, eliminating many parameters taken into account in the initial database.
+This data has been carefully filtered using the \texttt{dplyr} package, eliminating many parameters taken into account in the initial database.
 First of all, all the occurrence data with coordinates defined as "not available" were eliminated, then all the data were filtered on the basis of observation, keeping only the parameters defined as "human observation" and "observation" thus excluding all museum occurrences, private collections, zoos etc. that could have distorted our distribution model.
 The data was then filtered by area of interest (Europe excluding European Russia) including a period of 40 years (from 1981 to 2021).
 The year 1981 was carefully chosen as the starting year for our study, since most of the occurrences of interest fell from 1981 onwards for all the species considered.
 Subsequently, all occurrences with an uncertainty in the coordinates greater than 100 meters were excluded, to avoid a too pronounced bias in our model.
 Concerning databases with very numerous occurrences (in some cases over a million occurrences) this step has allowed us to remove many not very useful occurrences in our database, which has made the analysis work faster and more efficient.
+The downloaded and filtered data was then reduced to a sample of 5000 occurrences, a number large enough to allow us to study the vast area under analysis.
 
+In a second moment, the pseudo-absences were created to continue the analysis; given the high extension, a prevalence of 0.4 was set, so that the pseudo-absence points generated were 12,500 which, joining the presences, reached a number of 17,500 points to create the model.
+These points, in fact, have been combined using the \ texttt {rbind ()} function, in order to have a single file to extract the predictors values.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Worldclim data}
-
 For this project, climate data was downloaded from WorldClim (available for free on the website https://www.worldclim.org/data/index.html).
 Worldclim offers an efficient set of past and present data. It has recently implemented its service by adding the possibility to download data regarding future forecasts \citep{wc}, \citep{ey}. This data is often used for ecological modeling \citep{bcw}. 
 The 19 bioclimatic variables were downloaded at a spatial resolution of 2.5 minutes (about 4.5 km at the equator). The same parameter was used for both past and future data.
 The 19 variables include: mean annual temperature, mean diurnal interval, isotherm, temperature seasonality, maximum temperature of the hottest month, minimum temperature of the coldest month, annual temperature range, average temperature of the wettest quarter, average temperature of the wettest quarter. dry, mean temperature of the hottest district, mean temperature of the coldest district, annual rainfall, precipitation of the wettest month, precipitation of the driest month, rainfall seasonality, precipitation of the wettest district, precipitation of the driest district, precipitation of the district warmer, colder neighborhood rainfall 
-%DO I ENTER THE COLLINEARITY DATA HERE?
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Species data}
 To identify the species for this project we used the database of the International Union for Conservation of Nature's Red List of Threatened Species (IUCN red list).
 The IUCN since 1964 has compiled these lists of all species more or less endangered and assesses their survival prospects. Today the IUCN red list represents the most complete inventory of the extinction risk of species globally \citep {IUCN}.
@@ -196,11 +206,12 @@ The IUCN since 1964 has compiled these lists of all species more or less endange
 All the species investigated in this project have been carefully selected following some fundamental parameters.
 The first parameter used to select the species was the population trend. We have only chosen species with a decreasing population trend. It must be pointed out that the term "decreasing" is not always synonymous with danger (for example Querus Robur has a very high number of occurrences but the population is decreasing), but it must drive to investigate the causes of this trend and the possible responses in order to preserve the species.
 The distribution and number of occurrences are then taken into consideration. The distribution had to be consistent with the choice of the area designated in the project; therefore, all the selected species were present on the European territory. Subsequently, only species with a number of occurrences greater than 35,000 were chosen. A high number of occurrences allowed us to create a better model with better random sampling capacity and thus to decrease the bias \citep {kaplan} .
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bigskip
 {\noindent \textbf{\textit{Melanitta Fusca}}} 
 \\
-The first species treated was \textit{Melanitta fusca (Linnaeus, 1758)}, it is a sea duck with a wide distribution both in central Europe, where it is present in several states, and in northern Europe where most of its occurrences are recorded.
+The first species treated was \textit{Melanitta fusca (Linnaeus, 1758)}(\ref{panel}), it is a sea duck with a wide distribution both in central Europe, where it is present in several states, and in northern Europe where most of its occurrences are recorded.
 A part of the occurrences is found in the territory of Asian Russia which, however, we have not considered in our project.
 From surveys in 1992-1993, when the estimate of the wintering population of north-western Europe was estimated at around 933,000 individuals, in the period 2007-2009 there was a decline close to 60\% in the Baltic Sea bringing the count to around 373,000 individuals \citep{skov}.
 Currently the number of natural individuals is estimated at around 141,000-268,000 specimens \citep{IUCN}.
@@ -209,24 +220,26 @@ Climate change poses potentially the greatest threat to the species today and in
 Directly correlated with climate change, ocean acidification could lead to a decrease in shellfish that make up a large part of the \textit{Melanitta} diet \citep{stein}, \citep{carb}.
 Another major threat is by-catches in fishing gear, which occur in particular in wintering areas \citep*{dagys}.
 In general, therefore, this species is threatened by various factors: climate change, non-native species and diseases, pollution, hunting.\citep{IUCN}
-It is therefore a kind of interest and Obtaining trend estimates is a top priority \citep{IUCN}.\\
+The study of population trend and the respective monitoring are a priority objective for the present and for the future \citep{IUCN}.\\
 Data extraction: \citep{mela}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bigskip
 {\noindent \textbf{\textit{Miniopterus schreibersii}}} 
 \\
-\textit{Miniopterus schereibersii (Kuhl, 1817)} is a bat of the \textit{Miniotteridae} family.
+\textit{Miniopterus schereibersii (Kuhl, 1817)}(\ref{panel}) is a bat of the \textit{Miniotteridae} family.
 It has a very large range that affects various states of central and eastern Europe.
 The global population of \textit{Miniopterus schreibersii} is estimated to have decreased by at least 30\% across much of its range \citep{IUCN}. It is currently already extinct in Germany, Ukraine and Austria. In general, the habitat of this species is extremely fragmented. At present this species is classified as vulnerable \citep{IUCN}.
 The threats to this species are manifold: pollution from agricultural waste, human intrusion for recreational or work purposes, hunting and trapping, and invasive prion-induced disease.
 It is included in Annex II and IV of the EU Habitats and Species Directive and therefore requires special conservation measures, including the designation of special areas of conservation \citep{dir}.
 Currently there are numerous projects financed by LIFE for this species, in Spain, Italy and Romania \citep{IUCN}.\\
 Data extraction: \citep{minio}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bigskip
 {\noindent \textbf{\textit{Lagopus muta}}} 
 \\
-\textit{Lagopus muta (Montin, 1781)}, also known as ptarmigan, is a bird of the Phasianidae family; it is a stationary species that populates the arctic and subarctic areas of Eurasia and especially North America. For our analysis we took into account only the occurrences located in the European section (excluding European Russia).
+\textit{Lagopus muta (Montin, 1781)}(\ref{panel}), also known as ptarmigan, is a bird of the Phasianidae family; it is a stationary species that populates the arctic and subarctic areas of Eurasia and especially North America. For our analysis we took into account only the occurrences located in the European section (excluding European Russia).
 Due to the size of its range it cannot be considered a vulnerable species, despite the population trend in constant decrease \citep{IUCN}.
 For this reason we find this species cataloged as least concern in the IUCN red list \citep{IUCN}.
 In Europe, population size is estimated to be decreasing at a rate approaching 30\% in 12.6 years (three generations) \citep{bird}.
@@ -235,11 +248,12 @@ Human presence results in a displacement of the species from their wintering hab
 Another fundamental problem is climate change.
 A decrease recorded in the Swiss Alps of around 30\% of the population over 10 years has been attributed to climate change \citep{de}.\\
 Data extraction: \citep{pernice}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \bigskip
 {\noindent \textbf{\textit{Quercus robur}}} 
 \\
-\textit{Quercus robur (Linnaeus, 1753)}, commonly known as oak, is a tree belonging to the Fagaceae family.
+\textit{Quercus robur (Linnaeus, 1753)}(\ref{panel}), commonly known as oak, is a tree belonging to the Fagaceae family.
 It has a very large range that covers a large part of central Europe.
 Due to its vast range it is not possible to consider it as an endangered species even if the population is constantly decreasing. \citep{khe}. It is therefore considered "least to concern" in the IUCN red list. \citep{IUCN}
 The population is potentially at risk of decline due to climate change, which could lead to increased disease risk, loss of suitable habitat and increased exposure to unsuitable weather conditions \citep{jon}, \citep{IUCN}.
@@ -248,30 +262,25 @@ Furthermore, oak has historically been subjected to mortality events from extern
 In the future it is expected that the range of this species will likely change causing a shift towards north and east \citep{ef}.
 Global warming also increases the susceptibility to pathogen infections; this could lead to increased environmental stress from drought or floods, extreme temperatures and increased mortality \citep{jon}.\\
 Data extraction:\citep{querc}
-
-
-\subsection{SDM: species distribution model} 
-The use of species distribution models (SDMs) to map and monitor the distribution of plants and animals has become increasingly important wehn aiming at understanding environmental change, population dynamics and ecological consequences \citep{mil}.
-In addition to predicting the distribution of species, SDMs have become important for many studies that include the study of climate change, the identification of potential protected areas, the determination of places more or less susceptible to invasions, etc. \citep{mil}.
-
-There are mechanistic models where the phenotypic traits of a given organism are translated into performance or fitness components using sets of equations and correlative models, which we have dealt with.
-Correlative models can be of three types: presence-absence, presence-background, and presence-only methods.
-The presence-absence model was used for this project.
-The presence-absence methods intuitively use the observations of the occurrences and absences of species. The absences correspond to places where the species was not found during field sampling. When geo-referenced absences are not available, it is possible to create pseudo-absences (artificially created).
-Presence-absence modeling methods include: logistic regression \citep{bri}, generalized linear models and generalized additive models \citep{guis}, random forest \citep{brei}, boosted regression trees \citep{Eli}, multivariate adaptive regression splines \\ \citep{mois}, and artificial neural networks \citep{tarr}.
- For this project the generalized linear model (GLM) was chosen following the examples of previous studies\citep{eng} \citep{you} .
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{2cm}
+{\begin{figure}[H]
+\centerline{\includegraphics[scale=.45]{panel-1.png}}
+\caption{\textit{The four species that were studied in the project}}
+\label{panel}
+\end{figure}} 
 \subsubsection{SDM structure}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 The development process of an SDM is mainly composed of 4 phases: preparation of the data necessary for the project, calculation of the models, evaluation of the models and finally application of the models. Doing the data preparation is the part that will take the longest \citep{sil}.
 Once the objective of the project has been determined, it is necessary to define the area of the study.
 The continent of Europe was taken into consideration for this project.
 Species occurrence records are indispensable for calculating a correlative niche model. There are several sources of species presence records; for this project it was decided to use the GBIF-Global Biodiversity Information Facility online database \citep{yes}.
 Once the presences were obtained, the pseudo-absences were created.
 Pseudo-absences must be created with caution as their positioning can strongly influence the results of the models \citep{mass}.
-The pseudo absences can be created in various ways, we have chosen the function (random points), this has allowed the creation of random points on the map excluding the points of presence.
+The pseudo-absences can be created in various ways, we have chosen the \texttt{randomPoints()} function, this has allowed the creation of random points on the map excluding the points of presence.
 A prevalence rate of 0.4 was set for the creation of the pseudo-absence points; this value proved to be effective given the very vast territorial extension of the study.
 A sample of 5000 occurrences for each species was chosen, consequently the pseudo absences created were 12,500 according to this formula:\\ \[(P)0.4=\frac{5000(Pres)}{12.500 (Abs)}\] \\
-The best number of pseudo absences depends on the modeling technique used\\ \citep{kan} \citep{mass} .
+The best number of pseudo-absences depends on the modeling technique used\\ \citep{kan} \citep{mass} .
 In the case of this project based on generalized linear models, a good number of pseudo-absences is represented by a value greater than 10,000.
 At this point, having obtained these data, the key aspect was to check them to check for any errors.
 The most common errors are represented by occurrences with wrong or non-existent coordinates.
@@ -282,28 +291,24 @@ Consequently, the next step was to check for any points outside our map of inter
 Once the points were identified, they had to be removed from our analysis.
 As for the environmental values, for our project the bioclimatic variables taken from WorldClim were chosen \citep{bcw}.Most modeling algorithms are sensitive to high levels of correlation between predictive variables \citep{dor13}.Therefore the correlation of one or more predictor variables can drastically change the quality of the model.High correlations can have two main consequences \citep{dor13}\citep{demn}:
 1) the results will be over-adapted and 2) the response curves will not be independent, thus the curve response of a variable will not exclusively represent that variable, but will include interactions with other related variables.
-Variables with very high correlation values (such as -0.7 / -0.8) should be excluded \citep{dor13}.
+Variables with very high correlation values (such as 0.7 / 0.8) should be excluded \citep{dor13}.
+At this point the collinearity between the environmental variables (predictors) was tested; Basically 2 functions have been considered: \texttt{vifcor ()} and \texttt{vifstep ()}.
+Subsequently with the \texttt{exclude ()} function all those variables related to each other have been removed, allowing us to have a more reliable model.
 Another alternative used was that of PCA (principal component analysis) \citep{pere}.
 The PCA summarizes the environmental variables in orthogonal factors, therefore completely unrelated, and these factors can be used to model the niche of the species. However, the interpretation of the model will be more difficult \citep{sil}. 
-Other methodologies have also been tried to understand correlation; Parametric ( Pearson) or non-parametric ( Spearman) coefficients were tested \citep{fiel}.
+Other methodologies have also been tried to understand correlation; Parametric ( Pearson) or non-parametric (Spearman) coefficients were tested \citep{fiel}.
 The variance inflation factor (VIF) measured the correlation of each variable with a combination of all other variables in the model together \citep{dor13}. Therefore, VIF measures the multicollinearity or non-independence of the predictive variables. However, the parameters will continue to be fair, consistent and efficient.
-The generalized linear model (GLM) was then calculated with the function (MULTIGLM).
-The model obtained was then ported to \texttt{colorist } and following the workflow, the maps representing the distribution of these species and the level of specificity of each area within the European territory were obtained. 
-
+Once the data of interest were obtained, a generalized linear model (GLM) was created with the \ texttt {multGLM ()} function and with the \ texttt {getPreds ()} function, the predictions based on the model just created were made.
+Finally the model obtained was then ported to \texttt{colorist } and following the workflow, the maps representing the distribution of these species and the level of specificity of each area within the European territory were obtained. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\texttt{colorist} R package}
-The \texttt{colorist} package represents the beating heart of this project.
-Graphical map representation plays a key role in research to determine where, how and why wildlife distribution changes over space and time.\citep{colo}
-Understanding these mechanisms is one of the main objectives of ecology.\\\citep{and1}
-Traditionally, biologists used simple range maps to describe the distribution of species and individuals in space and time \citep{brt} \\\citep{gri}, however nowadays specific distribution data has become incredibly more abundant and readily available.
-Surely researchers can take advantage of a greater amount of high quality data, however this entails a series of challenges in visualizing this data that can often be confusing and unclear.\citep{colo}
-Community science projects have collected hundreds of millions of observations of wildlife populations \citep{nat} \citep{sal} and technologies for monitoring individual animals have improved and diversified \citep{ks}. Data for populations and individuals is now shared through a dedicated data infrastructure \citep{gbif} \citep{kra} and we have increasingly detailed descriptions of where and when wildlife can be found.
-This package emphasizes the use of color to indicate where, when and how consistently species can be found, to do this, \texttt{colorist} takes information from a stack of rasters, processes it and colors it in HCL (hue-chroma-luminance) in specific ways so that the occurrence, abundance, or density values have nearly equal perceptual weights in the resulting maps. \citep{colo}
+This \texttt{colorist} R package emphasizes the use of color to indicate where, when and how consistently species can be found, to do this, \texttt{colorist} takes information from a stack of rasters, processes it and colors it in HCL (hue-chroma-luminance) in specific ways so that the occurrence, abundance, or density values have nearly equal perceptual weights in the resulting maps. \citep{colo}
 This package can be used to represent obtained data, as in our case, but it can also be used to explore a dataset in order to know the distribution of the species concerned.
 It is important to remember that the \texttt{colorist} functions have been developed to manage and visualize the data, but the interpretations are the responsibility of the researcher.\citep{colo}
 The workflow is as follows: creation of the metrics that describe the distribution of the species concerned, creation of the colorimetric palette for representation, creation of the map based on metrics and palettes and finally a legend to be associated with the map.
 In this project we used \texttt{colorist} to visualize the distribution of our species.
 After extracting, filtering and analyzing the data, the generalized linear model (GLM) was chosen for the study on the species distribution, predictions were made from the obtained statistical model in order to obtain favourability, these data were imported into \texttt{colorist}.
-The metrics\_pull function was used to transform the model values into intensity values ranging from 0 (0 probability of occurrence) to 1 (maximum stack occurrence value).
+The \texttt{metrics\_pull()} function was used to transform the model values into intensity values ranging from 0 (0 probability of occurrence) to 1 (maximum stack occurrence value).
   In\texttt{colorist} we use the term "intensity" as a generic descriptor of normalized data values that can reflect the probability of relative occurrence, abundance, density or probability density.\citep{colo}
 We can describe this first phase as preparative, in fact this extraction process preserves all the information in the original stack while preparing the layers for the next visualization.
 
@@ -316,7 +321,7 @@ metrics<-metrics_pull(fav4sp)
 
 \bigskip
 The \textit{'fav4sp'} file is a stack containing the information of all the species considered.
-Subsequently, having obtained the metrics, the function \textit{palette\_set} was used.
+Subsequently, having obtained the metrics, the  \textit{palette\_set} function was used.
 In the \texttt{palette\_set} function it is possible to change the hue with \texttt{custom\_hues()} function; this is particularly effective in our analysis as we want to be sure that our map is visible to the widest possible audience, even those affected by CVD (colour vision deficiency).
 To extract the correct and perfectly visible values, the \texttt{show\_col(viridis\_pal()(30))} function was used; this function gives us the hexadecimal values of the colors belonging to the \texttt{viridis} palette that have been converted at first into the RGB color space and then into hue values using a simple color converter. This gave us four colors of the \texttt{viridis} palette perfectly visible even to all subjects with visual defects.
 \begin{lstlisting}
@@ -358,9 +363,9 @@ group_labels= c("Mioniopterus s.", "Melanita f.",
 \bigskip
 At this point we can interpret the data through the intensity and specificity parameters, a higher specificity value corresponds to a more intense color in the representation, consequently a lower specificity rate corresponds to a lower intensity of the color.
 When the specificity value is lower it means that the species share common space while when it is high it means that portion of space is not shared.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Climate change scenarios}
-The SDMs can be transferred in different spatial and temporal scenarios, the algorithms can apply the formula that determines the distribution of the species to a set of environmental variables that correspond to future projections.
+SDMs can be transferred in different spatial and temporal scenarios, the algorithms can apply the formula that determines the distribution of the species to a set of environmental variables that correspond to future projections.
 Today we find ourselves in a world that changes faster than any other period in history.    
 The specific data regarding climate change are analyzed in detail by the IPCC \citep{ipcc}.
 The Intergovernmental Panel on Climate Change (IPCC) is the United Nations body for the evaluation of science related to climate change, the IPCC was created to provide policymakers with regular scientific assessments on climate change, its implications and potential future risks, as well as to propose adaptation and mitigation options\citep{ipcc}.
@@ -368,135 +373,155 @@ Climate change is a direct consequence of the impact that human beings have on t
 In this project a future scenario was analyzed using the bioclimatic variables coming from WorldClim \citep{cmi} from 2021 to 2040; they were combined with our data and the same previous models were run so that we could compare them.
 Studying how the distribution of species varies with changing climatic conditions is fundamental to understand the dynamics between species that previously occupied different territories and that now and in the future may find themselves in common spaces they are not used to, this leads to loss of biodiversity, new population dynamics and new strategies for the conservation of these species.
 WorldClim's future data has been structured thanks to the Coupled Model Intercomparison Project (CMIP6) which is a collaborative framework designed to improve knowledge of climate change \citep{CMIP6}.
-
+CMIP6 represents a substantial expansion over CMIP5, in terms of the number of participating modeling groups, the number of future scenarios examined, and the number of different experiments conducted \citep{CMIP6}.
+CMIP6 was attended by various groups from all over the world.
+CMIP's goal is to generate a series of standard simulations that each model will run. This allows the results to be directly comparable between different models, to see where the models agree and disagree about future changes. \citep{CMIP6}.
+Monthly values of minimum temperature, maximum temperature, and precipitation were processed for 23 global climate models (GCMs), and for four Shared Socio-economic Pathways (SSPs): 126, 245, 370 and 585. \citep{CMIP619}
+The most pessimistic projection corresponding to SSP 585 was chosen for this project.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
 \section{Results}
-The first step in conducting the analysis was to properly download the occurrences from the Global Biodiversity Information Facility (GBIF), once downloaded, they were carefully filtered thanks to the \texttt{dplyr} package. 
-The downloaded and filtered data were then reduced to a sample of 5000 occurrences, a large enough number to allow us to study the vast area under analysis.
-
-At a later time, the pseudo-absences were created to continue the analysis; given the high extension, a prevalence of 0.4 was set, so the pseudo-absence points generated were 12,500 which, joining with the presences, reached a number of 17,500 points to create the model.
-These points, in fact, have been combined using the \texttt{rbind()} function, in order to have a single file to create your predictors.
-At this point the collinearity from our data occurred; 2 function basically were considered: \texttt{vifcor ()} and \texttt{vifstep ()}.
-Subsequently with the \texttt{exclude ()} function all those variables related to each other have been removed, allowing us to have a more reliable model. 
-Once the data of interest were obtained, a generalized linear model (GLM) was created with the \texttt{multGLM ()} function and the \texttt{getPreds ()} function. 
-At this point it was possible to pass to the representation process using the colorist package; after calculating the metrics and creating the colorimetric palette based on colors taken from the \texttt{viridis} palette, it was possible to generate the multiple map with the distribution model of the corresponding species.
-
+The results of the aforementioned generalized linear models at the present time and at the future time were graphed by the \texttt{colorist} package; below we show the outputs of the analyzes.
+With the generation of multiple maps we are able to see how our species are distributed (fig. \ref{multiplepres}).
 {\begin{figure}[H]
-\centerline{\includegraphics[scale=.9]{map mult pres.png}}
-\caption{\textit{The map shows how the four species analyzed are distributed.
-The color allows us to understand how the areas with a greater intensity are the areas with the highest distribution rate up to the white areas with a very low or completely absent distribution rate.}}
-\label{fig}
+\centerline{\includegraphics[scale=.7]{MAP PRES NAME.png}}
+\caption{\textit{Species distribution map.
+The color allows us to understand how the areas with greater intensity are those with the highest distribution rate up to the white areas with a very low or completely absent distribution rate.}}
+\label{multiplepres}
 \end{figure}} 
 \vspace{1cm}
-\texttt{colorist} allows us to use a very useful function for representation, so after distilling the information with the \texttt{metrics\_distill()} function, it was possible to create a single map with all the information in the same map in the form of intensity and specificity, this will allow us to understand which areas of the territory are more specific for a species and which ones are shared by several species.
+\texttt{colorist} allows us to use a very useful function for representation, so after distilling the information with the \texttt {metrics\_distill ()} function, the result was the creation of a single map with all the information distilled in the form of intensity and specificity, this will allow us to understand which areas of the territory are more specific for a species and which are shared by several species (fig. \ref{mapdist}).
 \vspace{1cm}
 
 \begin{figure}[H]
 \centerline{\includegraphics{mapdist.png}}
-\caption{\textit{This map includes all species and gives us values of intensity and specificity.
-If a color is predominant, it means that that territory is specific to the species corresponding to the color, while the white areas or areas with a low intensity indicate a shared space or not specific to any species.}}
-\label{fig}
+\caption{\textit{Distilled map of all species.
+This map includes all species and gives us intensity and specificity values.
+If a color is predominant it means that territory is specific to the species corresponding to the color, while white areas or areas of low intensity and specificity indicate a shared or non-species specific space.}}
+\label{mapdist}
 \end{figure}
 
 \vspace{1cm}
-For an accurate understanding of this map we use the \texttt{legend\_set()} function which will generate a legend able to make us understand how the colors are distributed on the map.
+For an accurate understanding of this map we use the \texttt{legend\_set()} function which generated a legend able to make us understand how the colors are distributed on the map. (fig. \ref{legend})
 
 \begin{figure}[H]
-\centerline{\includegraphics[scale=.7]{legend.png}}
-\caption{\textit{The legend explains how the colors are handled in the single \texttt{colorist} map.}}
-\label{fig}
+\centerline{\includegraphics[scale=.7]{legend.JPG}}
+\caption{\textit{Legend of distilled map. The legend explains how the colors are handled in the single \texttt{colorist} map.}}
+\label{legend}
 \end{figure}
 \vspace{1cm}
 Another aim of this project was to study and compare a species distribution model at the present time and one with future predictions.
-Similarly to the previous model, the same analyzes were made but this time with the bioclimatic variables for the time span from 2021 to 2040.
-After developing the model, it was possible to use colorist for the representation.
+Similarly to the previous model, the same analyzes were carried out but this time with the bioclimatic variables for the time span from 2021 to 2040.
+After developing the model, it was possible to use \texttt{colorist} for the representation, below are the results of the creation of the multiple map that shows us the distribution of the single species (fig. \ref{fut}).
 \vspace{1cm}
 \begin{figure}[H]
-\centerline{\includegraphics[scale=.9]{map mult fut.png}}
-\caption{\textit{This map defines the forecasts of the distributions of the species investigated in this project, in the period from 2021 to 2040.}}
-\label{fig}
+\centerline{\includegraphics[scale=.68]{MAP FUT NAME.png}}
+\caption{\textit{Map with future variables. This map defines the forecasts of the distributions of the species investigated in this project, in the period from 2021 to 2040.}}
+\label{fut}
 \end{figure}
 
 
-In viewing the map, in our opinion, there was no clear understanding of the change between present and future.
-To solve this visualization problem, a difference was made between the plot containing the data projected to the future and the plot with the data at the present time.
-Therefore, in the first analysis, a comparison was made between the present and future distributions for each species and subsequently a difference was made that allowed us to see more clearly what was the change in the distribution of species in the two time frames.
-\vspace{1cm}
+In the map view, in our opinion, there was no clear understanding of the change between present and future.
+To solve this display problem, a difference was made between the plot containing the data projected into the future and the plot with the data at the present moment.
+Therefore, a comparison was made between the present and future distribution for each species (fig.\ref{miniopar},\ref{melapar},\ref{querpar},\ref{lagpar}) and subsequently a difference was made that allowed us to see more clearly what the change in the distribution of species was in the two time periods (fig.\ref{mindiff},\ref{meladiff},\ref{querdiff},\ref{lagdiff}).
+\newgeometry{top=3cm, bottom=3cm}
 \begin{figure}[H]
-\centerline{\includegraphics[scale=.4]{minio nowfutu.png}}
+\centerline{\includegraphics[scale=.5]{minio par.png}}
 \caption{\textit{Representation of the two distributions at present time (left map) and with future forecasts (right map).
-The yellow colored areas represent the points where the species Miniopterus s. is most distributed. while the darker areas represent the areas where absent.}}
-\label{fig}
+The yellow colored areas represent the points where the species Miniopterus s. is most distributed. while the darker represent the areas where absence is more likely.}}
+\label{miniopar}
 \end{figure}
 
 \begin{figure}[H]
-\centerline{\includegraphics[scale=.4]{melapresfut.png}}
+\centerline{\includegraphics[scale=.5]{mela par.png}}
 \caption{\textit{Representation of the two distributions at present time (left map) and with future forecasts (right map).
 The yellow colored areas represent the points where the species Melanitta f. is most distributed. while the darker areas represent the areas where absent.}}
-\label{fig}
+\label{melapar}
 \end{figure}
-\vspace{1cm}
+
+
 \begin{figure}[H]
-\centerline{\includegraphics[scale=.4]{quercpresfut.png}}
+\centerline{\includegraphics[scale=.5]{querc par.png}}
 \caption{\textit{Representation of the two distributions at present time (left map) and with future forecasts (right map).
 The yellow colored areas represent the points where the species quercus r. is most distributed. while the darker areas represent the areas where absent.}}
-\label{fig}
+\label{querpar}
 \end{figure}
+
+
 \begin{figure}[H]
-\centerline{\includegraphics[scale=.4]{lagoppresfut.png}}
+\centerline{\includegraphics[scale=.5]{lag par.png}}
 \caption{\textit{Representation of the two distributions at present time (left map) and with future forecasts (right map).
 The yellow colored areas represent the points where the species Lagopus m. is most distributed. while the darker areas represent the areas where absent.}}
-\label{fig}
+\label{lagpar}
 \end{figure}
-\vspace{1cm}
-
-
 
 \begin{figure}[H]
-\centerline{\includegraphics[scale=.9]{miniodiff.png}}
-\caption{\textit{This map represents the difference between the values obtained from the models at the future time and the models at the present time. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
-\label{fig}
+\centerline{\includegraphics[scale=.9]{min diff.png}}
+\caption{\textit{Map with the difference between present and future models. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
+\label{mindiff}
 \end{figure}
-\vspace{1cm}
+
 \begin{figure}[H]
-\centerline{\includegraphics[scale=.9]{meladiff.png}}
-\caption{\textit{This map represents the difference between the values obtained from the models at the future time and the models at the present time. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
-\label{fig}
+\centerline{\includegraphics[scale=.9]{mela diff.png}}
+\caption{\textit{Map with the difference between present and future models. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
+\label{meladiff}
 \end{figure}
-\vspace{1cm}
+
 \begin{figure}[H]
-\centerline{\includegraphics[scale=.9]{quercdiff.png}}
-\caption{\textit{This map represents the difference between the values obtained from the models at the future time and the models at the present time. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
-\label{fig}
+\centerline{\includegraphics[scale=.9]{quer diff.png}}
+\caption{\textit{Map with the difference between present and future models. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
+\label{querdiff}
 \end{figure}
-\vspace{1cm}
+
 \begin{figure}[H]
-\centerline{\includegraphics[scale=.9]{lagdiff.png}}
-\caption{\textit{This map represents the difference between the values obtained from the models at the future time and the models at the present time. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
-\label{fig}
+\centerline{\includegraphics[scale=.9]{lag diff.png}}
+\caption{\textit{Map with the difference between present and future models. The darker areas suggest a decrease in the population at that point, while the lighter areas suggest an increase.}}
+\label{lagdiff}
 \end{figure}
-\vspace{1cm}
+
 It is important to remember that all the maps of this project are developed with the viridis colorimetric palette, which allows people with color vision deficiency (CVD) to perceive colors efficiently and thus avoid a misinterpretation of the research.
 
-
+\restoregeometry
 \newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
-%da caricare nel primo pomeriggio massimo
-
-\newpage
+In this project we want to communicate how important the study of ecological communities can be and how fundamental the representation of data is in order to avoid misunderstandings and confusion in the reading and interpretation of data.
+In a world that advances, changing at a frenetic speed, it is essential to understand how species are distributed over the territory and how they can interact with other species, giving life to the concept of ecological community, it is also important to study how over time they can move and change their living space to look for areas that are more conducive to their survival.
+This study has laid the foundations for responding to these needs.
+Figure number 1, generated using \texttt{colorist} after having created generalized linear models, explains how the species are distributed on the European territory; we can observe how these species are distributed in a different way but it can be seen that in many cases there are large spaces of shared territory. For example we can see how Miniopterus schreibersii is highly distributed in the Iberian peninsula where there are also the other 4 species, albeit to a lesser extent, while we can see for example that all the species analyzed are present in the northernmost part of the peninsula. Scandinavian etc.
+From this first figure, it is understandable how these species are distributed but it is difficult to understand the level of specificity of each species in each territory.
+Map number 2, which represents the very high potential of the \texttt{colorist} package, shows us all the species analyzed in a single map. It can be seen in the map that there are very intense colors and more delicate colors; this is due to the intrinsic ability of the \texttt{colorist} package to define the distribution of these species in the form of intensity and specificity, so where you can see a very bright color, \texttt{colorist} is indicating that in that particular area, the species corresponding to that color, is highly specific, this means that it will share less space with other species (obviously compared to the species analyzed).
+On the contrary, when you see little colored areas, with faded colors, tending to white, it means that the species present in that particular territory are present in a similar way to other species and therefore with a low rate of specificity since they will share the same living space.
+In our map we see how for example Quercus robur, compared to the other 3 species analyzed, is more specific in the area that includes the central European states such as France, Germany, Poland ectc. While we see how Lagopus muta is highly specific in the northern part of Norway and in northern Italy, in correspondence with the Alps.
+So, including the concept that \texttt{colorist} works, it is very easy to read the map and understand how these species are present together; to help us understand, in figure 3, the legend has been created that shows in detail how to read the map.
+Once the \texttt{colorist} potential was understood, it was clear how this tool could be extremely useful also for a study with future forecasts, in fact figure number 4 shows the distributions of the species according to the forecasts from 2021 to 2040 taken by Worldclim.
+At this point we asked ourselves how effective the representation was to understand the change in the presence of these species.
+The choice was to show current and future results and the difference between these two models.
+In figures 9,10,11,12 we can see the differences for each species.
+As expected, the models show a loss of the presence of the species in many points, or in any case a movement of the species following a climate change not favorable for the survival of these species with a population already decreasing.
+In the representation of this difference, the viridis palette was used to allow even those suffering from visual defects to understand and read the map without falling into error.
+The darker color (purple / blue), corresponding to negative numbers in the legend on the right of the map, indicates a loss of presence of the species in that territory, while, although less, the lighter color (yellow) instead indicates an increase in presence of the species.
+However, the general trend is pessimistic.
+Without adequate conservation interventions, these species could continue to decline over the years due to global and climate change.
+It is hoped that these and other studies will make them understand more and more the importance of studying and conserving the species present on the planet in order to guarantee the maintenance of biodiversity, which is fundamental for the balance in nature.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
-%da caricare nel primo pomeriggio massimo
+In conclusion, the \texttt{colorist} R package is a reliable and very useful tool in representing the distribution of species but not only; in fact, it is a useful tool for carrying out a large number of studies such as that on the study of changes due to global and climatic changes, forecasting studies for the introduction of invasive species, etc.
+The intrinsic ability in the creation of \texttt{colorist} to use HCL color palettes facilitates the use of colors and, as in our case, the use of the viridis palette (color vision deficienty friendly).
+This places it, therefore, as an inclusive tool for a much larger number of readers and researchers who can therefore compare the data more clearly.
+We strongly believe that the potential of \texttt{colorist} is wide and that it is possible to adapt this package to other studies to be investigated.
+As regards the species, we can conclude that, in accordance with the initial hypotheses, according to future forecasts they are destined to have a negative population trend with the territorial movement, especially towards the north, to seek situations more favorable to their survival.
 
-\newpage
-\section{Future studies}
-%da caricare nel primo pomeriggio massimo
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Acknowledgments}
-%da caricare nel primo pomeriggio massimo
+
 
 
 
 
 \newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Bibliography}
 \begin{thebibliography}{999}
 
@@ -585,7 +610,7 @@ GBIF. (2020). Global biodiversity information facility. Retrieved from http://gb
 Kranstauber, B., Cameron, A., Weinzerl, R., Fountain, T., Tilak, S., Wikelski, M., \& Kays, R. (2011). The Movebank data model for animal tracking. Environmental Modelling & Software, 26(6), 834– 835.
 
 \bibitem[Schuetz \& Strimas-Mackey \& Auer. 2020]{colo}
-Schuetz, JG, Strimas-Mackey, M, Auer, T. colorist: An r package for colouring wildlife distributions in space–time. Methods Ecol Evol. 2020; 11: 1476– 1482. https://doi-org.ezproxy.unibo.it/10.1111/2041-210X.13477
+Schuetz, JG, Strimas-Mackey, M, Auer, T. colorist: An r package for colouring wildlife distributions in spacetime. Methods Ecol Evol. 2020; 11: 1476– 1482. 
 
 \bibitem[Lagopus muta. GBIF. 2021]{pernice}
 GBIF.org (26 October 2021) GBIF Occurrence Download  https://doi.org/10.15468/dl.334ay7
@@ -693,9 +718,6 @@ M. Kearney, W.P. Porter
 Mechanistic niche modelling: combining physiological and spatial data to predict species’ ranges
 Ecol. Lett., 4 (2009), pp. 334-350
 
-\bibitem[Schuetz et al. 2020]{Schuetz}
-Schuetz, Justin G, Matthew Strimas‐Mackey, Tom Auer, and Laura Graham. "Colorist: An R Package for Colouring Wildlife Distributions in Space–time." Methods in Ecology and Evolution 11.11 (2020): 1476-482. Web
-
 
 \bibitem[Engler et al. 2004]{eng} 
 Engler, R., Guisan, A. and Rechsteiner, L. (2004), An improved approach for predicting the distribution of rare and endangered species from occurrence and pseudo-absence data. Journal of Applied Ecology, 41: 263-274. https://doi.org/10.1111/j.0021-8901.2004.00881.x
@@ -703,10 +725,62 @@ Engler, R., Guisan, A. and Rechsteiner, L. (2004), An improved approach for pred
 \bibitem[You et al. 2018]{you}
 You, M.P., Rensing, K., Renton, M. and Barbetti, M.J. (2018), Critical factors driving aphanomyces damping-off and root disease in clover revealed and explained using linear and generalized linear models and boosted regression trees. Plant Pathol, 67: 1374-1387. https://doi.org/10.1111/ppa.12837
 
+\bibitem[avocedo et al. 2012]{avo}
+Acevedo, Pelayo, and Raimundo Real. "Favourability: Concept, Distinctive Characteristics and Potential Usefulness." Die Naturwissenschaften 99.7 (2012): 515-22. Web.
+
+\bibitem[Hao et al. 2019]{hao}
+Hao, Tianxiao, Jane Elith, Gurutzeta Guillera‐Arroita, José J Lahoz‐Monfort, and Josep Serra‐Diaz. "A Review of Evidence about Use and Performance of Species Distribution Modelling Ensembles like BIOMOD." Diversity & Distributions 25.5 (2019): 839-52. Web.
+
+\bibitem[hao et al. 2020]{hao20}
+Hao, Tianxiao, Jane Elith, José J Lahoz‐Monfort, and Gurutzeta Guillera‐Arroita. "Testing Whether Ensemble Modelling Is Advantageous for Maximising Predictive Performance of Species Distribution Models." Ecography (Copenhagen) 43.4 (2020): 549-58. Web.
+
+\bibitem[Avocedo et al. 2010]{avo10}
+Acevedo, Pelayo, Alastair I Ward, Raimundo Real, and Graham C Smith. "Assessing Biogeographical Relationships of Ecologically Related Species Using Favourability Functions: A Case Study on British Deer." Diversity & Distributions 16.4 (2010): 515-28. Web.
+
+
+\bibitem[Romero et al. 2019]{romer}
+Romero, David, Jesus Olivero, Raimundo Real, and Jose Carlos Guerrero. "Applying Fuzzy Logic to Assess the Biogeographical Risk of Dengue in South America." Parasites & Vectors 12.1 (2019): 428. Web.
+
+
+\bibitem[Jimenez‐Valverde et al.2021]{jimen}
+Jimenez‐Valverde, Alberto, Pedro Aragon, Jorge M Lobo, and Volker Bahn. "Deconstructing the Abundance–suitability Relationship in Species Distribution Modelling." Global Ecology and Biogeography 30.1 (2021): 327-38. Web.
+
+
+\bibitem[Gabor et al. 2020]{gabom}
+Gábor, Lukas, Vítezslav Moudry, Vojtěch Bartak, and Vincent Lecours. "How Do Species and Data Characteristics Affect Species Distribution Models and When to Use Environmental Filtering?" International Journal of Geographical Information Science : IJGIS 34.8 (2020): 1567-584. Web.
+
+
+\bibitem[Gavish et al. 2017]{gavi}
+Gavish, Yoni, Charles J Marsh, Mathias Kuemmerlen, Stefan Stoll, Peter Haase, William E Kunin, and Robert Freckleton. "Accounting for Biotic Interactions through Alpha‐diversity Constraints in Stacked Species Distribution Models." Methods in Ecology and Evolution 8.9 (2017): 1092-102. Web.
+
+
+\bibitem[Real et al. 2006]{real}
+Real, Raimundo. "Obtaining Environmental Favourability Functions from Logistic Regression." Environmental & Ecological Statistics 13.2 (2006): 237-46. Web.
+
+
+\bibitem[Nunez et al. 2018]{nun}
+Nunez, Jamie R. "Optimizing Colormaps with Consideration for Color Vision Deficiency to Enable Accurate Interpretation of Scientific Data." PLoS ONE 13.8 (2018): PLoS ONE, 2018, Vol.13 (8). Web.
+
+\bibitem[Phillips]{Phil}
+Phillips, Steven J, Miroslav Dudik, Jane Elith, Catherine H Graham, Anthony Lehmann, John Leathwick, and Simon Ferrier. "Sample Selection Bias and Presence-Only Distribution Models: Implications for Background and Pseudo-Absence Data." Ecological Applications 19.1 (2009): 181-97. Web.
+
+
+\bibitem[Elith et al. 2020]{Elith20}
+Elith, Jane, Catherine Graham, Roozbeh Valavi, Meinrad Abegg, Caroline Bruce, Andrew Ford, Antoine Guisan, Robert J. Hijmans, Falk Huettmann, Lucia Lohmann, Bette Loiselle, Craig Moritz, Jake Overton, A. Townsend Peterson, Steven Phillips, Karen Richardson, Stephen Williams, Susan K. Wiser, Thomas Wohlgemuth, and Niklaus E. Zimmermann. "Presence-only and Presence-absence Data for Comparing Species Distribution Modeling Methods." Biodiversity Informatics 15.2 (2020): 69-80. Web.
+
+
+\bibitem[Meynard et al. 2019]{mey}
+Meynard, Christine N, Boris Leroy, and David M Kaplan. "Testing Methods in Species Distribution Modelling Using Virtual Species: What Have We Learnt and What Are We Missing?" Ecography (Copenhagen) 42.12 (2019): 2021-036. Web.
+
+\bibitem[Grimmet et al. 2021]{grimmet}
+Grimmett, Liam, Rachel Whitsed, and Ana Horta. "Creating Virtual Species to Test Species Distribution Models: The Importance of Landscape Structure, Dispersal and Population Processes." Ecography (Copenhagen) 44.5 (2021): 753-65. Web.
+
+
+\bibitem[CMIP6 sp. 2019]{CMIP619}
+https://www.carbonbrief.org/cmip6-the-next-generation-of-climate-models-explained
 
 
 \end{thebibliography}
-
 
 
 
