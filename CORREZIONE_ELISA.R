@@ -516,13 +516,18 @@ bioc21_40_585<-brick("wc2.1_2.5m_bioc_CNRM-CM6-1_ssp585_2021-2040.tif")
 #crop Europe----
 envDatafut<-crop(bioc21_40_585, Europe)
 EuropePredfut <- mask(envDatafut, Europe) #we create a new raster without NA value 
-
+names(EuropePredfut) <- c("bio1",  "bio2",  "bio3",  "bio4",  "bio5",  "bio6",  "bio7",  "bio8",  "bio9", "bio10", "bio11", "bio12", "bio13", "bio14", "bio15", "bio16", "bio17", "bio18", "bio19")
 
 #Prediction rasterstack climate change----
-predictors_future_min<- raster::extract(EuropePredfut, minPresAbs[,1:2], df=FALSE) 
-predictors_future_mela<- raster::extract(EuropePredfut, melaPresAbs[,1:2], df=FALSE) 
-predictors_future_querc<- raster::extract(EuropePredfut, quercPresAbs[,1:2], df=FALSE) 
-predictors_future_lag<- raster::extract(EuropePredfut, lagPresAbs[,1:2], df=FALSE) 
+predictors_future_min<- raster::extract(EuropePredfut, minPresAbs[,1:2], df=T) 
+predictors_future_mela<- raster::extract(EuropePredfut, melaPresAbs[,1:2], df=T) 
+predictors_future_querc<- raster::extract(EuropePredfut, quercPresAbs[,1:2], df=T) 
+predictors_future_lag<- raster::extract(EuropePredfut, lagPresAbs[,1:2], df=T) 
+
+predictors_future_min<- predictors_future_min[,-1]
+predictors_future_mela<- predictors_future_mela[,-1]
+predictors_future_querc<- predictors_future_querc[,-1]
+predictors_future_lag<- predictors_future_lag[,-1]
 
 #Collinearity----
 vif(predictors_future_min)
@@ -544,16 +549,16 @@ vif(predictors_future_lag)
 viflagstepfut<-vifstep(predictors_future_lag,th=10)
 
 
-XY<-as.data.frame(EuropePredfut[[1]], xy=TRUE, na.rm=TRUE)
-PTXY=data.frame("x" = XY$x, "y"=XY$y)
-predictorsDF_fut<- raster::extract(EuropePredfut,PTXY)
+XY_fut<-as.data.frame(EuropePredfut[[1]], xy=TRUE, na.rm=TRUE)
+PTXY_fut=data.frame("x" = XY_fut$x, "y"=XY_fut$y)
+predictorsDF_fut<- raster::extract(EuropePredfut,PTXY_fut)
 predictorsDF_fut<-data.frame(predictorsDF_fut)
 
 ####### PER OGNI SPECIE ESCLUDO LE VARIABILI DI EUROPEPRED IN FUNZIONE DELLE VARIBILI CORRELATE NEI PUNTI DI PRESENZA E ASSENZA ######
-preds_min_fut <- exclude(predictorsDF_fut,vifminstep)
-preds_mela_fut <-exclude(predictorsDF_fut,vifmelastep)
-preds_quer_fut <-exclude(predictorsDF_fut,vifquerstep)
-preds_lag_fut <-exclude(predictorsDF_fut,viflagstep)
+preds_min_fut <- exclude(predictorsDF_fut,vifminstepfut)
+preds_mela_fut <-exclude(predictorsDF_fut,vifmelastepfut)
+preds_quer_fut <-exclude(predictorsDF_fut,vifquerstepfut)
+preds_lag_fut <-exclude(predictorsDF_fut,viflagstepfut)
 
 preds_min_fut <- as.data.frame(preds_min_fut)
 preds_mela_fut <- as.data.frame(preds_mela_fut)
@@ -568,16 +573,16 @@ FavPred_quer_fut <- getPreds(preds_quer_fut, models=FavModel_quer$models, id.col
 FavPred_lag_fut <- getPreds(preds_lag_fut , models=FavModel_lag$models, id.col = NULL, Y = FALSE, P = FALSE, Favourability = TRUE)
 
 #### AVENDOLI COME DF OTTENGO UN DF COME RISULTATO DELLA PREDICTION QUINDI DEVO FARE QUESTI PASSAGGI ####
-FuturePred_min=data.frame("x" = XY$x, "y"=XY$y, "fav" = FavPred_min_fut$presence_F)
+FuturePred_min=data.frame("x" = XY_fut$x, "y"=XY_fut$y, "fav" = FavPred_min_fut$presence_F)
 FuturePred_min<- rasterFromXYZ(FuturePred_min)
 
-FuturePred_mela=data.frame("x" = XY$x, "y"=XY$y, "fav" = FavPred_mela_fut$presence_F)
+FuturePred_mela=data.frame("x" = XY_fut$x, "y"=XY_fut$y, "fav" = FavPred_mela_fut$presence_F)
 FuturePred_mela<- rasterFromXYZ(FuturePred_mela)
 
-FuturePred_querc=data.frame("x" = XY$x, "y"=XY$y, "fav" = FavPred_quer_fut$presence_F)
+FuturePred_querc=data.frame("x" = XY_fut$x, "y"=XY_fut$y, "fav" = FavPred_quer_fut$presence_F)
 FuturePred_querc<- rasterFromXYZ(FuturePred_querc)
 
-FuturePred_lag=data.frame("x" = XY$x, "y"=XY$y, "fav" = FavPred_lag_fut$presence_F)
+FuturePred_lag=data.frame("x" = XY_fut$x, "y"=XY_fut$y, "fav" = FavPred_lag_fut$presence_F)
 FuturePred_lag<- rasterFromXYZ(FuturePred_lag)
 
 
