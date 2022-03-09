@@ -1,0 +1,172 @@
+\documentclass{beamer}
+\graphicspath{{gfx/}}
+%%%%%%%%%%%%%%%%%%Packages%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[utf8]{inputenc}
+\usepackage{ragged2e}\justifying
+\usepackage{txfonts}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{bibentry}
+\usepackage{tikz}
+\usepackage{graphicx}
+
+%%%%%%%%%%%%%%%%%%%%Theme%%%%%%%%%%%%%%%%%%%%%
+%\usetheme{EastLansing}
+\usetheme[secheader]{Madrid}
+
+
+\definecolor{unibo}{rgb}{0.5 0 0.15}
+\usecolortheme[named=unibo]{structure}
+
+\usefonttheme{serif}
+
+%%%%%%%%%%%%%%%%%color/font/template%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamersize{text margin left=12mm, text margin right=12mm}
+\setbeamertemplate{frametitle}[default][left,leftskip=5mm]
+\setbeamertemplate{frametitle continuation}{\frametitle{\frametitle{Reference}}}
+\setbeamertemplate{bibliography item}[text]
+\setbeamertemplate{page number in head/foot}[appendixframenumber]
+
+
+\setbeamerfont{title}{series=\bfseries, size=\Large}
+\setbeamerfont{author}{series=\bfseries}
+\setbeamerfont{institute}{series=\bfseries}
+\setbeamerfont{date}{series=\bfseries}
+
+\setbeamercolor{author in head/foot}{bg=unibo}
+\setbeamercolor{date in head/foot}{bg=unibo}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%title%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Mixing distributions: the colorist R package }
+\subtitle{\Large{applied to community distribution estimate}} %ho usato questo escamotage per avere nel footer la frase non tagliata
+\author[Ludovico Chieffallo]{Ludovico Chieffallo\\ \tiny ludovico.chieffallo@studio.unibo.it\\ [5mm] \includegraphics[scale=0.07]{unibo.png}}
+\institute[Unibo]{Alma Mater Studiorum- Università degli studi di Bologna\\
+Laurea magistrale in Scienze e Gestione della Natura}
+\date{18 Marzo 2022}
+
+\begin{document}
+
+\maketitle
+\AtBeginSection[]
+{
+\begin{frame}{Index}
+\tableofcontents[currentsection]
+\end{frame}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\subsection{Biodiversity}
+\begin{frame}{Biodiversity}
+\centering
+\textit{"The most unique feature of Earth is the existence of life, and the most extraordinary
+feature of life is its diversity."} \\\textcolor{unibo}{(Cardinale et al. 2012, Nature)} 
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{What is the problem?}
+\centering
+Biodiversity is \textbf{decreasing}!\\ currently there are about 142,500 species within the IUCN red list with over 40,000 species threatened with extinction\\ \textcolor{unibo}{(IUCN 2021)}.
+\bigskip
+
+\centering  
+\includegraphics[scale=0.08]{iucn.png}
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{How can researchers address the problem?}
+ \centering
+ To address this problem, one of the practical aspects adopted is
+monitoring, with the consequent objective of proposing a conservation system for the
+investigated species.
+\bigskip
+
+\includegraphics[scale=0.2]{monitoring.png}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Species distribution models}
+\begin{frame}{Specie distribution models (SDMs)}
+   \centering
+   The use of species distribution models (SDMs) to map and monitor the distribution of plants and animals has become increasingly important when aiming at understanding environmental change, population dynamics and ecological consequences
+\textcolor{unibo}{(Miller 2010)}
+\bigskip
+
+\includegraphics[scale=0.2]{sdm.png}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{What are SDMs used for?}
+    \begin{itemize}
+        \item Understanding how the species are distributed \pause
+        \item Predict how the species will be distributed in the future  \pause
+        \item Understanding how climate change can affect species  \pause
+        \item Identification of protected areas  \pause
+        \item Determine possible invasions of alien species
+    \end{itemize}
+    
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{How can we represent the data?}
+    The graphical representation of the map plays a very important role in the research
+to determine where, how and why the distribution of wildlife changes in space and time.
+\bigskip
+
+Traditionally, biologists used simple range maps to describe the distribution of species and individuals in space and time \textcolor{unibo}{(Burt 1943, J. Mammal.)}, however nowadays specific distribution data has become incredibly moreabundant and readily available.
+\end{frame}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{The \texttt{colorist} R package}
+\begin{frame}{The \texttt{colorist} R package}
+\centering
+    The \texttt{colorist} package represents the beating heart of this project.
+    \bigskip
+    
+    The \texttt{colorist} package was created in 2020 to provide researchers with additional methodologies and options for studying, understanding and communicating information on the distribution of species in space and time. \\ 
+    \textcolor{unibo}{(Schuetz et al. 2020, Methods Ecol. Evol)}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Methods}
+\subsection{Study area}
+\begin{frame}{Study area}
+    
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Data and filters}
+\begin{frame}{Frame Title}
+    
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{WorldClim data}
+\begin{frame}{Frame Title}
+    
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5%%
+\subsection{Species Data}
+\begin{frame}{Frame Title}
+    
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{SDM structure}
+\begin{frame}{Frame Title}
+    
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{\texttt{colorist} R Package}
+\begin{frame}{Frame Title}
+    
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Climate change scenarios}
+\begin{frame}{Frame Title}
+    
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+\begin{frame}{Frame Title}
+    
+\end{frame}
+
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
