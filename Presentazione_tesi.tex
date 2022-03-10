@@ -104,6 +104,17 @@ investigated species.
     
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Understanding the results of data analysis}
+    \centering
+    The results of data analysis can often mislead or confuse us
+    \bigskip
+    
+    \includegraphics[scale=0.2]{conf.jpg}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{How can we represent the data?}
     The graphical representation of the map plays a very important role in the research
 to determine where, how and why the distribution of wildlife changes in space and time.
@@ -125,48 +136,152 @@ Traditionally, biologists used simple range maps to describe the distribution of
     
     The \texttt{colorist} package was created in 2020 to provide researchers with additional methodologies and options for studying, understanding and communicating information on the distribution of species in space and time. \\ 
     \textcolor{unibo}{(Schuetz et al. 2020, Methods Ecol. Evol)}
+    \centering
+    \includegraphics[scale=0.9]{col.png}
 \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Aim}
+\begin{frame}{Aims of this project}
+For this project, several aspects relating to the ecological community have been analyzed and for this reason we cannot define a single purpose, but multiple ones:
+\begin{itemize}
+    \item Understand how the species analyzed were distributed within the European territory\pause
+    \item Create a predictive model that could make us understand how species distributions can change in the future\pause
+    \item Check if the \texttt{colorist} package could give us a \textbf{reliable}, \textbf{effective} and \textbf{concrete} representation of the data developed for the study of an ecological community and not on single species.\pause
+    \item Make our research visible to people with color vision deficiency
+\end{itemize}
+    
+\end{frame}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Methods}
 \subsection{Study area}
 \begin{frame}{Study area}
-    
+    \centering
+    The study area chosen for this project was Europe, covering an area of approximately $6,184,800 km^{2}$ (excluding European Russia).\\
+    In this vast area we found various types of habitats, with a very high rate of biodiversity that makes this surface a natural laboratory for studying the various species and their distribution.
+    \centering
+    \includegraphics[scale=0.45]{europa.png}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Data and filters}
-\begin{frame}{Frame Title}
+\begin{frame}{Data and filters}
+    The data taken into consideration were extracted from the databases of the Global Biodiversity Information Facility (GBIF) between 18 October 2021 and 10 December 2021.
+    \bigskip
     
+    \centering
+    \includegraphics[scale=0.3]{gbif.jpg}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Filters applied to the data}
+\begin{itemize}
+    \item Occurrences with "not available" coordinates have been eliminated \pause
+    \item Keeping only the parameters defined as "human observation" and "observation" \pause
+    \item Only the European area was taken into consideration (excluding European Russia) \pause
+    \item Only the period from 1981 to 2021 was selected \pause
+    \item We have chosen the occurrences with a value of coordinate uncertainty less than 100 meters
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{WorldClim data}
-\begin{frame}{Frame Title}
-    
+\begin{frame}{WorldClim data}
+    The climatic data were obtained from WorldClim by downloading the 19 bioclimatic variables.
+    The same parameter was used for both past and future data.
+    \centering
+    \includegraphics[scale=0.4]{wc.png}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5%%
-\subsection{Species Data}
-\begin{frame}{Frame Title}
+\subsection{Species data}
+\begin{frame}{Species data}
+\centering
+  To identify the species for this project we used the International Union for Conservation of Nature's Red List of Threatened Species database (IUCN Red List) looking for species with a decreasing population trend.\\
+  \bigskip
+  
+  \centering
+  \includegraphics[scale=0.4]{trend.png}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{\textit{Melanitta fusca}}
+\textit{Melanitta fusca} is a sea duck with a wide distribution both in central Europe, where it is present in several states, and in northern Europe where most of its occurrences are recorded.\\
+
+From a survey in 1992-1993 the total population was estimated at about 933,000 individuals, currently the estimates are around 141,000-268,000 individuals \textcolor{unibo}{(IUCN 2021)}.
+\bigskip
+
+\centering
+\includegraphics[scale=0.15]{mel.png}
     
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{\textit{Miniopterus schreibersii}}
+    \textit{Miniopterus schreibersii} is a bat. It has a very large range that affects various states of central and astern Europe.The global population is estimated to have decreased by at least 30\% across much of its range.\textcolor{unibo}{(IUCN 2021)}
+    
+    \centering
+    \bigskip
+    
+    \includegraphics[scale=0.6]{minio.jpg}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{\textit{Lagopus muta}}
+\textit{Lagopus muta} also known as ptarmigan, is a bird of the Phasianidae family; it is a stationary species that populates the arctic and subarctic areas of Eurasia and especially North America.
+\\
+In Europe, population size is estimated to be decreasing at a rate approaching 30\% in 12.6 years (three generations) \textcolor{unibo}{(BirdLife International. 2015)}. 
+
+\bigskip
+
+    \centering
+    \includegraphics[scale=0.055]{lag.jpg}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{\textit{Quercus robur}}
+   \textit{Quercus robur} commonly known as oak, is a tree belonging to the Fagaceae family. It has a very large range that covers a large part of central Europe.\\
+   In general, throughout Europe, the population is declining and this is due to urban and agricultural expansion for timber \textcolor{unibo}{IUCN 2021}.
+   \bigskip
+   
+   \centering
+   \includegraphics[scale=0.45]{quer.jpg}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{SDM structure}
-\begin{frame}{Frame Title}
+\begin{frame}{SDM structure}
+    Workflow of our SDM
+    \bigskip
+    \centering
+    \includegraphics[scale=0.37]{sdm structure-1.png}
     
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{\texttt{colorist} R Package}
-\begin{frame}{Frame Title}
+\begin{frame}{\texttt{colorist} R Package}
+    \centering
+    \textbf{\texttt{colorist} workflow}
+    \bigskip
     
+    \centering
+    \includegraphics[scale=1.3]{col.png}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Climate change scenarios}
-\begin{frame}{Frame Title}
-    
+\begin{frame}{Climate change scenarios}
+    In this project a future scenario was analyzed using the bioclimatic variables coming from WorldClim from 2021 to 2040.\\
+    Studying how the distribution of species varies with changing climatic conditions is fundamental to understand the dynamics between species that previously occupied different territories and that now and in the future may find themselves in common spaces they are not used to, this leads to \textbf{loss of biodiversity}, \textbf{new population dynamics} and \textbf{new strategies} for the conservation of these species.
+WorldClim's future data has been structured thanks to the \textbf{Coupled Model Intercomparison Project} (CMIP6) which is a collaborative framework designed to improve knowledge of climate change 
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
 \begin{frame}{Frame Title}
     
 \end{frame}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion}
+\begin{frame}{Frame Title}
+    
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+    \begin{frame}{Frame Title}
+        
+    \end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
